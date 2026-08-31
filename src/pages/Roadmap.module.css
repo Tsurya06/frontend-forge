@@ -1,0 +1,327 @@
+.page {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+.stickyTopBar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--bg-primary);
+  background: color-mix(in srgb, var(--bg-primary) 95%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--space-3) 0 var(--space-4);
+  margin: calc(-1 * var(--space-6)) 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.headerText {
+  flex: 1;
+  min-width: 280px;
+}
+
+.title {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.subtitle {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: var(--leading-relaxed);
+  max-width: 680px;
+}
+
+.progressSummary {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-sm);
+}
+
+.progressTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+}
+
+.progressValue {
+  color: var(--color-primary);
+  font-weight: var(--font-bold);
+}
+
+.progressMeta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.scrollableContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding-top: var(--space-4);
+}
+
+.phasesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.phaseCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.phaseCard:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.phaseHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.phaseIconBadge {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.phaseIcon {
+  font-size: 1.6rem;
+}
+
+.phaseInfo {
+  flex: 1;
+  min-width: 260px;
+}
+
+.phaseTopRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.phaseTag {
+  font-size: 0.65rem;
+  font-weight: var(--font-bold);
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.durationBadge {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-weight: var(--font-medium);
+}
+
+.phaseTitle {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-1);
+}
+
+.phaseDesc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: var(--leading-relaxed);
+}
+
+.phaseProgress {
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.phaseProgStats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.milestonesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-3);
+}
+
+.milestoneItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-fast);
+}
+
+.milestoneItem:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-color-hover);
+}
+
+.milestoneDone {
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.checkbox:hover {
+  border-color: var(--color-primary);
+}
+
+.checkboxChecked {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+.milestoneContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.milestoneLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.milestoneLink:hover .milestoneTitle {
+  color: var(--color-primary);
+}
+
+.milestoneTitle {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  line-height: var(--leading-snug);
+  display: block;
+  transition: color var(--transition-fast);
+}
+
+.milestoneDone .milestoneTitle {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.milestoneMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.milestoneCat {
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+}
+
+.milestoneHours {
+  color: var(--text-muted);
+}
+
+.startBtn {
+  font-size: 0.7rem;
+  font-weight: var(--font-bold);
+  padding: 3px 8px;
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.startBtn:hover {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: var(--space-4);
+  }
+
+  .phaseHeader {
+    flex-direction: column;
+  }
+
+  .phaseProgress {
+    width: 100%;
+  }
+
+  .milestonesGrid {
+    grid-template-columns: 1fr;
+  }
+}

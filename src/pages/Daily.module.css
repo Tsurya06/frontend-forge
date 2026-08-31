@@ -1,0 +1,130 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+.header { margin-bottom: var(--space-2); }
+
+.title {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  margin: var(--space-1) 0 0;
+}
+
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.progressText {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-medium);
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dailyItem {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.itemNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  flex-shrink: 0;
+  margin-top: var(--space-3);
+}
+
+.dailyItem > :not(.itemNumber) {
+  flex: 1;
+  min-width: 0;
+}
+
+.codingCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.codingHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.codingTitle {
+  font-size: var(--text-md);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.doneCheck {
+  color: var(--color-success);
+}
+
+.codingDesc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: var(--leading-relaxed);
+}
+
+.codingActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.toggleBtn {
+  background: none;
+  border: none;
+  color: var(--text-link);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggleBtn:hover { text-decoration: underline; }
+
+.viewLink {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: var(--font-medium);
+}
+
+.viewLink:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+  .page { padding: var(--space-4); }
+  .dailyItem { flex-direction: column; }
+  .itemNumber { margin-top: 0; }
+}
