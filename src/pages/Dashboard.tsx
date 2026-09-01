@@ -59,16 +59,20 @@ export default function Dashboard() {
 
           <div className={styles.quickActions}>
             <Link to="/roadmap" className={styles.quickActionPrimary}>
-              <span>🗺️</span> 8-Week Structured Roadmap
+              <span>🗺️</span>
+              <span className={styles.quickActionText}>8-Week Structured Roadmap</span>
             </Link>
             <Link to="/playground" className={styles.quickActionSecondary}>
-              <span>🛠️</span> Code & Live Component Sandbox
+              <span>🛠️</span>
+              <span>Code & Live Component Sandbox</span>
             </Link>
             <Link to="/machine-coding" className={styles.quickActionSecondary}>
-              <span>🏗️</span> Machine Coding (35)
+              <span>🏗️</span>
+              <span>Machine Coding (35)</span>
             </Link>
             <Link to="/system-design" className={styles.quickActionSecondary}>
-              <span>📐</span> System Design (9)
+              <span>📐</span>
+              <span>System Design (9)</span>
             </Link>
           </div>
         </div>

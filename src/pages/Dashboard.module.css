@@ -80,13 +80,15 @@
   margin-top: var(--space-2);
 }
 
-.quickActionPrimary {
+.quickActionPrimary,
+.quickActionPrimary:link,
+.quickActionPrimary:visited {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   padding: 8px 18px;
   background-color: var(--accent);
-  color: #ffffff;
+  color: #ffffff !important;
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
   border-radius: var(--radius-md);
@@ -94,10 +96,16 @@
   transition: all var(--transition-fast);
 }
 
-.quickActionPrimary:hover {
+.quickActionPrimary:hover,
+.quickActionPrimary:focus,
+.quickActionPrimary:active {
   background-color: var(--accent-hover);
   color: #ffffff !important;
   text-decoration: none;
+}
+
+.quickActionText {
+  color: #ffffff !important;
 }
 
 .quickActionSecondary {
@@ -602,13 +610,15 @@
   flex-shrink: 0;
 }
 
-.essentialBtn {
+.essentialBtn,
+.essentialBtn:link,
+.essentialBtn:visited {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
   background: var(--accent);
-  color: #ffffff;
+  color: #ffffff !important;
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
   border-radius: var(--radius-md);
@@ -617,7 +627,9 @@
   white-space: nowrap;
 }
 
-.essentialBtn:hover {
+.essentialBtn:hover,
+.essentialBtn:focus,
+.essentialBtn:active {
   background: var(--accent-hover);
   color: #ffffff !important;
   text-decoration: none;
