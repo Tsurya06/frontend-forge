@@ -87,6 +87,51 @@ export function formatValue(value: unknown): string {
 }
 
 /**
+ * Deep structural equality check that is key-order independent.
+ */
+function deepStructuralEqual(a: unknown, b: unknown): boolean {
+  if (a === b) return true;
+
+  if (typeof a === "number" && typeof b === "number") {
+    if (isNaN(a) && isNaN(b)) return true;
+    return Math.abs(a - b) < 1e-9;
+  }
+
+  if (
+    a === null ||
+    b === null ||
+    typeof a !== "object" ||
+    typeof b !== "object"
+  ) {
+    return false;
+  }
+
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepStructuralEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+
+  const aObj = a as Record<string, unknown>;
+  const bObj = b as Record<string, unknown>;
+  const aKeys = Object.keys(aObj);
+  const bKeys = Object.keys(bObj);
+
+  if (aKeys.length !== bKeys.length) return false;
+
+  for (const k of aKeys) {
+    if (!Object.prototype.hasOwnProperty.call(bObj, k)) return false;
+    if (!deepStructuralEqual(aObj[k], bObj[k])) return false;
+  }
+
+  return true;
+}
+
+/**
  * Deep equality check for comparing test outputs
  */
 function isValueMatch(
@@ -108,7 +153,7 @@ function isValueMatch(
   if (
     !isNaN(Number(normExpected)) &&
     typeof actual === "number" &&
-    Number(normExpected) === actual
+    (Number(normExpected) === actual || Math.abs(Number(normExpected) - actual) < 1e-9)
   ) {
     return true;
   }
@@ -118,13 +163,24 @@ function isValueMatch(
     if (
       actual === normExpected ||
       `"${actual}"` === normExpected ||
+      `'${actual}'` === normExpected ||
       normExpected.includes(actual)
     ) {
       return true;
     }
   }
 
-  // JSON match
+  // Deep Structural JSON & Object match (key-order independent)
+  try {
+    const parsedExpected = JSON.parse(normExpected);
+    if (deepStructuralEqual(actual, parsedExpected)) {
+      return true;
+    }
+  } catch {
+    // If not JSON, continue with other checks
+  }
+
+  // Raw JSON String match
   try {
     const actualJSON = JSON.stringify(actual);
     if (
@@ -144,7 +200,10 @@ function isValueMatch(
 
   // Check logs for side-effect / console output match (e.g. Logs "c" after 300ms)
   for (const log of logs) {
-    if (normExpected.toLowerCase().includes(log.toLowerCase())) {
+    if (
+      normExpected.toLowerCase().includes(log.toLowerCase()) ||
+      log.toLowerCase().includes(normExpected.toLowerCase())
+    ) {
       return true;
     }
   }
