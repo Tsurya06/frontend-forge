@@ -262,9 +262,10 @@
 }
 
 @media (max-width: 768px) {
-  .page { padding: var(--space-4); }
+  .page { padding: var(--space-3); }
   .resultsStats { grid-template-columns: repeat(2, 1fr); }
   .answerActions { flex-direction: column; }
   .resultsActions { flex-direction: column; width: 100%; }
-  .startBtn, .secondaryBtn { width: 100%; text-align: center; }
+  .startBtn, .secondaryBtn { width: 100%; text-align: center; padding: var(--space-3) var(--space-4); }
+  .optionBtn { padding: var(--space-3) var(--space-4); font-size: var(--text-sm); }
 }

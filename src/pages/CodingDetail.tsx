@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProgressContext } from '@/context/ProgressContext';
 import { useBookmarkContext } from '@/context/BookmarkContext';
@@ -21,6 +21,7 @@ export default function CodingDetail() {
   const { problemId } = useParams<{ problemId: string }>();
   const { isComplete, markComplete } = useProgressContext();
   const { isBookmarked, toggleBookmark } = useBookmarkContext();
+  const [selectedTier, setSelectedTier] = useState<'beginner' | 'intermediate' | 'expert'>('expert');
 
   const problem = useMemo(() => {
     if (!problemId) return undefined;
@@ -52,37 +53,84 @@ export default function CodingDetail() {
     problem.implementation.includes('<style');
   const implLanguage = isHtmlProblem ? 'html' : 'javascript';
 
+  // Determine current active code for selected tier
+  let activeCode = problem.implementation;
+  let activeApproach = problem.optimalApproach;
+
+  if (selectedTier === 'beginner' && problem.beginnerImplementation) {
+    activeCode = problem.beginnerImplementation;
+    activeApproach = problem.beginnerApproach || problem.naiveApproach || 'Baseline implementation for core requirements.';
+  } else if (selectedTier === 'intermediate' && problem.intermediateImplementation) {
+    activeCode = problem.intermediateImplementation;
+    activeApproach = problem.intermediateApproach || 'Enhanced implementation with additional argument and edge case handling.';
+  } else if (selectedTier === 'expert' && problem.expertImplementation) {
+    activeCode = problem.expertImplementation;
+    activeApproach = problem.expertApproach || problem.optimalApproach;
+  }
+
+  const hasTiers = Boolean(problem.beginnerImplementation || problem.intermediateImplementation || problem.expertImplementation);
+
   const tabs = [
     {
       id: 'solution',
-      label: 'Solution',
+      label: 'Interactive Solutions',
       content: (
         <div className={styles.tabContent}>
-          {problem.naiveApproach && (
-            <div className={styles.section}>
-              <h3 className={styles.subheading}>Naive Approach</h3>
-              <p className={styles.sectionText}>{problem.naiveApproach}</p>
+          {hasTiers && (
+            <div className={styles.tierSelector}>
+              <span className={styles.tierLabel}>Solution Level:</span>
+              <div className={styles.tierButtons}>
+                {problem.beginnerImplementation && (
+                  <button
+                    type="button"
+                    className={`${styles.tierBtn} ${selectedTier === 'beginner' ? styles.tierBtnActive : ''} ${styles.tierBeginner}`}
+                    onClick={() => setSelectedTier('beginner')}
+                  >
+                    🟢 Beginner
+                  </button>
+                )}
+                {problem.intermediateImplementation && (
+                  <button
+                    type="button"
+                    className={`${styles.tierBtn} ${selectedTier === 'intermediate' ? styles.tierBtnActive : ''} ${styles.tierIntermediate}`}
+                    onClick={() => setSelectedTier('intermediate')}
+                  >
+                    🟡 Intermediate
+                  </button>
+                )}
+                {problem.expertImplementation && (
+                  <button
+                    type="button"
+                    className={`${styles.tierBtn} ${selectedTier === 'expert' ? styles.tierBtnActive : ''} ${styles.tierExpert}`}
+                    onClick={() => setSelectedTier('expert')}
+                  >
+                    🟣 Expert (Production)
+                  </button>
+                )}
+              </div>
             </div>
           )}
+
           <div className={styles.section}>
-            <h3 className={styles.subheading}>Optimal Approach</h3>
-            <p className={styles.sectionText}>{problem.optimalApproach}</p>
+            <h3 className={styles.subheading}>Approach & Strategy</h3>
+            <p className={styles.sectionText}>{activeApproach}</p>
           </div>
+
           <div className={styles.section}>
-            <h3 className={styles.subheading}>Implementation</h3>
+            <h3 className={styles.subheading}>Code Implementation</h3>
             <CodeBlock
-              code={problem.implementation}
+              code={activeCode}
               language={implLanguage}
               showLineNumbers
             />
           </div>
+
           {problem.implementationTS && (
             <div className={styles.section}>
               <h3 className={styles.subheading}>TypeScript Implementation</h3>
               <CodeBlock
                 code={problem.implementationTS}
                 language="typescript"
-                title="TypeScript Solution"
                 showLineNumbers
               />
             </div>
@@ -90,6 +138,59 @@ export default function CodingDetail() {
         </div>
       ),
     },
+    ...(problem.theoryAndConcepts
+      ? [
+          {
+            id: 'theory',
+            label: 'Theory & Core Concepts',
+            content: (
+              <div className={styles.tabContent}>
+                <div className={styles.theoryBox}>
+                  <h3 className={styles.subheading}>Engineering Concepts & Architecture</h3>
+                  <div className={styles.theoryText}>
+                    {problem.theoryAndConcepts.split('\n\n').map((paragraph, i) => (
+                      <p key={i}>{paragraph}</p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+        ]
+      : []),
+    ...(problem.interviewTraps && problem.interviewTraps.length > 0
+      ? [
+          {
+            id: 'traps',
+            label: `Interview Traps (${problem.interviewTraps.length})`,
+            content: (
+              <div className={styles.tabContent}>
+                <div className={styles.trapsBox}>
+                  <h3 className={styles.trapsTitle}>⚠️ Critical Gotchas & Common Pitfalls</h3>
+                  <ul className={styles.trapsList}>
+                    {problem.interviewTraps.map((trap, i) => (
+                      <li key={i} className={styles.trapItem}>
+                        <span className={styles.trapIcon}>⚡</span>
+                        <span>{trap}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {problem.commonMistakes && problem.commonMistakes.length > 0 && (
+                  <div className={styles.section}>
+                    <h3 className={styles.subheading}>Common Candidate Mistakes</h3>
+                    <ul className={styles.infoList}>
+                      {problem.commonMistakes.map((mistake, i) => (
+                        <li key={i}>{mistake}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ),
+          },
+        ]
+      : []),
     {
       id: 'steps',
       label: 'Step-by-Step',
@@ -105,7 +206,7 @@ export default function CodingDetail() {
     },
     {
       id: 'complexity',
-      label: 'Complexity',
+      label: 'Complexity & Exercises',
       content: (
         <div className={styles.tabContent}>
           <div className={styles.complexityGrid}>
@@ -118,30 +219,25 @@ export default function CodingDetail() {
               <code className={styles.complexityValue}>{problem.spaceComplexity}</code>
             </div>
           </div>
+          {problem.practiceExercises && problem.practiceExercises.length > 0 && (
+            <div className={styles.section}>
+              <h3 className={styles.subheading}>🎯 Practice Exercises & Variations</h3>
+              <ul className={styles.practiceList}>
+                {problem.practiceExercises.map((exercise, i) => (
+                  <li key={i} className={styles.practiceItem}>
+                    <input type="checkbox" id={`ex-${i}`} className={styles.practiceCheckbox} />
+                    <label htmlFor={`ex-${i}`}>{exercise}</label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {problem.alternativeSolutions && problem.alternativeSolutions.length > 0 && (
             <div className={styles.section}>
               <h3 className={styles.subheading}>Alternative Solutions</h3>
               <ul className={styles.altList}>
                 {problem.alternativeSolutions.map((alt, i) => (
                   <li key={i}>{alt}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      ),
-    },
-    {
-      id: 'followups',
-      label: 'Follow-ups',
-      content: (
-        <div className={styles.tabContent}>
-          {problem.commonMistakes && problem.commonMistakes.length > 0 && (
-            <div className={styles.section}>
-              <h3 className={styles.subheading}>Common Mistakes</h3>
-              <ul className={styles.infoList}>
-                {problem.commonMistakes.map((m, i) => (
-                  <li key={i}>{m}</li>
                 ))}
               </ul>
             </div>
@@ -155,10 +251,6 @@ export default function CodingDetail() {
                 ))}
               </ul>
             </div>
-          )}
-          {(!problem.commonMistakes || problem.commonMistakes.length === 0) &&
-           (!problem.followUps || problem.followUps.length === 0) && (
-            <EmptyState icon="📝" title="No follow-ups" description="No follow-up content available." />
           )}
         </div>
       ),

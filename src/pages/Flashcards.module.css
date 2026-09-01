@@ -279,8 +279,9 @@
 }
 
 @media (max-width: 768px) {
-  .page { padding: var(--space-4); }
-  .ratingControls { flex-direction: column; }
+  .page { padding: var(--space-3); }
+  .ratingControls { flex-direction: column; width: 100%; }
+  .ratingBtn { padding: var(--space-3) var(--space-4); width: 100%; font-size: var(--text-base); }
   .resultsActions { flex-direction: column; width: 100%; }
-  .startBtn, .secondaryBtn { width: 100%; text-align: center; }
+  .startBtn, .secondaryBtn { width: 100%; text-align: center; padding: var(--space-3) var(--space-4); }
 }

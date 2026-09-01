@@ -63,7 +63,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
       >
         {"\u2630"}
       </button>
-      <span className={styles.title}>{"\u26A1"} FIQ Mastery</span>
+      <span className={styles.title}>{"\u26A1"} FrontendForge</span>
       <form className={styles.search} onSubmit={handleSubmit} role="search">
         <span className={styles.searchIcon} aria-hidden="true">
           {"\u{1F50D}"}

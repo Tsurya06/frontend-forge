@@ -52,6 +52,14 @@ export interface CodingProblem {
   requirements: string[];
   examples: ProblemExample[];
   edgeCases: string[];
+  theoryAndConcepts?: string;
+  keyConcepts?: string[];
+  beginnerApproach?: string;
+  beginnerImplementation?: string;
+  intermediateApproach?: string;
+  intermediateImplementation?: string;
+  expertApproach?: string;
+  expertImplementation?: string;
   naiveApproach?: string;
   optimalApproach: string;
   implementation: string;
@@ -59,6 +67,8 @@ export interface CodingProblem {
   stepByStep: string[];
   timeComplexity: string;
   spaceComplexity: string;
+  interviewTraps?: string[];
+  practiceExercises?: string[];
   alternativeSolutions?: string[];
   commonMistakes?: string[];
   followUps?: string[];

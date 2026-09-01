@@ -58,7 +58,7 @@ const sections: NavSection[] = [
     title: "Practice & Sandbox",
     items: [
       { label: "Code Playground", path: "/playground", icon: "🛠️", badge: "IDE" },
-      { label: "Coding Problems", path: "/coding", icon: "💻", badge: "33" },
+      { label: "Essential 28 JS & Polyfills", path: "/coding", icon: "⚡", badge: "37" },
       { label: "Machine Coding", path: "/machine-coding", icon: "🏗️", badge: "35" },
       { label: "System Design", path: "/system-design", icon: "📐", badge: "9" },
       { label: "Staff Architecture", path: "/senior", icon: "👔" },

@@ -81,6 +81,33 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Featured: The Essential 28 JavaScript Playbook */}
+      <section className={styles.essentialBanner}>
+        <div className={styles.essentialContent}>
+          <div className={styles.essentialBadge}>
+            <span>⚡ FEATURED PLAYBOOK</span>
+          </div>
+          <h2 className={styles.essentialTitle}>The Essential 28 JavaScript Challenges & Polyfills</h2>
+          <p className={styles.essentialDesc}>
+            Master the canonical 28 production JavaScript problems with progressive 3-tier solutions (Beginner ➔ Intermediate ➔ Expert), interview trap warnings, WeakMap circular defenses, and interactive live executions.
+          </p>
+          <div className={styles.essentialTags}>
+            <span>Currying & Arity</span>
+            <span>Safe JSON Serialization</span>
+            <span>WeakMap Deep Clone</span>
+            <span>Event Emitter</span>
+            <span>Debounce & Throttle</span>
+            <span>Promise Concurrency</span>
+            <span>DOM Template TreeWalker</span>
+          </div>
+        </div>
+        <div className={styles.essentialAction}>
+          <Link to="/coding" className={styles.essentialBtn}>
+            Explore Essential 28 (3-Tier Solutions) →
+          </Link>
+        </div>
+      </section>
+
       {/* Guided Career Pathways Section */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>

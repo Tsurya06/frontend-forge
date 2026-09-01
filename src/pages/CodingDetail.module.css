@@ -298,9 +298,180 @@
   line-height: var(--leading-relaxed);
 }
 
+/* ── 3-Tier Solution Selector ── */
+.tierSelector {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  flex-wrap: wrap;
+}
+
+.tierLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+}
+
+.tierButtons {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tierBtn {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tierBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.tierBtnActive {
+  background: var(--bg-active);
+  color: var(--text-primary);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.tierBeginner.tierBtnActive {
+  border-color: #10a37f;
+  background: rgba(16, 163, 127, 0.12);
+  color: #10a37f;
+}
+
+.tierIntermediate.tierBtnActive {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+
+.tierExpert.tierBtnActive {
+  border-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.12);
+  color: #7c3aed;
+}
+
+/* ── Theory Box ── */
+.theoryBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+}
+
+.theoryText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+}
+
+.theoryText p {
+  margin: 0;
+}
+
+/* ── Traps Box ── */
+.trapsBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+}
+
+.trapsTitle {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: #dc2626;
+  margin: 0;
+}
+
+.trapsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.trapItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  line-height: var(--leading-relaxed);
+}
+
+.trapIcon {
+  flex-shrink: 0;
+}
+
+/* ── Practice Exercises ── */
+.practiceList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.practiceItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.practiceCheckbox {
+  accent-color: var(--color-primary);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.practiceItem label {
+  cursor: pointer;
+  flex: 1;
+}
+
 @media (max-width: 768px) {
   .page {
-    padding: var(--space-4);
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .title {
+    font-size: var(--text-xl);
   }
 
   .complexityGrid {
@@ -309,5 +480,26 @@
 
   .actions {
     flex-direction: column;
+    width: 100%;
+  }
+
+  .actionBtn,
+  .playgroundBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tierSelector {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tierButtons {
+    width: 100%;
+  }
+
+  .tierBtn {
+    flex: 1;
+    justify-content: center;
   }
 }
