@@ -1,31 +1,38 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const navbarProblem: MachineCodingProblem = {
-  id: 'mc-navbar',
-  title: 'Responsive Navbar with Mobile Menu',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'responsive', 'navigation', 'hamburger-menu', 'css', 'mobile-first'],
+  id: "mc-navbar",
+  title: "Responsive Navbar with Mobile Menu",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "responsive",
+    "navigation",
+    "hamburger-menu",
+    "css",
+    "mobile-first",
+  ],
 
   problemStatement: `Build a responsive navigation bar component in React that displays a horizontal menu on desktop and collapses into a hamburger menu on mobile. The navbar should include a logo/brand section, navigation links, and optional action buttons (e.g., login/signup). This is a practical component that tests your understanding of responsive design, CSS media queries (or container queries), and mobile interaction patterns.
 
 The mobile menu should slide in from the side or drop down with smooth animation. It must handle outside clicks to close, support keyboard navigation, and properly manage focus when opened. The navbar should support active link highlighting based on the current route and dropdown submenus for nested navigation. The component should be built without CSS frameworks, using plain CSS or CSS-in-JS.`,
 
   functionalRequirements: [
-    'Horizontal nav links on desktop, hamburger menu on mobile',
-    'Hamburger button toggles mobile menu open/close',
-    'Close mobile menu on link click, outside click, or Escape key',
-    'Active link highlighting based on current path',
-    'Support dropdown submenus for nested navigation',
-    'Sticky/fixed positioning at the top of the viewport',
-    'Smooth open/close animation for mobile menu',
+    "Horizontal nav links on desktop, hamburger menu on mobile",
+    "Hamburger button toggles mobile menu open/close",
+    "Close mobile menu on link click, outside click, or Escape key",
+    "Active link highlighting based on current path",
+    "Support dropdown submenus for nested navigation",
+    "Sticky/fixed positioning at the top of the viewport",
+    "Smooth open/close animation for mobile menu",
   ],
 
   nonFunctionalRequirements: [
-    'Pure CSS responsive breakpoints (no resize event listeners)',
-    'Accessible: proper ARIA attributes for navigation landmarks',
-    'Focus trap within mobile menu when open',
-    'Support for both client-side routing and anchor links',
+    "Pure CSS responsive breakpoints (no resize event listeners)",
+    "Accessible: proper ARIA attributes for navigation landmarks",
+    "Focus trap within mobile menu when open",
+    "Support for both client-side routing and anchor links",
   ],
 
   componentHierarchy: `Navbar
@@ -265,34 +272,34 @@ export default function Navbar({ brand, items, currentPath = '/' }: NavbarProps)
   performance: `Responsive breakpoint detection uses \`matchMedia\` API instead of resize event listeners, which is more efficient as it only fires at the breakpoint boundary. CSS transitions handle animations without JavaScript, leveraging GPU-accelerated transforms. The mobile menu remains in the DOM but is translated off-screen when closed, avoiding mount/unmount costs. Body scroll locking is handled via direct DOM manipulation in useEffect with cleanup. The nav items configuration array is typically static and doesn't require memoization.`,
 
   edgeCases: [
-    'Window resize from mobile to desktop should close the mobile menu',
-    'Clicking a link in the mobile menu should close the menu',
-    'Very long nav item labels should truncate or wrap gracefully',
-    'Deeply nested dropdown menus need careful positioning',
-    'Touch devices need tap handling instead of hover for dropdowns',
+    "Window resize from mobile to desktop should close the mobile menu",
+    "Clicking a link in the mobile menu should close the menu",
+    "Very long nav item labels should truncate or wrap gracefully",
+    "Deeply nested dropdown menus need careful positioning",
+    "Touch devices need tap handling instead of hover for dropdowns",
   ],
 
   testingStrategy: [
-    'Unit test: hamburger button toggles mobile menu visibility',
-    'Unit test: clicking a link closes the mobile menu',
-    'Unit test: Escape key closes the mobile menu',
-    'Integration test: active link styling matches current path',
-    'Integration test: dropdown submenu opens on hover (desktop) and click (mobile)',
-    'Responsive test: layout switches at the breakpoint',
+    "Unit test: hamburger button toggles mobile menu visibility",
+    "Unit test: clicking a link closes the mobile menu",
+    "Unit test: Escape key closes the mobile menu",
+    "Integration test: active link styling matches current path",
+    "Integration test: dropdown submenu opens on hover (desktop) and click (mobile)",
+    "Responsive test: layout switches at the breakpoint",
   ],
 
   improvements: [
-    'Add search bar integration that expands on click',
-    'Support mega menus for complex navigation structures',
-    'Add notification badges on nav items',
-    'Implement breadcrumb integration for nested pages',
-    'Add theme toggle (light/dark) in the navbar',
+    "Add search bar integration that expands on click",
+    "Support mega menus for complex navigation structures",
+    "Add notification badges on nav items",
+    "Implement breadcrumb integration for nested pages",
+    "Add theme toggle (light/dark) in the navbar",
   ],
 
   followUpQuestions: [
-    'How would you handle accessibility for mega menu dropdowns?',
-    'What are the trade-offs of CSS media queries vs container queries for responsive navbars?',
-    'How would you integrate this navbar with a client-side router like React Router?',
-    'How would you implement a scroll-hide navbar that reappears on scroll up?',
+    "How would you handle accessibility for mega menu dropdowns?",
+    "What are the trade-offs of CSS media queries vs container queries for responsive navbars?",
+    "How would you integrate this navbar with a client-side router like React Router?",
+    "How would you implement a scroll-hide navbar that reappears on scroll up?",
   ],
 };

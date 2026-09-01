@@ -1,31 +1,38 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const customHofProblem: MachineCodingProblem = {
-  id: 'mc-custom-hof',
-  title: 'Custom Map, Filter, Reduce, Sort Playground & Polyfills',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['javascript', 'polyfills', 'hof', 'functional-programming', 'interactive-playground', 'react'],
+  id: "mc-custom-hof",
+  title: "Custom Map, Filter, Reduce, Sort Playground & Polyfills",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "javascript",
+    "polyfills",
+    "hof",
+    "functional-programming",
+    "interactive-playground",
+    "react",
+  ],
 
   problemStatement: `Build an interactive Higher-Order Function (HOF) polyfill suite and visualization playground in React. The component serves as both a production-ready polyfill library implementation for \`Array.prototype.myMap\`, \`Array.prototype.myFilter\`, \`Array.prototype.myReduce\`, \`Array.prototype.myFlatMap\`, and \`Array.prototype.mySort\` (handling sparse arrays, prototype chains, edge cases, \`thisArg\` context binding, and in-place sorting), and an interactive UI playground where candidates can run custom predicates, step through iteration executions, and inspect accumulator/index/array state changes in real time.
 
 This machine coding question is a favorite at top tech companies because it tests deep JavaScript fundamentals, spec compliance (ECMAScript specification semantics), prototype manipulation, handling \`empty\` / sparse slots, and creating an intuitive developer tooling interface.`,
 
   functionalRequirements: [
-    'Implement spec-compliant polyfills for myMap, myFilter, myReduce, myFlatMap, and mySort',
-    'Handle sparse arrays / empty slots (e.g. [1, , 3] should skip unassigned indices in map/filter/reduce)',
-    'Support custom thisArg context binding for map, filter, and flatMap',
-    'Interactive React playground allowing users to input an array, select a method, and write/edit a callback or comparator function',
-    'Visual step-by-step debugger showing current item, index, accumulator, and return value at each step',
-    'Console / output panel showing return value and execution metrics (operations count, time taken)',
-    'Preset examples demonstrating common patterns (flattening, counting frequencies, grouping, custom sort)',
+    "Implement spec-compliant polyfills for myMap, myFilter, myReduce, myFlatMap, and mySort",
+    "Handle sparse arrays / empty slots (e.g. [1, , 3] should skip unassigned indices in map/filter/reduce)",
+    "Support custom thisArg context binding for map, filter, and flatMap",
+    "Interactive React playground allowing users to input an array, select a method, and write/edit a callback or comparator function",
+    "Visual step-by-step debugger showing current item, index, accumulator, and return value at each step",
+    "Console / output panel showing return value and execution metrics (operations count, time taken)",
+    "Preset examples demonstrating common patterns (flattening, counting frequencies, grouping, custom sort)",
   ],
 
   nonFunctionalRequirements: [
-    'Strict specification compliance: throws TypeError when callback is not a function or reduce is called on empty array with no initial value',
-    'Safe execution sandbox for user-provided callbacks with try/catch error boundaries',
-    'Clean responsive UI with syntax-highlighted code editor or formatted inputs',
-    'Clear performance logging and operation tracking',
+    "Strict specification compliance: throws TypeError when callback is not a function or reduce is called on empty array with no initial value",
+    "Safe execution sandbox for user-provided callbacks with try/catch error boundaries",
+    "Clean responsive UI with syntax-highlighted code editor or formatted inputs",
+    "Clear performance logging and operation tracking",
   ],
 
   componentHierarchy: `HofPlayground
@@ -323,30 +330,30 @@ export function CustomHofPlayground() {
   performance: `Polyfills match native JavaScript array iteration performance characteristics with O(N) linear time complexity and minimal memory overhead. The playground throttles step telemetry rendering to preserve 60fps interaction during execution on large datasets.`,
 
   edgeCases: [
-    'Sparse arrays with deleted or unassigned slots (e.g. new Array(5) or [1, , 3])',
-    'Calling reduce on an empty array with no initialValue (must throw TypeError)',
-    'Mutating the original array inside the callback function during iteration',
-    'Non-array objects with a length property (array-like objects like arguments or NodeList)',
-    'Passing custom thisArg in strict vs non-strict mode',
+    "Sparse arrays with deleted or unassigned slots (e.g. new Array(5) or [1, , 3])",
+    "Calling reduce on an empty array with no initialValue (must throw TypeError)",
+    "Mutating the original array inside the callback function during iteration",
+    "Non-array objects with a length property (array-like objects like arguments or NodeList)",
+    "Passing custom thisArg in strict vs non-strict mode",
   ],
 
   testingStrategy: [
-    'Unit test: myMap transforms all elements and skips sparse indices',
-    'Unit test: myFilter excludes falsey returns and preserves sparse integrity',
-    'Unit test: myReduce accumulates properly with and without initialValue and throws on empty array',
-    'Unit test: thisArg context binding correctly resolves inside callbacks',
-    'Integration test: UI playground renders execution steps and correct final output',
+    "Unit test: myMap transforms all elements and skips sparse indices",
+    "Unit test: myFilter excludes falsey returns and preserves sparse integrity",
+    "Unit test: myReduce accumulates properly with and without initialValue and throws on empty array",
+    "Unit test: thisArg context binding correctly resolves inside callbacks",
+    "Integration test: UI playground renders execution steps and correct final output",
   ],
 
   improvements: [
-    'Add polyfills for Array.prototype.myFlat, mySome, myEvery, and myFind',
-    'Add time-travel slider to scrub through iteration states step-by-step',
-    'Add benchmark comparison graph comparing custom polyfill vs native browser implementation',
+    "Add polyfills for Array.prototype.myFlat, mySome, myEvery, and myFind",
+    "Add time-travel slider to scrub through iteration states step-by-step",
+    "Add benchmark comparison graph comparing custom polyfill vs native browser implementation",
   ],
 
   followUpQuestions: [
-    'Why is length >>> 0 (unsigned right shift) used in standard spec polyfills?',
-    'How does V8 optimize Array.prototype.map through inline caching and speculative JIT optimization?',
-    'How would you polyfill Array.prototype.sort to match the ECMAScript requirement of a stable sort?',
+    "Why is length >>> 0 (unsigned right shift) used in standard spec polyfills?",
+    "How does V8 optimize Array.prototype.map through inline caching and speculative JIT optimization?",
+    "How would you polyfill Array.prototype.sort to match the ECMAScript requirement of a stable sort?",
   ],
 };

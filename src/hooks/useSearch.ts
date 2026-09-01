@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 import type {
   Topic,
   Question,
   CodingProblem,
   MachineCodingProblem,
   Difficulty,
-} from '@/types';
+} from "@/types";
 
 interface SearchSource {
   topics?: Topic[];
@@ -15,7 +15,7 @@ interface SearchSource {
 }
 
 export interface SearchResultItem {
-  type: 'topic' | 'question' | 'coding' | 'machineCoding';
+  type: "topic" | "question" | "coding" | "machineCoding";
   id: string;
   title: string;
   description: string;
@@ -57,7 +57,7 @@ export function useSearch(query: string, sources: SearchSource): SearchResults {
         matchesAny([t.title, t.description, t.category, ...t.tags], trimmed),
       )
       .map((t) => ({
-        type: 'topic' as const,
+        type: "topic" as const,
         id: t.id,
         title: t.title,
         description: t.description,
@@ -70,7 +70,7 @@ export function useSearch(query: string, sources: SearchSource): SearchResults {
         matchesAny([q.question, q.shortAnswer, q.category, ...q.tags], trimmed),
       )
       .map((q) => ({
-        type: 'question' as const,
+        type: "question" as const,
         id: q.id,
         title: q.question,
         description: q.shortAnswer,
@@ -83,7 +83,7 @@ export function useSearch(query: string, sources: SearchSource): SearchResults {
         matchesAny([p.title, p.problem, p.category, ...p.tags], trimmed),
       )
       .map((p) => ({
-        type: 'coding' as const,
+        type: "coding" as const,
         id: p.id,
         title: p.title,
         description: p.problem,
@@ -91,22 +91,23 @@ export function useSearch(query: string, sources: SearchSource): SearchResults {
         difficulty: p.difficulty,
       }));
 
-    const machineCodingProblems: SearchResultItem[] =
-      (sources.machineCodingProblems ?? [])
-        .filter((p) =>
-          matchesAny(
-            [p.title, p.problemStatement, p.category, ...p.tags],
-            trimmed,
-          ),
-        )
-        .map((p) => ({
-          type: 'machineCoding' as const,
-          id: p.id,
-          title: p.title,
-          description: p.problemStatement,
-          category: p.category,
-          difficulty: p.difficulty,
-        }));
+    const machineCodingProblems: SearchResultItem[] = (
+      sources.machineCodingProblems ?? []
+    )
+      .filter((p) =>
+        matchesAny(
+          [p.title, p.problemStatement, p.category, ...p.tags],
+          trimmed,
+        ),
+      )
+      .map((p) => ({
+        type: "machineCoding" as const,
+        id: p.id,
+        title: p.title,
+        description: p.problemStatement,
+        category: p.category,
+        difficulty: p.difficulty,
+      }));
 
     return {
       topics,

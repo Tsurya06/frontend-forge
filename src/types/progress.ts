@@ -11,7 +11,7 @@ export interface UserProgress {
   dailyPracticeHistory: DailyPracticeResult[];
   recentlyViewed: string[];
   notes: Record<string, string>;
-  theme: 'light' | 'dark' | 'system';
+  theme: "light" | "dark" | "system";
 }
 
 export interface QuizResult {

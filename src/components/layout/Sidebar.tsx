@@ -1,4 +1,4 @@
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 
 interface SidebarProps {
@@ -10,7 +10,6 @@ interface NavItem {
   path: string;
   icon: string;
   badge?: string;
-  isNew?: boolean;
 }
 
 interface NavSection {
@@ -20,58 +19,60 @@ interface NavSection {
 
 const sections: NavSection[] = [
   {
-    title: "Overview",
+    title: "Core Practice",
     items: [
-      { label: "Dashboard", path: "/", icon: "◈" },
-      { label: "Learning Roadmap", path: "/roadmap", icon: "🗺️", badge: "8 Weeks" },
+      { label: "Problemset", path: "/coding", icon: "💻", badge: "28" },
+      {
+        label: "Machine Coding",
+        path: "/machine-coding",
+        icon: "🏗️",
+        badge: "35",
+      },
+      {
+        label: "System Design",
+        path: "/system-design",
+        icon: "📐",
+        badge: "9",
+      },
+      {
+        label: "Learning Roadmap",
+        path: "/roadmap",
+        icon: "🗺️",
+        badge: "8 Wks",
+      },
       { label: "Daily Challenge", path: "/daily", icon: "⚡" },
+      { label: "Code Sandbox", path: "/playground", icon: "🛠️", badge: "IDE" },
     ],
   },
   {
-    title: "Curriculum",
+    title: "Curriculum Tracks",
     items: [
       { label: "All 85 Topics", path: "/topics", icon: "📚", badge: "85" },
-      { label: "JavaScript", path: "/javascript", icon: "⚡" },
-      { label: "React 19", path: "/react", icon: "⚛️" },
+      { label: "JavaScript Internals", path: "/javascript", icon: "⚡" },
+      { label: "React 19 & Hooks", path: "/react", icon: "⚛️" },
       { label: "TypeScript", path: "/typescript", icon: "📘" },
-      { label: "Browser & Web", path: "/browser", icon: "🌐" },
-      { label: "HTML5", path: "/html", icon: "📄" },
-      { label: "CSS & Layout", path: "/css", icon: "🎨" },
-      { label: "Redux & State", path: "/redux", icon: "🔄" },
-      { label: "Performance", path: "/performance", icon: "🚀" },
-      { label: "Security", path: "/security", icon: "🔒" },
-      { label: "Testing", path: "/testing", icon: "🧪" },
+      { label: "Browser & Web APIs", path: "/browser", icon: "🌐" },
+      { label: "CSS & Layouts", path: "/css", icon: "🎨" },
+      { label: "Performance & Vitals", path: "/performance", icon: "🚀" },
+      { label: "Security & Defenses", path: "/security", icon: "🔒" },
+      { label: "Testing (Vitest/RTL)", path: "/testing", icon: "🧪" },
       { label: "Design Patterns", path: "/design-patterns", icon: "📐" },
+      {
+        label: "Senior & Staff Guide",
+        path: "/senior",
+        icon: "👔",
+        badge: "Senior",
+      },
     ],
   },
   {
-    title: "Engineering & Tools",
+    title: "Study Modes & Analytics",
     items: [
-      { label: "Git & VCS", path: "/git", icon: "📦" },
-      { label: "Build Tools", path: "/build-tools", icon: "🔧" },
-      { label: "Package Management", path: "/package-management", icon: "📦" },
-      { label: "Code Quality", path: "/code-quality", icon: "✨" },
-      { label: "Accessibility (a11y)", path: "/accessibility", icon: "♿" },
-    ],
-  },
-  {
-    title: "Practice & Sandbox",
-    items: [
-      { label: "Code Playground", path: "/playground", icon: "🛠️", badge: "IDE" },
-      { label: "Essential 28 JS & Polyfills", path: "/coding", icon: "⚡", badge: "37" },
-      { label: "Machine Coding", path: "/machine-coding", icon: "🏗️", badge: "35" },
-      { label: "System Design", path: "/system-design", icon: "📐", badge: "9" },
-      { label: "Staff Architecture", path: "/senior", icon: "👔" },
-    ],
-  },
-  {
-    title: "Review & Analytics",
-    items: [
-      { label: "Skill Assessment", path: "/interview", icon: "🎯" },
+      { label: "Mock Interview", path: "/interview", icon: "🎙️" },
+      { label: "Flashcards", path: "/flashcards", icon: "📇" },
       { label: "Quiz Mode", path: "/quiz", icon: "❓" },
-      { label: "Flashcards", path: "/flashcards", icon: "🧠" },
-      { label: "Bookmarks", path: "/bookmarks", icon: "🔖" },
-      { label: "Progress", path: "/progress", icon: "📊" },
+      { label: "My Progress", path: "/progress", icon: "📊" },
+      { label: "Bookmarks", path: "/bookmarks", icon: "⭐" },
       { label: "Settings", path: "/settings", icon: "⚙️" },
     ],
   },
@@ -79,17 +80,7 @@ const sections: NavSection[] = [
 
 export function Sidebar({ onNavigate }: SidebarProps) {
   return (
-    <nav className={styles.sidebar} aria-label="Main navigation">
-      <Link to="/" className={styles.logo}>
-        <div className={styles.logoBadge}>
-          <img src={import.meta.env.BASE_URL + "favicon-192.png"} alt="FrontendForge Logo" className={styles.logoImg} />
-        </div>
-        <div className={styles.logoTextGroup}>
-          <span className={styles.logoTitle}>FrontendForge</span>
-          <span className={styles.logoSubtitle}>Architecture & Engineering Hub</span>
-        </div>
-      </Link>
-
+    <nav className={styles.sidebar} aria-label="Curriculum Navigation">
       <div className={styles.nav}>
         {sections.map((section) => (
           <div key={section.title} className={styles.section}>

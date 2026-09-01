@@ -1,32 +1,39 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const shoppingCartProblem: MachineCodingProblem = {
-  id: 'mc-shopping-cart',
-  title: 'Shopping Cart Component',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'state-management', 'e-commerce', 'context', 'reducer', 'cart'],
+  id: "mc-shopping-cart",
+  title: "Shopping Cart Component",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "state-management",
+    "e-commerce",
+    "context",
+    "reducer",
+    "cart",
+  ],
 
   problemStatement: `Build a Shopping Cart component in React with add, remove, update quantity, and calculate total functionality. The cart should manage a list of items with their quantities and prices, displaying a running subtotal, tax calculation, and grand total. This is a classic machine coding challenge that tests state management, derived state calculations, and component composition.
 
 The cart should support adding items from a product list, adjusting quantities with increment/decrement buttons, removing items entirely, and applying discount codes. It should persist cart data to localStorage so the cart survives page refreshes. The component should use Context API or useReducer for state management to demonstrate scalable patterns beyond simple useState.`,
 
   functionalRequirements: [
-    'Add items to cart from a product listing',
-    'Increment/decrement item quantity in the cart',
-    'Remove individual items from the cart',
-    'Display subtotal, tax, discount, and grand total',
-    'Apply and remove discount/promo codes',
-    'Clear entire cart with confirmation',
-    'Persist cart to localStorage across page refreshes',
-    'Show item count badge on cart icon',
+    "Add items to cart from a product listing",
+    "Increment/decrement item quantity in the cart",
+    "Remove individual items from the cart",
+    "Display subtotal, tax, discount, and grand total",
+    "Apply and remove discount/promo codes",
+    "Clear entire cart with confirmation",
+    "Persist cart to localStorage across page refreshes",
+    "Show item count badge on cart icon",
   ],
 
   nonFunctionalRequirements: [
-    'useReducer + Context for scalable state management',
-    'Derived calculations (totals) via useMemo to avoid redundant computation',
-    'Optimistic UI updates with error rollback',
-    'Accessible quantity controls and cart summary',
+    "useReducer + Context for scalable state management",
+    "Derived calculations (totals) via useMemo to avoid redundant computation",
+    "Optimistic UI updates with error rollback",
+    "Accessible quantity controls and cart summary",
   ],
 
   componentHierarchy: `CartProvider (Context)
@@ -341,34 +348,34 @@ export default Cart;`,
   performance: `Derived values (subtotal, discount, tax, total, item count) are calculated via \`useMemo\` to avoid recalculation on unrelated state changes. The context value is memoized to prevent unnecessary re-renders of consuming components. localStorage serialization happens in a \`useEffect\` after render, not synchronously during state updates. The reducer performs immutable updates using spread operators, which are efficient for small-to-medium cart sizes. For very large carts, normalized state (items as a map by ID) would be more efficient for lookups.`,
 
   edgeCases: [
-    'Adding the same item twice should increment quantity, not duplicate',
-    'Decrementing quantity to 0 should remove the item',
-    'Invalid promo code should show error without affecting cart',
-    'localStorage with corrupted data should fallback gracefully',
-    'Floating point price calculations should round to 2 decimal places',
+    "Adding the same item twice should increment quantity, not duplicate",
+    "Decrementing quantity to 0 should remove the item",
+    "Invalid promo code should show error without affecting cart",
+    "localStorage with corrupted data should fallback gracefully",
+    "Floating point price calculations should round to 2 decimal places",
   ],
 
   testingStrategy: [
-    'Unit test: ADD_ITEM adds new item or increments existing quantity',
-    'Unit test: REMOVE_ITEM removes item by ID',
-    'Unit test: UPDATE_QUANTITY to 0 removes the item',
-    'Unit test: APPLY_PROMO sets discount percentage correctly',
-    'Integration test: total calculation with multiple items, discount, and tax',
-    'Integration test: cart persists and rehydrates from localStorage',
+    "Unit test: ADD_ITEM adds new item or increments existing quantity",
+    "Unit test: REMOVE_ITEM removes item by ID",
+    "Unit test: UPDATE_QUANTITY to 0 removes the item",
+    "Unit test: APPLY_PROMO sets discount percentage correctly",
+    "Integration test: total calculation with multiple items, discount, and tax",
+    "Integration test: cart persists and rehydrates from localStorage",
   ],
 
   improvements: [
-    'Add item stock validation before adding to cart',
-    'Support multiple discount types (percentage, fixed amount, free shipping)',
-    'Add cart item notes or customization options',
-    'Implement saved carts / wishlists',
-    'Add animated item add/remove transitions',
+    "Add item stock validation before adding to cart",
+    "Support multiple discount types (percentage, fixed amount, free shipping)",
+    "Add cart item notes or customization options",
+    "Implement saved carts / wishlists",
+    "Add animated item add/remove transitions",
   ],
 
   followUpQuestions: [
-    'How would you handle concurrent cart modifications from multiple tabs?',
-    'When would you choose Context + useReducer vs Redux for cart state?',
-    'How would you implement server-side cart synchronization?',
-    'What strategy would you use for handling out-of-stock items?',
+    "How would you handle concurrent cart modifications from multiple tabs?",
+    "When would you choose Context + useReducer vs Redux for cart state?",
+    "How would you implement server-side cart synchronization?",
+    "What strategy would you use for handling out-of-stock items?",
   ],
 };

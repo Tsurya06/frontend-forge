@@ -1,11 +1,17 @@
-import type { CodingProblem } from '../../types';
+import type { CodingProblem } from "../../types";
 
 export const memoizeSingleArgProblem: CodingProblem = {
-  id: 'coding-memoize-single',
-  title: 'Memoize with Single Argument',
-  difficulty: 'Beginner',
-  category: 'Coding',
-  tags: ['memoization', 'caching', 'closures', 'performance', 'higher-order-functions'],
+  id: "coding-memoize-single",
+  title: "Memoize with Single Argument",
+  difficulty: "Beginner",
+  category: "Coding",
+  tags: [
+    "memoization",
+    "caching",
+    "closures",
+    "performance",
+    "higher-order-functions",
+  ],
 
   problem: `Implement a memoize function that takes a single-argument function and returns a new function that caches its results. When the memoized function is called with an argument it has seen before, it should return the cached result immediately without re-executing the original function.
 
@@ -14,37 +20,39 @@ This is the simplest form of memoization and is the perfect entry point for unde
 Memoization is a fundamental optimization technique. It's the basis for React.memo, useMemo, and selector libraries like Reselect. This problem tests your understanding of closures (the cache lives in the closure), higher-order functions (accepting and returning functions), and the trade-off between time and space complexity.`,
 
   requirements: [
-    'Accept a single-argument function and return a memoized version',
-    'Cache results using the argument as the cache key',
-    'Return cached results for previously seen arguments',
-    'Only execute the original function once per unique argument',
-    'Handle any argument type (primitives, objects by reference)',
-    'Preserve the original function\'s return value exactly',
+    "Accept a single-argument function and return a memoized version",
+    "Cache results using the argument as the cache key",
+    "Return cached results for previously seen arguments",
+    "Only execute the original function once per unique argument",
+    "Handle any argument type (primitives, objects by reference)",
+    "Preserve the original function's return value exactly",
   ],
 
   examples: [
     {
       input: `const square = memoize(x => { console.log("calc"); return x * x; });\nsquare(4); // logs "calc", returns 16\nsquare(4);`,
       output: '16 (no "calc" logged second time)',
-      explanation: 'First call computes and caches. Second call returns cached result.',
+      explanation:
+        "First call computes and caches. Second call returns cached result.",
     },
     {
       input: `const memoFib = memoize(n => n <= 1 ? n : memoFib(n-1) + memoFib(n-2));\nmemoFib(40);`,
-      output: '102334155 (computed instantly)',
-      explanation: 'Without memoization, fib(40) takes billions of operations. Memoized version computes each value once.',
+      output: "102334155 (computed instantly)",
+      explanation:
+        "Without memoization, fib(40) takes billions of operations. Memoized version computes each value once.",
     },
     {
       input: `const upper = memoize(s => s.toUpperCase());\nupper("hello"); // "HELLO"\nupper("world"); // "WORLD"\nupper("hello");`,
       output: '"HELLO" (from cache)',
-      explanation: 'Different arguments get separate cache entries.',
+      explanation: "Different arguments get separate cache entries.",
     },
   ],
 
   edgeCases: [
-    'Argument is undefined or null (should still be cached)',
-    'Function returns undefined (should cache it, not treat as uncached)',
-    'Function returns falsy values like 0, false, or empty string',
-    'Object arguments — cached by reference, not by value',
+    "Argument is undefined or null (should still be cached)",
+    "Function returns undefined (should cache it, not treat as uncached)",
+    "Function returns falsy values like 0, false, or empty string",
+    "Object arguments — cached by reference, not by value",
   ],
 
   naiveApproach: `The most naive approach doesn't cache at all and just wraps the function. A slightly better naive approach uses a plain object ({}) as the cache with argument.toString() as the key. This fails because different values can have the same toString (e.g., [1,2].toString() === "1,2" === String("1,2")). It also coerces all keys to strings, conflating 1 and "1".`,
@@ -113,28 +121,29 @@ console.log(square(5));  // 25
 console.log(square(5));  // 25 (cached)`,
 
   stepByStep: [
-    'Create a new Map inside the closure to serve as the cache.',
-    'Return a new function that takes a single argument.',
-    'Check if the cache already has an entry for the argument using cache.has().',
-    'If cached, return cache.get(arg) immediately — no function execution.',
-    'If not cached, call the original function fn(arg) and store the result.',
-    'Save the result in the cache with cache.set(arg, result).',
-    'Return the computed result.',
+    "Create a new Map inside the closure to serve as the cache.",
+    "Return a new function that takes a single argument.",
+    "Check if the cache already has an entry for the argument using cache.has().",
+    "If cached, return cache.get(arg) immediately — no function execution.",
+    "If not cached, call the original function fn(arg) and store the result.",
+    "Save the result in the cache with cache.set(arg, result).",
+    "Return the computed result.",
   ],
 
-  timeComplexity: 'O(1) for cache hits. O(T) for cache misses where T is the original function\'s time complexity.',
-  spaceComplexity: 'O(n) where n is the number of unique arguments cached.',
+  timeComplexity:
+    "O(1) for cache hits. O(T) for cache misses where T is the original function's time complexity.",
+  spaceComplexity: "O(n) where n is the number of unique arguments cached.",
 
   commonMistakes: [
     'Using a plain object instead of Map, which coerces keys to strings (1 and "1" collide)',
-    'Checking cache[arg] !== undefined instead of cache.has(arg), which breaks if the function returns undefined',
-    'Not returning the result from the memoized function after computing it',
-    'Confusing memoization (caching returns) with debouncing/throttling (controlling call frequency)',
+    "Checking cache[arg] !== undefined instead of cache.has(arg), which breaks if the function returns undefined",
+    "Not returning the result from the memoized function after computing it",
+    "Confusing memoization (caching returns) with debouncing/throttling (controlling call frequency)",
   ],
 
   followUps: [
-    'How would you extend this to handle multiple arguments?',
-    'How would you add a maximum cache size (LRU eviction)?',
-    'What is the difference between memoize and React.useMemo?',
+    "How would you extend this to handle multiple arguments?",
+    "How would you add a maximum cache size (LRU eviction)?",
+    "What is the difference between memoize and React.useMemo?",
   ],
 };

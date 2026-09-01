@@ -7,7 +7,9 @@
   padding: var(--space-6);
 }
 
-.header { margin-bottom: var(--space-2); }
+.header {
+  margin-bottom: var(--space-2);
+}
 
 .title {
   font-size: var(--text-3xl);
@@ -74,8 +76,14 @@
   align-self: flex-start;
 }
 
-.startBtn:hover { background: var(--color-primary-hover); color: #ffffff !important; }
-.startBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.startBtn:hover {
+  background: var(--color-primary-hover);
+  color: #ffffff !important;
+}
+.startBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .secondaryBtn {
   padding: var(--space-3) var(--space-6);
@@ -87,7 +95,9 @@
   cursor: pointer;
 }
 
-.secondaryBtn:hover { background: var(--bg-hover); }
+.secondaryBtn:hover {
+  background: var(--bg-hover);
+}
 
 .fcHeader {
   display: flex;
@@ -197,8 +207,13 @@
   transition: all var(--transition-fast);
 }
 
-.controlBtn:hover { background: var(--bg-hover); }
-.controlBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.controlBtn:hover {
+  background: var(--bg-hover);
+}
+.controlBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 .ratingControls {
   display: flex;
@@ -223,7 +238,10 @@
   border-color: var(--color-success);
 }
 
-.easyBtn:hover { background: var(--color-success); color: white; }
+.easyBtn:hover {
+  background: var(--color-success);
+  color: white;
+}
 
 .hardBtn {
   background: var(--color-error-light);
@@ -231,14 +249,19 @@
   border-color: var(--color-error);
 }
 
-.hardBtn:hover { background: var(--color-error); color: white; }
+.hardBtn:hover {
+  background: var(--color-error);
+  color: white;
+}
 
 .skipRatingBtn {
   background: var(--bg-secondary);
   color: var(--text-secondary);
 }
 
-.skipRatingBtn:hover { background: var(--bg-hover); }
+.skipRatingBtn:hover {
+  background: var(--bg-hover);
+}
 
 .resultsCard {
   display: flex;
@@ -279,9 +302,26 @@
 }
 
 @media (max-width: 768px) {
-  .page { padding: var(--space-3); }
-  .ratingControls { flex-direction: column; width: 100%; }
-  .ratingBtn { padding: var(--space-3) var(--space-4); width: 100%; font-size: var(--text-base); }
-  .resultsActions { flex-direction: column; width: 100%; }
-  .startBtn, .secondaryBtn { width: 100%; text-align: center; padding: var(--space-3) var(--space-4); }
+  .page {
+    padding: var(--space-3);
+  }
+  .ratingControls {
+    flex-direction: column;
+    width: 100%;
+  }
+  .ratingBtn {
+    padding: var(--space-3) var(--space-4);
+    width: 100%;
+    font-size: var(--text-base);
+  }
+  .resultsActions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .startBtn,
+  .secondaryBtn {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-3) var(--space-4);
+  }
 }

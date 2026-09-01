@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import {
   allTopics,
   allQuestions,
@@ -6,10 +6,10 @@ import {
   allMachineCodingProblems,
   allSystemDesignProblems,
   categories,
-} from '../data';
+} from "../data";
 
-describe('Data Integrity & Coverage Verification', () => {
-  it('should have all 35 machine coding problems populated with required fields', () => {
+describe("Data Integrity & Coverage Verification", () => {
+  it("should have all 35 machine coding problems populated with required fields", () => {
     expect(allMachineCodingProblems.length).toBe(35);
 
     allMachineCodingProblems.forEach((problem) => {
@@ -31,7 +31,7 @@ describe('Data Integrity & Coverage Verification', () => {
     });
   });
 
-  it('should have all coding problems populated with required fields', () => {
+  it("should have all coding problems populated with required fields", () => {
     expect(allCodingProblems.length).toBeGreaterThanOrEqual(33); // 33 core JS algorithm polyfills + HTML/CSS layout challenges
 
     allCodingProblems.forEach((problem) => {
@@ -48,7 +48,7 @@ describe('Data Integrity & Coverage Verification', () => {
     });
   });
 
-  it('should have all 9 system design problems populated with full architecture', () => {
+  it("should have all 9 system design problems populated with full architecture", () => {
     expect(allSystemDesignProblems.length).toBe(9);
 
     allSystemDesignProblems.forEach((problem) => {
@@ -70,7 +70,7 @@ describe('Data Integrity & Coverage Verification', () => {
     });
   });
 
-  it('should have all curriculum categories initialized with valid topics and questions', () => {
+  it("should have all curriculum categories initialized with valid topics and questions", () => {
     expect(categories.length).toBeGreaterThanOrEqual(11);
     expect(allTopics.length).toBeGreaterThan(50);
     expect(allQuestions.length).toBeGreaterThan(400);
@@ -86,7 +86,7 @@ describe('Data Integrity & Coverage Verification', () => {
     });
   });
 
-  it('should have unique IDs across all entities to prevent key collisions', () => {
+  it("should have unique IDs across all entities to prevent key collisions", () => {
     const topicIds = new Set<string>();
     allTopics.forEach((t) => {
       expect(topicIds.has(t.id)).toBe(false);

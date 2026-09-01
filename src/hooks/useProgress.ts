@@ -1,17 +1,18 @@
-import { useCallback, useEffect } from 'react';
-import { useLocalStorage } from './useLocalStorage';
+import { useCallback, useEffect } from "react";
+import { useLocalStorage } from "./useLocalStorage";
 
 const KEYS = {
-  questions: 'feeq-completed-questions',
-  coding: 'feeq-completed-coding',
-  machineCoding: 'feeq-completed-machine-coding',
-  systemDesign: 'feeq-completed-system-design',
-  recentlyViewed: 'feeq-recently-viewed',
-  dailyStreak: 'feeq-daily-streak',
-  lastActiveDate: 'feeq-last-active-date',
+  questions: "feeq-completed-questions",
+  coding: "feeq-completed-coding",
+  machineCoding: "feeq-completed-machine-coding",
+  systemDesign: "feeq-completed-system-design",
+  recentlyViewed: "feeq-recently-viewed",
+  dailyStreak: "feeq-daily-streak",
+  lastActiveDate: "feeq-last-active-date",
 } as const;
 
-export type CompletionType = 'question' | 'coding' | 'machineCoding' | 'systemDesign';
+export type CompletionType =
+  "question" | "coding" | "machineCoding" | "systemDesign";
 
 const MAX_RECENTLY_VIEWED = 20;
 
@@ -24,14 +25,12 @@ export function useProgress() {
     KEYS.coding,
     [],
   );
-  const [completedMachineCoding, setCompletedMachineCoding] = useLocalStorage<string[]>(
-    KEYS.machineCoding,
-    [],
-  );
-  const [completedSystemDesign, setCompletedSystemDesign] = useLocalStorage<string[]>(
-    KEYS.systemDesign,
-    [],
-  );
+  const [completedMachineCoding, setCompletedMachineCoding] = useLocalStorage<
+    string[]
+  >(KEYS.machineCoding, []);
+  const [completedSystemDesign, setCompletedSystemDesign] = useLocalStorage<
+    string[]
+  >(KEYS.systemDesign, []);
   const [recentlyViewed, setRecentlyViewed] = useLocalStorage<string[]>(
     KEYS.recentlyViewed,
     [],
@@ -49,9 +48,11 @@ export function useProgress() {
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
     if (lastActiveDate !== today) {
-      const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+      const yesterday = new Date(Date.now() - 86400000)
+        .toISOString()
+        .slice(0, 10);
       if (lastActiveDate === yesterday) {
-        setDailyStreak(prev => (prev || 0) + 1);
+        setDailyStreak((prev) => (prev || 0) + 1);
       } else {
         setDailyStreak(1);
       }
@@ -62,33 +63,43 @@ export function useProgress() {
   const getSetterForType = useCallback(
     (type: CompletionType) => {
       switch (type) {
-        case 'question':
+        case "question":
           return setCompletedQuestions;
-        case 'coding':
+        case "coding":
           return setCompletedCoding;
-        case 'machineCoding':
+        case "machineCoding":
           return setCompletedMachineCoding;
-        case 'systemDesign':
+        case "systemDesign":
           return setCompletedSystemDesign;
       }
     },
-    [setCompletedQuestions, setCompletedCoding, setCompletedMachineCoding, setCompletedSystemDesign],
+    [
+      setCompletedQuestions,
+      setCompletedCoding,
+      setCompletedMachineCoding,
+      setCompletedSystemDesign,
+    ],
   );
 
   const getListForType = useCallback(
     (type: CompletionType): string[] => {
       switch (type) {
-        case 'question':
+        case "question":
           return completedQuestions;
-        case 'coding':
+        case "coding":
           return completedCoding;
-        case 'machineCoding':
+        case "machineCoding":
           return completedMachineCoding;
-        case 'systemDesign':
+        case "systemDesign":
           return completedSystemDesign;
       }
     },
-    [completedQuestions, completedCoding, completedMachineCoding, completedSystemDesign],
+    [
+      completedQuestions,
+      completedCoding,
+      completedMachineCoding,
+      completedSystemDesign,
+    ],
   );
 
   const markComplete = useCallback(
@@ -124,10 +135,7 @@ export function useProgress() {
     [setRecentlyViewed],
   );
 
-  const getRecentlyViewed = useCallback(
-    () => recentlyViewed,
-    [recentlyViewed],
-  );
+  const getRecentlyViewed = useCallback(() => recentlyViewed, [recentlyViewed]);
 
   return {
     completedQuestions,

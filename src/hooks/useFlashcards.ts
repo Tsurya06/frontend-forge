@@ -1,6 +1,6 @@
-import { useState, useCallback, useMemo } from 'react';
-import { useLocalStorage } from './useLocalStorage';
-import type { Question } from '@/types';
+import { useState, useCallback, useMemo } from "react";
+import { useLocalStorage } from "./useLocalStorage";
+import type { Question } from "@/types";
 
 interface FlashcardProgress {
   easy: string[];
@@ -8,7 +8,7 @@ interface FlashcardProgress {
   skipped: string[];
 }
 
-const FLASHCARD_PROGRESS_KEY = 'feeq-flashcard-progress';
+const FLASHCARD_PROGRESS_KEY = "feeq-flashcard-progress";
 
 export function useFlashcards(cards: Question[]) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,10 +18,7 @@ export function useFlashcards(cards: Question[]) {
     { easy: [], hard: [], skipped: [] },
   );
 
-  const currentCard = useMemo(
-    () => cards[currentIndex],
-    [cards, currentIndex],
-  );
+  const currentCard = useMemo(() => cards[currentIndex], [cards, currentIndex]);
 
   const totalCards = cards.length;
 
@@ -54,17 +51,17 @@ export function useFlashcards(cards: Question[]) {
   );
 
   const markEasy = useCallback(() => {
-    addToCategory('easy');
+    addToCategory("easy");
     next();
   }, [addToCategory, next]);
 
   const markHard = useCallback(() => {
-    addToCategory('hard');
+    addToCategory("hard");
     next();
   }, [addToCategory, next]);
 
   const skip = useCallback(() => {
-    addToCategory('skipped');
+    addToCategory("skipped");
     next();
   }, [addToCategory, next]);
 

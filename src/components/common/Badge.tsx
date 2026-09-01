@@ -1,12 +1,7 @@
 import styles from "./Badge.module.css";
 
 type BadgeVariant =
-  | "beginner"
-  | "intermediate"
-  | "advanced"
-  | "senior"
-  | "category"
-  | "tag";
+  "beginner" | "intermediate" | "advanced" | "senior" | "category" | "tag";
 
 interface BadgeProps {
   children: React.ReactNode;

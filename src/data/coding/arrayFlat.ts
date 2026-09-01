@@ -1,11 +1,11 @@
-import type { CodingProblem } from '../../types';
+import type { CodingProblem } from "../../types";
 
 export const arrayFlatProblem: CodingProblem = {
-  id: 'coding-array-flat',
-  title: 'Array.flat Polyfill with Depth',
-  difficulty: 'Intermediate',
-  category: 'Coding',
-  tags: ['arrays', 'recursion', 'polyfill', 'depth', 'flattening'],
+  id: "coding-array-flat",
+  title: "Array.flat Polyfill with Depth",
+  difficulty: "Intermediate",
+  category: "Coding",
+  tags: ["arrays", "recursion", "polyfill", "depth", "flattening"],
 
   problem: `Implement a polyfill for \`Array.prototype.flat(depth)\` that flattens a nested array up to the specified depth. The default depth is 1, meaning only the first level of nesting is flattened. A depth of Infinity flattens all levels completely.
 
@@ -14,40 +14,43 @@ The native Array.flat was introduced in ES2019 and is not available in older env
 Your implementation should handle arrays of arbitrary nesting depth, sparse arrays (arrays with holes/empty slots), and should not mutate the original array. It should match the behavior of the native Array.prototype.flat as closely as possible.`,
 
   requirements: [
-    'Flatten a nested array up to the specified depth level',
-    'Default depth should be 1 if not provided',
-    'Depth of Infinity should flatten all levels completely',
-    'Depth of 0 should return a shallow copy (no flattening)',
-    'Handle sparse arrays by skipping holes (matching native behavior)',
-    'Do not mutate the original array',
-    'Handle non-array elements by including them as-is in the result',
+    "Flatten a nested array up to the specified depth level",
+    "Default depth should be 1 if not provided",
+    "Depth of Infinity should flatten all levels completely",
+    "Depth of 0 should return a shallow copy (no flattening)",
+    "Handle sparse arrays by skipping holes (matching native behavior)",
+    "Do not mutate the original array",
+    "Handle non-array elements by including them as-is in the result",
   ],
 
   examples: [
     {
       input: `flat([1, [2, [3, [4]]]], 1)`,
       output: `[1, 2, [3, [4]]]`,
-      explanation: 'With depth 1, only the first level of nesting is removed. Inner arrays beyond depth 1 remain as-is.',
+      explanation:
+        "With depth 1, only the first level of nesting is removed. Inner arrays beyond depth 1 remain as-is.",
     },
     {
       input: `flat([1, [2, [3, [4]]]], Infinity)`,
       output: `[1, 2, 3, 4]`,
-      explanation: 'With Infinity depth, all nesting levels are flattened into a single flat array.',
+      explanation:
+        "With Infinity depth, all nesting levels are flattened into a single flat array.",
     },
     {
       input: `flat([1, [2, 3], [4, [5, 6]]], 0)`,
       output: `[1, [2, 3], [4, [5, 6]]]`,
-      explanation: 'Depth 0 returns a shallow copy of the array without any flattening.',
+      explanation:
+        "Depth 0 returns a shallow copy of the array without any flattening.",
     },
   ],
 
   edgeCases: [
-    'Empty array should return an empty array',
-    'Array with no nested arrays returns a shallow copy',
-    'Sparse arrays (holes) — holes should be removed, matching native flat behavior',
-    'Depth is a negative number — should behave like depth 0 (no flattening)',
-    'Very deeply nested arrays with Infinity depth',
-    'Arrays containing mixed types (objects, strings, numbers, null, undefined) alongside nested arrays',
+    "Empty array should return an empty array",
+    "Array with no nested arrays returns a shallow copy",
+    "Sparse arrays (holes) — holes should be removed, matching native flat behavior",
+    "Depth is a negative number — should behave like depth 0 (no flattening)",
+    "Very deeply nested arrays with Infinity depth",
+    "Arrays containing mixed types (objects, strings, numbers, null, undefined) alongside nested arrays",
   ],
 
   naiveApproach: `A naive approach uses toString() or JSON.stringify to flatten and re-parse, but this loses type information and fails on non-primitive values. Another common naive solution recursively flattens without respecting the depth parameter, always flattening completely regardless of the requested depth. This doesn't match the native behavior where depth controls how many levels to unwrap.`,
@@ -127,30 +130,32 @@ console.log(flatReduce([1, [2, [3]]], 1));
 // [1, 2, [3]]`,
 
   stepByStep: [
-    'Create a result array to collect flattened elements.',
-    'Define an inner recursive function that takes items and currentDepth.',
-    'Iterate through each element in items using a for loop (to handle sparse arrays).',
-    'Skip holes by checking if the index exists in the array (i in items).',
-    'If the element is an array AND currentDepth > 0, recurse with currentDepth - 1.',
-    'Otherwise, push the element directly into the result array.',
-    'Call the inner function with the original array and the requested depth.',
-    'Return the result array.',
+    "Create a result array to collect flattened elements.",
+    "Define an inner recursive function that takes items and currentDepth.",
+    "Iterate through each element in items using a for loop (to handle sparse arrays).",
+    "Skip holes by checking if the index exists in the array (i in items).",
+    "If the element is an array AND currentDepth > 0, recurse with currentDepth - 1.",
+    "Otherwise, push the element directly into the result array.",
+    "Call the inner function with the original array and the requested depth.",
+    "Return the result array.",
   ],
 
-  timeComplexity: 'O(n) where n is the total number of elements after flattening to the requested depth.',
-  spaceComplexity: 'O(n) for the result array, plus O(d) recursion stack depth where d is the flattening depth.',
+  timeComplexity:
+    "O(n) where n is the total number of elements after flattening to the requested depth.",
+  spaceComplexity:
+    "O(n) for the result array, plus O(d) recursion stack depth where d is the flattening depth.",
 
   commonMistakes: [
-    'Ignoring the depth parameter and always flattening completely',
-    'Not handling sparse arrays — using forEach or for...of skips holes differently than the native flat',
-    'Mutating the original array instead of creating a new one',
-    'Using concat without recursion, which only flattens one level regardless of depth parameter',
+    "Ignoring the depth parameter and always flattening completely",
+    "Not handling sparse arrays — using forEach or for...of skips holes differently than the native flat",
+    "Mutating the original array instead of creating a new one",
+    "Using concat without recursion, which only flattens one level regardless of depth parameter",
   ],
 
   followUps: [
-    'How would you implement Array.prototype.flatMap as a polyfill?',
-    'What are the performance differences between the recursive and iterative approaches?',
-    'How would you handle flattening iterables (not just arrays) like Sets and generators?',
-    'How does the native Array.flat handle sparse arrays vs. Array.from?',
+    "How would you implement Array.prototype.flatMap as a polyfill?",
+    "What are the performance differences between the recursive and iterative approaches?",
+    "How would you handle flattening iterables (not just arrays) like Sets and generators?",
+    "How does the native Array.flat handle sparse arrays vs. Array.from?",
   ],
 };

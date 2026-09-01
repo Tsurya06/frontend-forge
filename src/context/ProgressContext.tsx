@@ -1,6 +1,6 @@
-import { createContext, useContext } from 'react';
-import type { ReactNode } from 'react';
-import { useProgress } from '@/hooks/useProgress';
+import { createContext, useContext } from "react";
+import type { ReactNode } from "react";
+import { useProgress } from "@/hooks/useProgress";
 
 type ProgressContextValue = ReturnType<typeof useProgress>;
 
@@ -19,7 +19,7 @@ export function useProgressContext(): ProgressContextValue {
   const ctx = useContext(ProgressContext);
   if (!ctx) {
     throw new Error(
-      'useProgressContext must be used within a ProgressProvider',
+      "useProgressContext must be used within a ProgressProvider",
     );
   }
   return ctx;

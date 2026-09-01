@@ -7,7 +7,9 @@
   padding: var(--space-6);
 }
 
-.header { margin-bottom: var(--space-2); }
+.header {
+  margin-bottom: var(--space-2);
+}
 
 .title {
   font-size: var(--text-3xl);
@@ -143,8 +145,17 @@
 }
 
 @media (max-width: 768px) {
-  .page { padding: var(--space-4); }
-  .statRow { grid-template-columns: repeat(2, 1fr); }
-  .categoryRow { flex-direction: column; align-items: stretch; }
-  .categoryInfo { min-width: auto; }
+  .page {
+    padding: var(--space-4);
+  }
+  .statRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .categoryRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .categoryInfo {
+    min-width: auto;
+  }
 }

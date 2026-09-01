@@ -11,6 +11,10 @@ export default defineConfig({
     },
   },
   build: {
+    modulePreload: {
+      polyfill: true,
+    },
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -32,10 +36,13 @@ export default defineConfig({
           if (id.includes('src/data/javascript') || id.includes('src/data/react') || id.includes('src/data/typescript')) {
             return 'data-core-topics';
           }
+          if (id.includes('src/data/')) {
+            return 'data-web-topics';
+          }
         },
       },
     },
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1500,
   },
   test: {
     globals: true,

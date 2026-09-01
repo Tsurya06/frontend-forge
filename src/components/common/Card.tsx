@@ -29,7 +29,11 @@ export function Card({
     .join(" ");
 
   return (
-    <Tag className={cardClass} onClick={onClick} type={onClick ? "button" : undefined}>
+    <Tag
+      className={cardClass}
+      onClick={onClick}
+      type={onClick ? "button" : undefined}
+    >
       {header && <div className={styles.header}>{header}</div>}
       {children}
       {footer && <div className={styles.footer}>{footer}</div>}

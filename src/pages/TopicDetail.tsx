@@ -1,21 +1,24 @@
-import { useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useProgressContext } from '@/context/ProgressContext';
-import { Badge } from '@/components/common/Badge';
-import { Tabs } from '@/components/common/Tabs';
-import { ProgressBar } from '@/components/common/ProgressBar';
-import { EmptyState } from '@/components/common/EmptyState';
-import { CodeBlock } from '@/components/code/CodeBlock';
-import { QuestionCard } from '@/components/questions/QuestionCard';
-import { getTopicById, allTopics, categories } from '@/data';
-import type { Difficulty, Topic } from '@/types';
-import styles from './TopicDetail.module.css';
+import { useMemo } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useProgressContext } from "@/context/ProgressContext";
+import { Badge } from "@/components/common/Badge";
+import { Tabs } from "@/components/common/Tabs";
+import { ProgressBar } from "@/components/common/ProgressBar";
+import { EmptyState } from "@/components/common/EmptyState";
+import { CodeBlock } from "@/components/code/CodeBlock";
+import { QuestionCard } from "@/components/questions/QuestionCard";
+import { getTopicById, allTopics, categories } from "@/data";
+import type { Difficulty, Topic } from "@/types";
+import styles from "./TopicDetail.module.css";
 
-const difficultyVariant: Record<Difficulty, 'beginner' | 'intermediate' | 'advanced' | 'senior'> = {
-  Beginner: 'beginner',
-  Intermediate: 'intermediate',
-  Advanced: 'advanced',
-  Senior: 'senior',
+const difficultyVariant: Record<
+  Difficulty,
+  "beginner" | "intermediate" | "advanced" | "senior"
+> = {
+  Beginner: "beginner",
+  Intermediate: "intermediate",
+  Advanced: "advanced",
+  Senior: "senior",
 };
 
 export default function TopicDetail() {
@@ -31,8 +34,12 @@ export default function TopicDetail() {
 
   const progress = useMemo(() => {
     if (!topic) return 0;
-    const done = topic.questions.filter(q => completedQuestions.includes(q.id)).length;
-    return topic.questions.length > 0 ? Math.round((done / topic.questions.length) * 100) : 0;
+    const done = topic.questions.filter((q) =>
+      completedQuestions.includes(q.id),
+    ).length;
+    return topic.questions.length > 0
+      ? Math.round((done / topic.questions.length) * 100)
+      : 0;
   }, [topic, completedQuestions]);
 
   const relatedTopics = useMemo(() => {
@@ -55,7 +62,7 @@ export default function TopicDetail() {
       if (t.id !== topic.id && !map.has(t.id)) {
         if (
           t.category.toLowerCase() === topic.category.toLowerCase() ||
-          t.tags.some(tag => topic.tags.includes(tag))
+          t.tags.some((tag) => topic.tags.includes(tag))
         ) {
           map.set(t.id, t);
         }
@@ -72,16 +79,16 @@ export default function TopicDetail() {
     }
     // Extract code examples from questions
     return topic.questions
-      .filter(q => Boolean(q.code))
-      .map(q => ({
+      .filter((q) => Boolean(q.code))
+      .map((q) => ({
         title: q.question,
-        language: q.language || 'javascript',
+        language: q.language || "javascript",
         code: q.code!,
         explanation: q.shortAnswer || q.explanation,
       }));
   }, [topic]);
 
-  const cat = categories.find(c => c.id === topic?.category);
+  const cat = categories.find((c) => c.id === topic?.category);
 
   if (!topic) {
     return (
@@ -91,7 +98,7 @@ export default function TopicDetail() {
           title="Topic not found"
           description="The topic you're looking for doesn't exist."
           actionLabel="Browse Topics"
-          onAction={() => window.location.assign('/topics')}
+          onAction={() => window.location.assign("/topics")}
         />
       </div>
     );
@@ -99,8 +106,8 @@ export default function TopicDetail() {
 
   const tabs = [
     {
-      id: 'overview',
-      label: 'Overview',
+      id: "overview",
+      label: "Overview",
       content: (
         <div className={styles.tabContent}>
           {topic.overview && (
@@ -112,8 +119,12 @@ export default function TopicDetail() {
             <div className={styles.conceptsSection}>
               <div className={styles.conceptsHeader}>
                 <span className={styles.conceptsIcon}>💡</span>
-                <h3 className={styles.conceptsTitle}>Key Concepts & Mastery Points</h3>
-                <span className={styles.conceptsCount}>{topic.concepts.length} concepts</span>
+                <h3 className={styles.conceptsTitle}>
+                  Key Concepts & Mastery Points
+                </h3>
+                <span className={styles.conceptsCount}>
+                  {topic.concepts.length} concepts
+                </span>
               </div>
               <div className={styles.conceptsGrid}>
                 {topic.concepts.map((concept, i) => (
@@ -125,24 +136,25 @@ export default function TopicDetail() {
               </div>
             </div>
           )}
-          {!topic.overview && (!topic.concepts || topic.concepts.length === 0) && (
-            <EmptyState
-              icon="📝"
-              title="No overview available"
-              description="This topic doesn't have an overview yet."
-            />
-          )}
+          {!topic.overview &&
+            (!topic.concepts || topic.concepts.length === 0) && (
+              <EmptyState
+                icon="📝"
+                title="No overview available"
+                description="This topic doesn't have an overview yet."
+              />
+            )}
         </div>
       ),
     },
     {
-      id: 'questions',
+      id: "questions",
       label: `Deep-Dive QA (${topic.questions.length})`,
       content: (
         <div className={styles.tabContent}>
           {topic.questions.length > 0 ? (
             <div className={styles.questionsList}>
-              {topic.questions.map(q => (
+              {topic.questions.map((q) => (
                 <QuestionCard
                   key={q.id}
                   id={q.id}
@@ -170,7 +182,7 @@ export default function TopicDetail() {
       ),
     },
     {
-      id: 'code',
+      id: "code",
       label: `Code Examples (${codeExamples.length})`,
       content: (
         <div className={styles.tabContent}>
@@ -179,10 +191,14 @@ export default function TopicDetail() {
               {codeExamples.map((example, i) => (
                 <div key={i} className={styles.codeExampleCard}>
                   {example.title && (
-                    <h4 className={styles.codeExampleHeading}>{example.title}</h4>
+                    <h4 className={styles.codeExampleHeading}>
+                      {example.title}
+                    </h4>
                   )}
                   {example.explanation && (
-                    <p className={styles.codeExplanation}>{example.explanation}</p>
+                    <p className={styles.codeExplanation}>
+                      {example.explanation}
+                    </p>
                   )}
                   <div className={styles.codeBlockWrapper}>
                     <CodeBlock
@@ -205,18 +221,28 @@ export default function TopicDetail() {
       ),
     },
     {
-      id: 'related',
+      id: "related",
       label: `Related Topics (${relatedTopics.length})`,
       content: (
         <div className={styles.tabContent}>
           {relatedTopics.length > 0 ? (
             <div className={styles.relatedGrid}>
-              {relatedTopics.map(rt => (
-                <Link key={rt.id} to={`/topics/${rt.id}`} className={styles.relatedLink}>
+              {relatedTopics.map((rt) => (
+                <Link
+                  key={rt.id}
+                  to={`/topics/${rt.id}`}
+                  className={styles.relatedLink}
+                >
                   <div className={styles.relatedCard}>
                     <div className={styles.relatedTop}>
                       <h4 className={styles.relatedTitle}>{rt.title}</h4>
-                      <Badge variant={difficultyVariant[rt.difficulty as Difficulty] || 'tag'} size="small">
+                      <Badge
+                        variant={
+                          difficultyVariant[rt.difficulty as Difficulty] ||
+                          "tag"
+                        }
+                        size="small"
+                      >
                         {rt.difficulty}
                       </Badge>
                     </div>
@@ -242,13 +268,19 @@ export default function TopicDetail() {
     <div className={styles.page}>
       <div className={styles.stickyTopBar}>
         <nav className={styles.breadcrumbs}>
-          <Link to="/" className={styles.breadcrumbLink}>Home</Link>
+          <Link to="/" className={styles.breadcrumbLink}>
+            Home
+          </Link>
           <span className={styles.breadcrumbSep}>/</span>
-          <Link to="/topics" className={styles.breadcrumbLink}>Topics</Link>
+          <Link to="/topics" className={styles.breadcrumbLink}>
+            Topics
+          </Link>
           {cat && (
             <>
               <span className={styles.breadcrumbSep}>/</span>
-              <Link to={cat.route} className={styles.breadcrumbLink}>{cat.title}</Link>
+              <Link to={cat.route} className={styles.breadcrumbLink}>
+                {cat.title}
+              </Link>
             </>
           )}
           <span className={styles.breadcrumbSep}>/</span>
@@ -258,18 +290,27 @@ export default function TopicDetail() {
         <header className={styles.header}>
           <div className={styles.headerTop}>
             <h1 className={styles.title}>{topic.title}</h1>
-            <Badge variant={difficultyVariant[topic.difficulty]}>{topic.difficulty}</Badge>
+            <Badge variant={difficultyVariant[topic.difficulty]}>
+              {topic.difficulty}
+            </Badge>
           </div>
           <div className={styles.meta}>
             <span className={styles.metaItem}>
               {cat?.icon} {cat?.title ?? topic.category}
             </span>
-            {topic.tags.map(tag => (
-              <Badge key={tag} variant="tag" size="small">{tag}</Badge>
+            {topic.tags.map((tag) => (
+              <Badge key={tag} variant="tag" size="small">
+                {tag}
+              </Badge>
             ))}
           </div>
           <div className={styles.progressRow}>
-            <ProgressBar value={progress} showPercentage size="sm" label="Progress" />
+            <ProgressBar
+              value={progress}
+              showPercentage
+              size="sm"
+              label="Progress"
+            />
           </div>
         </header>
       </div>

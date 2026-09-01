@@ -1,31 +1,31 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const sortableTableProblem: MachineCodingProblem = {
-  id: 'mc-sortable-table',
-  title: 'Sortable & Filterable Table',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'table', 'sorting', 'filtering', 'search', 'data-grid'],
+  id: "mc-sortable-table",
+  title: "Sortable & Filterable Table",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: ["react", "table", "sorting", "filtering", "search", "data-grid"],
 
   problemStatement: `Build a data table component in React that supports column sorting, row filtering, and text search. The table should handle clicking on column headers to sort data in ascending/descending order, with a visual indicator showing the current sort direction. A search input should filter rows across all columns in real time.
 
 This is a practical machine coding question that tests your ability to manage derived state, implement efficient sorting and filtering algorithms, and build a responsive data display component. The table should handle moderate datasets (hundreds of rows) without performance issues and provide a clean, usable interface.`,
 
   functionalRequirements: [
-    'Render tabular data with dynamic columns and rows',
-    'Click column headers to sort ascending/descending/none',
-    'Display sort direction indicator (arrow) on the active column',
-    'Global text search that filters across all columns',
-    'Support per-column filter dropdowns',
-    'Pagination with configurable page size',
-    'Highlight matched search text in cells',
+    "Render tabular data with dynamic columns and rows",
+    "Click column headers to sort ascending/descending/none",
+    "Display sort direction indicator (arrow) on the active column",
+    "Global text search that filters across all columns",
+    "Support per-column filter dropdowns",
+    "Pagination with configurable page size",
+    "Highlight matched search text in cells",
   ],
 
   nonFunctionalRequirements: [
-    'Efficient sorting using Array.sort with locale-aware comparison',
-    'Debounced search input to avoid excessive re-renders',
-    'Accessible table markup with proper <thead>, <tbody>, scope attributes',
-    'Responsive design that handles overflow gracefully',
+    "Efficient sorting using Array.sort with locale-aware comparison",
+    "Debounced search input to avoid excessive re-renders",
+    "Accessible table markup with proper <thead>, <tbody>, scope attributes",
+    "Responsive design that handles overflow gracefully",
   ],
 
   componentHierarchy: `SortableTable
@@ -256,33 +256,33 @@ export default function SortableTable<T extends Record<string, unknown>>({
   performance: `The data transformation pipeline (filter → sort → paginate) uses \`useMemo\` at each stage, so sorting doesn't re-filter and pagination doesn't re-sort. Search input is debounced at 300ms to avoid re-filtering on every keystroke. The sort comparison function handles type coercion once per comparison rather than converting all values upfront. For very large datasets (10,000+ rows), virtualization (e.g., react-window) should be added to render only visible rows. The generic type parameter ensures type safety without runtime overhead.`,
 
   edgeCases: [
-    'Empty data array should show empty state message',
-    'Search that matches zero rows should show empty state and reset pagination',
-    'Sorting columns with mixed types (numbers stored as strings)',
-    'Null or undefined cell values should sort to the end',
-    'Changing page size should reset to page 1',
+    "Empty data array should show empty state message",
+    "Search that matches zero rows should show empty state and reset pagination",
+    "Sorting columns with mixed types (numbers stored as strings)",
+    "Null or undefined cell values should sort to the end",
+    "Changing page size should reset to page 1",
   ],
 
   testingStrategy: [
-    'Unit test: clicking a column header sorts data ascending, then descending, then clears',
-    'Unit test: search input filters rows case-insensitively across all columns',
-    'Unit test: pagination correctly slices data and disables buttons at boundaries',
-    'Integration test: sorting and searching together produce correct results',
-    'Accessibility audit: verify aria-sort, scope, and label attributes',
+    "Unit test: clicking a column header sorts data ascending, then descending, then clears",
+    "Unit test: search input filters rows case-insensitively across all columns",
+    "Unit test: pagination correctly slices data and disables buttons at boundaries",
+    "Integration test: sorting and searching together produce correct results",
+    "Accessibility audit: verify aria-sort, scope, and label attributes",
   ],
 
   improvements: [
-    'Add column resizing via drag handles',
-    'Support multi-column sorting with priority',
-    'Add row selection with checkboxes',
-    'Implement virtual scrolling for large datasets',
-    'Add CSV/JSON export functionality',
+    "Add column resizing via drag handles",
+    "Support multi-column sorting with priority",
+    "Add row selection with checkboxes",
+    "Implement virtual scrolling for large datasets",
+    "Add CSV/JSON export functionality",
   ],
 
   followUpQuestions: [
-    'How would you implement server-side sorting and pagination?',
-    'What is the time complexity of the sort-then-paginate approach?',
-    'How would you add column reordering via drag and drop?',
-    'How does virtual scrolling work and when would you use it here?',
+    "How would you implement server-side sorting and pagination?",
+    "What is the time complexity of the sort-then-paginate approach?",
+    "How would you add column reordering via drag and drop?",
+    "How does virtual scrolling work and when would you use it here?",
   ],
 };

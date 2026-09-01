@@ -8,45 +8,48 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const toggleSidebar = useCallback(() => {
-    if (window.innerWidth <= 768) {
-      setSidebarOpen((prev) => !prev);
-    } else {
-      setCollapsed((prev) => !prev);
-    }
+  const toggleDrawer = useCallback(() => {
+    setDrawerOpen((prev) => !prev);
   }, []);
 
-  const closeSidebar = useCallback(() => {
-    setSidebarOpen(false);
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
   }, []);
-
-  const layoutClass = [
-    styles.layout,
-    sidebarOpen ? styles.open : "",
-    collapsed ? styles.collapsed : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
 
   return (
-    <div className={layoutClass}>
-      <div className={styles.sidebar}>
-        <Sidebar onNavigate={closeSidebar} />
-      </div>
+    <div className={styles.layout}>
+      {/* Top Header */}
+      <Header onMenuToggle={toggleDrawer} />
+
+      {/* Slide-in Navigation Drawer (Mobile & Tablet) */}
       <div
-        className={styles.backdrop}
-        onClick={closeSidebar}
+        className={`${styles.drawerBackdrop} ${drawerOpen ? styles.drawerBackdropOpen : ""}`}
+        onClick={closeDrawer}
         role="presentation"
+        aria-hidden="true"
       />
-      <div className={styles.main}>
-        <div className={styles.header}>
-          <Header onMenuToggle={toggleSidebar} />
+      <aside
+        className={`${styles.drawer} ${drawerOpen ? styles.drawerOpen : ""}`}
+        aria-label="Mobile Navigation"
+      >
+        <div className={styles.drawerHeader}>
+          <span className={styles.drawerTitle}>⚡ Navigation & Curriculum</span>
+          <button
+            type="button"
+            className={styles.closeDrawerBtn}
+            onClick={closeDrawer}
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
         </div>
-        <main className={styles.content}>{children}</main>
-      </div>
+        <Sidebar onNavigate={closeDrawer} />
+      </aside>
+
+      {/* Main Content Area */}
+      <main className={styles.content}>{children}</main>
     </div>
   );
 }

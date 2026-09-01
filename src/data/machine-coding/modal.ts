@@ -1,32 +1,39 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const modalProblem: MachineCodingProblem = {
-  id: 'mc-modal',
-  title: 'Modal / Dialog Component',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'portal', 'accessibility', 'focus-trap', 'overlay', 'keyboard'],
+  id: "mc-modal",
+  title: "Modal / Dialog Component",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "portal",
+    "accessibility",
+    "focus-trap",
+    "overlay",
+    "keyboard",
+  ],
 
   problemStatement: `Build a reusable Modal (dialog) component in React that renders an overlay with centered content. The modal must support closing via the Escape key, clicking the overlay backdrop, or an explicit close button. This is a fundamental UI pattern and a very common frontend interview question that tests your knowledge of portals, focus management, and accessibility.
 
 The modal should trap focus within itself when open, preventing users from tabbing to elements behind the overlay. When the modal closes, focus should return to the element that triggered it. The body scroll should be locked while the modal is open to prevent background scrolling. The component must work correctly with screen readers, using proper ARIA attributes and roles.`,
 
   functionalRequirements: [
-    'Open and close the modal programmatically via props',
-    'Close on Escape key press',
-    'Close on overlay/backdrop click',
-    'Render modal content via children prop',
-    'Trap focus inside the modal when open',
-    'Restore focus to trigger element on close',
-    'Lock body scroll when modal is open',
-    'Support custom header, body, and footer sections',
+    "Open and close the modal programmatically via props",
+    "Close on Escape key press",
+    "Close on overlay/backdrop click",
+    "Render modal content via children prop",
+    "Trap focus inside the modal when open",
+    "Restore focus to trigger element on close",
+    "Lock body scroll when modal is open",
+    "Support custom header, body, and footer sections",
   ],
 
   nonFunctionalRequirements: [
-    'Use React Portal to render outside the component tree',
+    "Use React Portal to render outside the component tree",
     'Accessible: role="dialog", aria-modal, aria-labelledby',
-    'Smooth open/close animations with CSS transitions',
-    'No external dependencies',
+    "Smooth open/close animations with CSS transitions",
+    "No external dependencies",
   ],
 
   componentHierarchy: `Modal (Portal)
@@ -203,33 +210,33 @@ export default function Modal({
   performance: `The modal renders nothing when closed (\`isOpen\` is false), so there is zero overhead when not visible. Portal rendering avoids unnecessary re-renders in the parent component tree. Event listeners for keyboard handling are attached only when the modal is open and cleaned up on unmount. Body scroll locking is handled via direct DOM manipulation in useEffect with proper cleanup. The focus-trapping logic queries focusable elements on each Tab press rather than caching them, which is simpler and handles dynamic content correctly with negligible performance cost.`,
 
   edgeCases: [
-    'Modal with no focusable elements inside should still be keyboard-dismissible',
-    'Nested modals should maintain separate focus traps',
-    'Dynamic content changes inside the modal should not break focus trapping',
-    'Browser back button should close the modal on mobile',
-    'Multiple rapid open/close calls should not cause scroll lock issues',
+    "Modal with no focusable elements inside should still be keyboard-dismissible",
+    "Nested modals should maintain separate focus traps",
+    "Dynamic content changes inside the modal should not break focus trapping",
+    "Browser back button should close the modal on mobile",
+    "Multiple rapid open/close calls should not cause scroll lock issues",
   ],
 
   testingStrategy: [
-    'Unit test: modal renders when isOpen is true and hides when false',
-    'Unit test: Escape key triggers onClose callback',
-    'Unit test: overlay click triggers onClose when closeOnOverlay is true',
-    'Integration test: focus moves into modal on open and returns to trigger on close',
-    'Integration test: Tab key cycles focus within modal boundaries',
-    'Accessibility audit: ARIA roles and attributes are correctly applied',
+    "Unit test: modal renders when isOpen is true and hides when false",
+    "Unit test: Escape key triggers onClose callback",
+    "Unit test: overlay click triggers onClose when closeOnOverlay is true",
+    "Integration test: focus moves into modal on open and returns to trigger on close",
+    "Integration test: Tab key cycles focus within modal boundaries",
+    "Accessibility audit: ARIA roles and attributes are correctly applied",
   ],
 
   improvements: [
-    'Add enter/exit CSS animations with AnimatePresence-like unmount delay',
-    'Support stacking multiple modals with a modal manager context',
-    'Add size variants (sm, md, lg, fullscreen)',
-    'Implement a confirmation dialog variant with built-in confirm/cancel buttons',
+    "Add enter/exit CSS animations with AnimatePresence-like unmount delay",
+    "Support stacking multiple modals with a modal manager context",
+    "Add size variants (sm, md, lg, fullscreen)",
+    "Implement a confirmation dialog variant with built-in confirm/cancel buttons",
   ],
 
   followUpQuestions: [
-    'How would you handle nested modals with independent focus traps?',
-    'What is the difference between a modal dialog and a non-modal dialog?',
-    'How would you implement animation on mount and unmount without a library?',
-    'How do you handle modals in a server-side rendered application?',
+    "How would you handle nested modals with independent focus traps?",
+    "What is the difference between a modal dialog and a non-modal dialog?",
+    "How would you implement animation on mount and unmount without a library?",
+    "How do you handle modals in a server-side rendered application?",
   ],
 };

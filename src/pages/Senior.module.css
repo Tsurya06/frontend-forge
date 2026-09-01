@@ -1,26 +1,23 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  height: calc(100vh - 50px);
+  max-height: calc(100vh - 50px);
   max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  gap: var(--space-3);
+  overflow: hidden;
+  width: 100%;
 }
 
 .stickyTopBar {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  background: var(--bg-primary);
-  background: color-mix(in srgb, var(--bg-primary) 95%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-color);
-  padding: var(--space-3) 0 var(--space-4);
-  margin: calc(-1 * var(--space-6)) 0 0 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
+  flex-shrink: 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .statsBar {
@@ -42,21 +39,27 @@
 .scrollableContent {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  padding-top: var(--space-2);
+  gap: var(--space-5);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--space-2) 0 var(--space-8);
 }
 
-.header { margin-bottom: var(--space-2); }
+.header {
+  margin-bottom: var(--space-1);
+}
 
 .title {
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   font-weight: var(--font-bold);
   color: var(--text-primary);
   margin: 0;
 }
 
 .subtitle {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   color: var(--text-secondary);
   margin: var(--space-1) 0 0;
 }
@@ -64,17 +67,17 @@
 .topicGroups {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--space-6);
 }
 
 .topicGroup {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .topicTitle {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: var(--font-semibold);
   color: var(--text-primary);
   margin: 0;
@@ -83,7 +86,7 @@
 }
 
 .topicDesc {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   margin: 0;
 }
@@ -91,9 +94,11 @@
 .questionsList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 @media (max-width: 768px) {
-  .page { padding: var(--space-4); }
+  .page {
+    padding: var(--space-2);
+  }
 }

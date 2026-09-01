@@ -1,86 +1,98 @@
 :root {
-  /* ── ChatGPT Aesthetic Design Tokens ── */
+  /* ── LeetCode Design System (Signature Dark Palette) ── */
 
-  /* ── Accent & Primary Colors (ChatGPT Signature Green) ── */
-  --accent: #10a37f;
-  --accent-hover: #0d8f70;
-  --accent-light: #e6f7f2;
-  --accent-dark: #0a7158;
+  /* ── LeetCode Brand Orange & Accents ── */
+  --accent: #ffa116;
+  --accent-hover: #ffaa00;
+  --accent-light: rgba(255, 161, 22, 0.12);
+  --accent-dark: #cc800e;
 
-  --color-primary: #10a37f;
-  --color-primary-hover: #0d8f70;
-  --color-primary-light: #e6f7f2;
-  --color-primary-dark: #0a7158;
+  --color-primary: #ffa116;
+  --color-primary-hover: #ffaa00;
+  --color-primary-light: rgba(255, 161, 22, 0.15);
+  --color-primary-dark: #cc800e;
 
-  --color-secondary: #5d5d6d;
-  --color-secondary-hover: #454555;
-  --color-secondary-light: #f0f0f4;
+  --color-secondary: #9ca3af;
+  --color-secondary-hover: #d1d5db;
+  --color-secondary-light: #282828;
 
-  /* ── Semantic Colors (Accessible & Muted) ── */
-  --color-success: #10a37f;
-  --color-success-light: #e6f7f2;
-  --color-success-dark: #0d8f70;
+  /* ── LeetCode Standard Difficulty Colors ── */
+  --color-easy: #00b8a3;
+  --color-easy-bg: rgba(0, 184, 163, 0.15);
+  --color-easy-border: rgba(0, 184, 163, 0.3);
 
-  --color-warning: #f59e0b;
-  --color-warning-light: #fef3c7;
-  --color-warning-dark: #d97706;
+  --color-medium: #ffc01e;
+  --color-medium-bg: rgba(255, 192, 30, 0.15);
+  --color-medium-border: rgba(255, 192, 30, 0.3);
 
-  --color-error: #ef4444;
-  --color-error-light: #fee2e2;
-  --color-error-dark: #dc2626;
+  --color-hard: #ff375f;
+  --color-hard-bg: rgba(255, 55, 95, 0.15);
+  --color-hard-border: rgba(255, 55, 95, 0.3);
 
-  --color-info: #0284c7;
-  --color-info-light: #e0f2fe;
+  --color-success: #00b8a3;
+  --color-success-light: rgba(0, 184, 163, 0.15);
+  --color-success-dark: #009684;
 
-  /* ── Light Mode Surfaces (Off-white / Neutral) ── */
-  --background: #ffffff;
-  --background-secondary: #f7f7f8;
-  --surface: #ffffff;
-  --surface-secondary: #f7f7f8;
-  --surface-tertiary: #ececf1;
+  --color-warning: #ffc01e;
+  --color-warning-light: rgba(255, 192, 30, 0.15);
+  --color-warning-dark: #d99b00;
 
-  --bg-primary: #ffffff;
-  --bg-secondary: #f7f7f8;
-  --bg-tertiary: #ececf1;
-  --bg-card: #ffffff;
-  --bg-code: #1e1e24;
-  --bg-hover: #f0f0f2;
-  --bg-active: #e5e5e8;
-  --bg-overlay: rgba(0, 0, 0, 0.4);
+  --color-error: #ff375f;
+  --color-error-light: rgba(255, 55, 95, 0.15);
+  --color-error-dark: #d62249;
 
-  /* ── Dark Sidebar (ChatGPT Charcoal Navigation) ── */
-  --sidebar-bg: #202123;
-  --sidebar-surface: #26272b;
-  --sidebar-hover: #2a2b32;
-  --sidebar-active: #343541;
-  --sidebar-text: #ececf1;
-  --sidebar-text-muted: #8e8ea0;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --color-info: #38bdf8;
+  --color-info-light: rgba(56, 189, 248, 0.15);
 
-  --color-sidebar-bg: #202123;
-  --color-sidebar-active: #343541;
+  /* ── LeetCode Dark Mode Surfaces ── */
+  --background: #1a1a1a;
+  --background-secondary: #282828;
+  --surface: #282828;
+  --surface-secondary: #262626;
+  --surface-tertiary: #323232;
 
-  /* ── Typography & Text ── */
-  --text-primary: #2d2d2d;
-  --text-secondary: #6b6b6b;
-  --text-muted: #8e8ea0;
-  --text-inverse: #ffffff;
-  --text-link: #10a37f;
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #282828;
+  --bg-tertiary: #323232;
+  --bg-card: #282828;
+  --bg-code: #181818;
+  --bg-hover: #323232;
+  --bg-active: #3a3a3a;
+  --bg-overlay: rgba(0, 0, 0, 0.75);
+
+  /* ── Sidebar (LeetCode Obsidian) ── */
+  --sidebar-bg: #1e1e1e;
+  --sidebar-surface: #262626;
+  --sidebar-hover: #2e2e2e;
+  --sidebar-active: #323232;
+  --sidebar-text: #eff2f6;
+  --sidebar-text-muted: #9ca3af;
+  --sidebar-border: #333333;
+
+  --color-sidebar-bg: #1e1e1e;
+  --color-sidebar-active: #323232;
+
+  /* ── Typography & Text Hierarchy ── */
+  --text-primary: #eff2f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --text-inverse: #1a1a1a;
+  --text-link: #ffa116;
 
   /* ── Subtle Borders & Dividers ── */
-  --border: #e5e5e5;
-  --border-color: #e5e5e5;
-  --border-color-hover: #d1d1d6;
-  --border-color-focus: #10a37f;
+  --border: #3e3e3e;
+  --border-color: #3e3e3e;
+  --border-color-hover: #525252;
+  --border-color-focus: #ffa116;
   --border-width: 1px;
 
-  /* ── Clean, Flat & Subtle Shadows (No Heavy Shadows) ── */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.07);
-  --shadow-xl: 0 8px 20px rgba(0, 0, 0, 0.08);
-  --shadow-focus: 0 0 0 2px rgba(16, 163, 127, 0.25);
+  /* ── Shadows ── */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.45);
+  --shadow-xl: 0 12px 28px rgba(0, 0, 0, 0.55);
+  --shadow-focus: 0 0 0 2px rgba(255, 161, 22, 0.35);
 
   /* ── Radii ── */
   --radius-sm: 4px;
@@ -105,8 +117,10 @@
   --space-12: 48px;
 
   /* ── Typography Scale ── */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", "SF Mono", Consolas, Menlo, monospace;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter",
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, Monaco, monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.8125rem;
@@ -133,8 +147,8 @@
 
   /* ── Layout ── */
   --sidebar-width: 260px;
-  --header-height: 56px;
-  --content-max-width: 980px;
+  --header-height: 54px;
+  --content-max-width: 1080px;
 
   /* ── Z-index scale ── */
   --z-base: 0;
@@ -148,64 +162,75 @@
   /* ── Scrollbar ── */
   --scrollbar-width: 6px;
   --scrollbar-track: transparent;
-  --scrollbar-thumb: #d1d1d6;
-  --scrollbar-thumb-hover: #b0b0b8;
+  --scrollbar-thumb: #3e3e3e;
+  --scrollbar-thumb-hover: #525252;
 }
 
-/* ── Dark theme (ChatGPT Dark Mode) ── */
-[data-theme="dark"] {
-  --background: #202123;
-  --background-secondary: #2a2b32;
-  --surface: #2a2b32;
-  --surface-secondary: #343541;
-  --surface-tertiary: #40414f;
+/* ── Light Mode (LeetCode Clean Light) ── */
+[data-theme="light"] {
+  --accent: #e67e00;
+  --accent-hover: #cc7000;
+  --accent-light: rgba(230, 126, 0, 0.12);
+  --accent-dark: #b35f00;
 
-  --color-primary: #10a37f;
-  --color-primary-hover: #1a7f64;
-  --color-primary-light: rgba(16, 163, 127, 0.15);
-  --color-primary-dark: #0d8f70;
+  --color-primary: #e67e00;
+  --color-primary-hover: #cc7000;
+  --color-primary-light: rgba(230, 126, 0, 0.12);
 
-  --color-secondary: #8e8ea0;
-  --color-secondary-hover: #acacbe;
-  --color-secondary-light: #343541;
+  --color-easy: #059669;
+  --color-easy-bg: rgba(5, 150, 105, 0.12);
+  --color-easy-border: rgba(5, 150, 105, 0.25);
 
-  --bg-primary: #202123;
-  --bg-secondary: #2a2b32;
-  --bg-tertiary: #343541;
-  --bg-card: #2a2b32;
-  --bg-code: #171717;
-  --bg-hover: #343541;
-  --bg-active: #40414f;
-  --bg-overlay: rgba(0, 0, 0, 0.7);
+  --color-medium: #d97706;
+  --color-medium-bg: rgba(217, 119, 6, 0.12);
+  --color-medium-border: rgba(217, 119, 6, 0.25);
 
-  --sidebar-bg: #171717;
-  --sidebar-surface: #202123;
-  --sidebar-hover: #2a2b32;
-  --sidebar-active: #343541;
-  --sidebar-text: #ececf1;
-  --sidebar-text-muted: #8e8ea0;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --color-hard: #dc2626;
+  --color-hard-bg: rgba(220, 38, 38, 0.12);
+  --color-hard-border: rgba(220, 38, 38, 0.25);
 
-  --color-sidebar-bg: #171717;
-  --color-sidebar-active: #343541;
+  --background: #f8f9fa;
+  --background-secondary: #ffffff;
+  --surface: #ffffff;
+  --surface-secondary: #f3f4f6;
+  --surface-tertiary: #e5e7eb;
 
-  --text-primary: #ececf1;
-  --text-secondary: #c5c5d2;
-  --text-muted: #8e8ea0;
-  --text-inverse: #202123;
-  --text-link: #10a37f;
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f3f4f6;
+  --bg-card: #ffffff;
+  --bg-code: #1e1e24;
+  --bg-hover: #f3f4f6;
+  --bg-active: #e5e7eb;
+  --bg-overlay: rgba(0, 0, 0, 0.4);
 
-  --border: #40414f;
-  --border-color: #383944;
-  --border-color-hover: #4e4f5d;
+  --sidebar-bg: #f8f9fa;
+  --sidebar-surface: #ffffff;
+  --sidebar-hover: #f3f4f6;
+  --sidebar-active: #e5e7eb;
+  --sidebar-text: #1f2937;
+  --sidebar-text-muted: #6b7280;
+  --sidebar-border: #e5e7eb;
 
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.35);
-  --shadow-xl: 0 8px 20px rgba(0, 0, 0, 0.4);
-  --shadow-focus: 0 0 0 2px rgba(16, 163, 127, 0.4);
+  --color-sidebar-bg: #f8f9fa;
+  --color-sidebar-active: #e5e7eb;
 
-  --scrollbar-thumb: #4e4f5d;
-  --scrollbar-thumb-hover: #6e7080;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --text-inverse: #ffffff;
+  --text-link: #e67e00;
+
+  --border: #e5e7eb;
+  --border-color: #e5e7eb;
+  --border-color-hover: #d1d5db;
+  --border-color-focus: #e67e00;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+
+  --scrollbar-thumb: #d1d5db;
+  --scrollbar-thumb-hover: #9ca3af;
 }

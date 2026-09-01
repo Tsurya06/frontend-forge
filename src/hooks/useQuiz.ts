@@ -1,7 +1,7 @@
-import { useState, useCallback, useMemo } from 'react';
-import type { Question } from '@/types';
+import { useState, useCallback, useMemo } from "react";
+import type { Question } from "@/types";
 
-type QuizPhase = 'idle' | 'configuring' | 'active' | 'results';
+type QuizPhase = "idle" | "configuring" | "active" | "results";
 
 interface QuizAnswer {
   questionId: string;
@@ -27,7 +27,7 @@ interface QuizState {
 }
 
 const INITIAL_STATE: QuizState = {
-  phase: 'idle',
+  phase: "idle",
   questions: [],
   currentIndex: 0,
   answers: [],
@@ -49,7 +49,7 @@ export function useQuiz() {
 
   const startQuiz = useCallback((questions: Question[]) => {
     setState({
-      phase: 'active',
+      phase: "active",
       questions,
       currentIndex: 0,
       answers: [],
@@ -57,24 +57,21 @@ export function useQuiz() {
     });
   }, []);
 
-  const answerQuestion = useCallback(
-    (questionId: string, correct: boolean) => {
-      setState((prev) => {
-        if (prev.phase !== 'active') return prev;
-        const already = prev.answers.some((a) => a.questionId === questionId);
-        if (already) return prev;
-        return {
-          ...prev,
-          answers: [...prev.answers, { questionId, correct }],
-        };
-      });
-    },
-    [],
-  );
+  const answerQuestion = useCallback((questionId: string, correct: boolean) => {
+    setState((prev) => {
+      if (prev.phase !== "active") return prev;
+      const already = prev.answers.some((a) => a.questionId === questionId);
+      if (already) return prev;
+      return {
+        ...prev,
+        answers: [...prev.answers, { questionId, correct }],
+      };
+    });
+  }, []);
 
   const skipQuestion = useCallback(() => {
     setState((prev) => {
-      if (prev.phase !== 'active') return prev;
+      if (prev.phase !== "active") return prev;
       const current = prev.questions[prev.currentIndex];
       if (!current) return prev;
       const alreadySkipped = prev.skippedIds.includes(current.id);
@@ -89,9 +86,9 @@ export function useQuiz() {
 
   const nextQuestion = useCallback(() => {
     setState((prev) => {
-      if (prev.phase !== 'active') return prev;
+      if (prev.phase !== "active") return prev;
       if (prev.currentIndex >= prev.questions.length - 1) {
-        return { ...prev, phase: 'results' };
+        return { ...prev, phase: "results" };
       }
       return { ...prev, currentIndex: prev.currentIndex + 1 };
     });

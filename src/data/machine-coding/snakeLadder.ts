@@ -1,32 +1,39 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const snakeLadderProblem: MachineCodingProblem = {
-  id: 'mc-snake-ladder',
-  title: 'Snake and Ladder Game',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'game', 'board-game', 'animation', 'multiplayer', 'state-machine'],
+  id: "mc-snake-ladder",
+  title: "Snake and Ladder Game",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "game",
+    "board-game",
+    "animation",
+    "multiplayer",
+    "state-machine",
+  ],
 
   problemStatement: `Build a complete, interactive Snake and Ladder board game in React. The game supports 2 to 4 players competing on a standard 10x10 (100-cell) grid with alternating numbered tiles (boustrophedon / serpentine order). Players take turns rolling a 6-sided die to advance their tokens. Landing on the base of a ladder advances the player to the ladder's top, while landing on a snake's head slides the player down to its tail.
 
 The game requires rolling an exact number to land on tile 100 to win (or bouncing back on overshoots). Include dice roll animation, movement step-by-step visualization, sound effects or visual logs, customized board layouts (ladders and snakes configuration), player avatars, turn indicators, game reset, and an optional autoplay/AI mode.`,
 
   functionalRequirements: [
-    'Render a 10x10 board with 100 tiles numbered in alternating serpentine order (1-10 left-to-right, 11-20 right-to-left, etc.)',
-    'Support 2-4 customizable players with unique tokens/colors',
-    'Interactive dice roller (1-6) with rolling animation',
-    'Automatically move player token on dice roll with animated step transitions',
-    'Detect ladders (move up to destination) and snakes (slide down to tail)',
-    'Enforce win condition: exact roll to tile 100 (or bounce back)',
+    "Render a 10x10 board with 100 tiles numbered in alternating serpentine order (1-10 left-to-right, 11-20 right-to-left, etc.)",
+    "Support 2-4 customizable players with unique tokens/colors",
+    "Interactive dice roller (1-6) with rolling animation",
+    "Automatically move player token on dice roll with animated step transitions",
+    "Detect ladders (move up to destination) and snakes (slide down to tail)",
+    "Enforce win condition: exact roll to tile 100 (or bounce back)",
     'Display roll history log and event banner (e.g., "Player 1 climbed a ladder to 45!")',
-    'Restart game and configure number of players',
+    "Restart game and configure number of players",
   ],
 
   nonFunctionalRequirements: [
-    'Smooth CSS animations for token movement, ladder climbs, and snake slides',
-    'Accessible board with ARIA grid roles and live regions for turn/event announcements',
-    'Responsive SVG / CSS Grid layout that scales cleanly on mobile and desktop',
-    'Deterministic game state machine with pure transition functions',
+    "Smooth CSS animations for token movement, ladder climbs, and snake slides",
+    "Accessible board with ARIA grid roles and live regions for turn/event announcements",
+    "Responsive SVG / CSS Grid layout that scales cleanly on mobile and desktop",
+    "Deterministic game state machine with pure transition functions",
   ],
 
   componentHierarchy: `SnakeLadderGame
@@ -290,31 +297,31 @@ export function SnakeLadderGame() {
   performance: `Board grid rendering is static and uses pure CSS grid. Cell re-renders only occur for tiles where player tokens enter or leave. Dice roll animation is throttled using requestAnimationFrame or setInterval with clear timer cleanup. Event logs are bounded to the last 20 items to prevent unbounded memory growth.`,
 
   edgeCases: [
-    'Overshooting tile 100: player stays on current tile until exact roll',
-    'Multiple players landing on the same tile: tokens display side by side without overlapping',
-    'Rolling a 6: can optionally award a bonus roll',
-    'Landing on a snake tail or ladder top: no secondary jump occurs (only trigger on head/base)',
-    'Reset during active dice roll animation: clears interval safely',
+    "Overshooting tile 100: player stays on current tile until exact roll",
+    "Multiple players landing on the same tile: tokens display side by side without overlapping",
+    "Rolling a 6: can optionally award a bonus roll",
+    "Landing on a snake tail or ladder top: no secondary jump occurs (only trigger on head/base)",
+    "Reset during active dice roll animation: clears interval safely",
   ],
 
   testingStrategy: [
-    'Unit test: calculateSerpentineCoordinates maps tile numbers to correct row/col indices',
-    'Unit test: snake and ladder transitions update player position accurately',
-    'Unit test: exact roll rule prevents victory on overshoot',
-    'Integration test: clicking roll advances turn and updates board display',
-    'Integration test: winner state disables roll button and triggers victory banner',
+    "Unit test: calculateSerpentineCoordinates maps tile numbers to correct row/col indices",
+    "Unit test: snake and ladder transitions update player position accurately",
+    "Unit test: exact roll rule prevents victory on overshoot",
+    "Integration test: clicking roll advances turn and updates board display",
+    "Integration test: winner state disables roll button and triggers victory banner",
   ],
 
   improvements: [
-    'Add SVG ladder rungs and curved animated snake graphics connecting tiles',
-    'Add AI bot opponents with automated turns',
-    'Sound effects for dice roll, ladder climb, and snake bite',
-    'Custom board editor allowing users to drag and place snakes/ladders',
+    "Add SVG ladder rungs and curved animated snake graphics connecting tiles",
+    "Add AI bot opponents with automated turns",
+    "Sound effects for dice roll, ladder climb, and snake bite",
+    "Custom board editor allowing users to drag and place snakes/ladders",
   ],
 
   followUpQuestions: [
-    'How would you find the shortest path / minimum dice rolls to win using BFS?',
-    'How would you compute the expected number of turns to complete the game using Markov Chains?',
-    'How would you synchronize multiplayer state in real-time using WebSockets?',
+    "How would you find the shortest path / minimum dice rolls to win using BFS?",
+    "How would you compute the expected number of turns to complete the game using Markov Chains?",
+    "How would you synchronize multiplayer state in real-time using WebSockets?",
   ],
 };

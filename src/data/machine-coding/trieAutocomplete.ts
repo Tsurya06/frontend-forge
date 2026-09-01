@@ -1,31 +1,38 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const trieAutocompleteProblem: MachineCodingProblem = {
-  id: 'mc-trie-autocomplete',
-  title: 'Trie-Based Autocomplete',
-  difficulty: 'Advanced',
-  category: 'Machine Coding',
-  tags: ['react', 'trie', 'data-structure', 'autocomplete', 'search', 'keyboard-navigation'],
+  id: "mc-trie-autocomplete",
+  title: "Trie-Based Autocomplete",
+  difficulty: "Advanced",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "trie",
+    "data-structure",
+    "autocomplete",
+    "search",
+    "keyboard-navigation",
+  ],
 
   problemStatement: `Build an autocomplete search component in React that uses a Trie (prefix tree) data structure for efficient prefix matching. As the user types, the component should display matching suggestions in a dropdown. The Trie provides O(k) lookup time where k is the length of the prefix, making it significantly faster than linear search through an array of suggestions for large datasets.
 
 This problem tests both your data structure knowledge and your React component skills. You need to implement the Trie class with insert and search methods, then integrate it with a React search input that shows suggestions, supports keyboard navigation through the results (arrow keys + Enter to select), and highlights the matching prefix in each suggestion. The component should handle edge cases like empty input, no matches, and special characters.`,
 
   functionalRequirements: [
-    'Trie data structure with insert, search (prefix), and delete operations',
-    'Search input that queries the Trie on each keystroke',
-    'Dropdown showing matching suggestions with highlighted matching prefix',
-    'Keyboard navigation: Arrow Up/Down to navigate, Enter to select, Escape to close',
-    'Click to select a suggestion from the dropdown',
-    'Support for ranking/sorting suggestions by frequency or recency',
-    'Clear button to reset the search input',
+    "Trie data structure with insert, search (prefix), and delete operations",
+    "Search input that queries the Trie on each keystroke",
+    "Dropdown showing matching suggestions with highlighted matching prefix",
+    "Keyboard navigation: Arrow Up/Down to navigate, Enter to select, Escape to close",
+    "Click to select a suggestion from the dropdown",
+    "Support for ranking/sorting suggestions by frequency or recency",
+    "Clear button to reset the search input",
   ],
 
   nonFunctionalRequirements: [
-    'O(k) prefix lookup where k is prefix length',
-    'Debounced input to limit Trie queries on rapid typing',
-    'Accessible combobox pattern with proper ARIA attributes',
-    'Maximum suggestion limit to avoid rendering thousands of matches',
+    "O(k) prefix lookup where k is prefix length",
+    "Debounced input to limit Trie queries on rapid typing",
+    "Accessible combobox pattern with proper ARIA attributes",
+    "Maximum suggestion limit to avoid rendering thousands of matches",
   ],
 
   componentHierarchy: `Autocomplete
@@ -308,35 +315,35 @@ export default function Autocomplete({
   performance: `The Trie provides O(k) prefix lookup where k is the prefix length, compared to O(n×m) for linear search where n is the number of words and m is average word length. The Trie is built once on mount via \`useMemo\` and persists across renders. Search results are limited to \`maxSuggestions\` to cap both the traversal time and DOM rendering cost. The highlighted item scrolls into view using the native \`scrollIntoView\` method. For very large dictionaries (100K+ words), the Trie could be built in a Web Worker to avoid blocking the main thread during initialization.`,
 
   edgeCases: [
-    'Empty input should show no suggestions',
-    'Input with only whitespace should not trigger search',
-    'Special characters in input should not cause errors',
-    'Selecting a suggestion should close the dropdown and update input',
-    'No matching results should close the dropdown (not show empty box)',
-    'Trie with duplicate words should track frequency correctly',
+    "Empty input should show no suggestions",
+    "Input with only whitespace should not trigger search",
+    "Special characters in input should not cause errors",
+    "Selecting a suggestion should close the dropdown and update input",
+    "No matching results should close the dropdown (not show empty box)",
+    "Trie with duplicate words should track frequency correctly",
   ],
 
   testingStrategy: [
-    'Unit test (Trie): insert and search returns correct matches',
-    'Unit test (Trie): delete removes word and cleans up empty branches',
-    'Unit test (Trie): search with no matches returns empty array',
-    'Unit test (Component): typing shows matching suggestions',
-    'Integration test: arrow keys navigate through suggestions',
-    'Integration test: Enter selects highlighted suggestion and closes dropdown',
+    "Unit test (Trie): insert and search returns correct matches",
+    "Unit test (Trie): delete removes word and cleans up empty branches",
+    "Unit test (Trie): search with no matches returns empty array",
+    "Unit test (Component): typing shows matching suggestions",
+    "Integration test: arrow keys navigate through suggestions",
+    "Integration test: Enter selects highlighted suggestion and closes dropdown",
   ],
 
   improvements: [
-    'Add fuzzy matching for typo tolerance using edit distance',
-    'Support weighted suggestions based on search history',
-    'Build Trie in a Web Worker for large datasets',
-    'Add recently searched items section above suggestions',
-    'Implement multi-word search with per-word prefix matching',
+    "Add fuzzy matching for typo tolerance using edit distance",
+    "Support weighted suggestions based on search history",
+    "Build Trie in a Web Worker for large datasets",
+    "Add recently searched items section above suggestions",
+    "Implement multi-word search with per-word prefix matching",
   ],
 
   followUpQuestions: [
-    'How does a Trie compare to a hash map for prefix search?',
-    'How would you implement fuzzy search alongside exact prefix matching?',
-    'What are the memory implications of a Trie with a large vocabulary?',
-    'How would you persist and hydrate the Trie for server-side rendering?',
+    "How does a Trie compare to a hash map for prefix search?",
+    "How would you implement fuzzy search alongside exact prefix matching?",
+    "What are the memory implications of a Trie with a large vocabulary?",
+    "How would you persist and hydrate the Trie for server-side rendering?",
   ],
 };

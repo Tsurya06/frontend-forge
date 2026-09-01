@@ -1,32 +1,40 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const searchableGridProblem: MachineCodingProblem = {
-  id: 'mc-searchable-grid',
-  title: 'Searchable & Sortable Product Grid',
-  difficulty: 'Advanced',
-  category: 'Machine Coding',
-  tags: ['react', 'grid', 'search', 'filter', 'sort', 'e-commerce', 'responsive'],
+  id: "mc-searchable-grid",
+  title: "Searchable & Sortable Product Grid",
+  difficulty: "Advanced",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "grid",
+    "search",
+    "filter",
+    "sort",
+    "e-commerce",
+    "responsive",
+  ],
 
   problemStatement: `Build a searchable and sortable product grid component inspired by e-commerce platforms like Amazon. The grid should display product cards in a responsive layout, support real-time text search, category filtering, price range filtering, and multiple sort options (price low-to-high, high-to-low, rating, newest). This is a comprehensive machine coding challenge that tests your ability to manage complex derived state and build a polished UI.
 
 The component must handle a moderate dataset efficiently, with debounced search and memoized filter/sort pipelines. The grid layout should be responsive, adapting from multiple columns on desktop to a single column on mobile. Each product card should display an image, title, price, rating, and an "Add to Cart" button. Empty and loading states should be handled gracefully.`,
 
   functionalRequirements: [
-    'Display products in a responsive grid layout',
-    'Real-time search filtering by product name and description',
-    'Category filter dropdown or chip selector',
-    'Price range filter with min/max inputs',
-    'Sort by price (asc/desc), rating, or name',
-    'Display product count and active filter summary',
-    'Clear all filters button',
-    'Empty state when no products match filters',
+    "Display products in a responsive grid layout",
+    "Real-time search filtering by product name and description",
+    "Category filter dropdown or chip selector",
+    "Price range filter with min/max inputs",
+    "Sort by price (asc/desc), rating, or name",
+    "Display product count and active filter summary",
+    "Clear all filters button",
+    "Empty state when no products match filters",
   ],
 
   nonFunctionalRequirements: [
-    'Debounced search input (300ms) to avoid excessive filtering',
-    'Memoized filter/sort pipeline for performance',
-    'Responsive CSS Grid layout adapting to screen width',
-    'Accessible filter controls with proper labels',
+    "Debounced search input (300ms) to avoid excessive filtering",
+    "Memoized filter/sort pipeline for performance",
+    "Responsive CSS Grid layout adapting to screen width",
+    "Accessible filter controls with proper labels",
   ],
 
   componentHierarchy: `SearchableGrid
@@ -282,34 +290,34 @@ export default function SearchableGrid({ products }: SearchableGridProps) {
   performance: `The filter pipeline uses staged \`useMemo\` calls so that each transformation only re-runs when its specific dependencies change. Search is debounced at 300ms to prevent filtering on every keystroke. Category list extraction is memoized against the products array. The CSS Grid layout uses \`auto-fill\` with \`minmax()\` for responsive columns without JavaScript resize listeners. Product descriptions are truncated in the render to avoid layout shifts. For very large catalogs (1000+ products), virtualization with react-window or intersection observer-based rendering should be added.`,
 
   edgeCases: [
-    'Empty product array should show a friendly empty state',
-    'Search with special characters (regex metacharacters) should not crash',
-    'Price range where min > max should show no results',
-    'Products with identical names should sort stably',
-    'Extremely long product names or descriptions should truncate gracefully',
+    "Empty product array should show a friendly empty state",
+    "Search with special characters (regex metacharacters) should not crash",
+    "Price range where min > max should show no results",
+    "Products with identical names should sort stably",
+    "Extremely long product names or descriptions should truncate gracefully",
   ],
 
   testingStrategy: [
-    'Unit test: search filters products by name and description case-insensitively',
-    'Unit test: category filter shows only matching products',
-    'Unit test: price range filter includes boundary values',
-    'Unit test: all sort options produce correct ordering',
-    'Integration test: combining multiple filters produces correct results',
-    'Integration test: clear filters resets all filter state',
+    "Unit test: search filters products by name and description case-insensitively",
+    "Unit test: category filter shows only matching products",
+    "Unit test: price range filter includes boundary values",
+    "Unit test: all sort options produce correct ordering",
+    "Integration test: combining multiple filters produces correct results",
+    "Integration test: clear filters resets all filter state",
   ],
 
   improvements: [
-    'Add product detail modal on card click',
-    'Implement URL-based filter state for shareable filtered views',
-    'Add pagination or infinite scroll for large product catalogs',
-    'Support multi-select category filtering with chips',
-    'Add grid/list view toggle',
+    "Add product detail modal on card click",
+    "Implement URL-based filter state for shareable filtered views",
+    "Add pagination or infinite scroll for large product catalogs",
+    "Support multi-select category filtering with chips",
+    "Add grid/list view toggle",
   ],
 
   followUpQuestions: [
-    'How would you persist filter state in the URL for shareable links?',
-    'How would you implement faceted search with filter counts?',
-    'What strategies would you use for handling 10,000+ products?',
-    'How would you add server-side filtering and sorting?',
+    "How would you persist filter state in the URL for shareable links?",
+    "How would you implement faceted search with filter counts?",
+    "What strategies would you use for handling 10,000+ products?",
+    "How would you add server-side filtering and sorting?",
   ],
 };

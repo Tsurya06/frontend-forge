@@ -1,5 +1,6 @@
-export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced' | 'Senior';
-export type QuestionType = 'Conceptual' | 'Coding' | 'Scenario' | 'Machine Coding';
+export type Difficulty = "Beginner" | "Intermediate" | "Advanced" | "Senior";
+export type QuestionType =
+  "Conceptual" | "Coding" | "Scenario" | "Machine Coding";
 
 export interface Question {
   id: string;

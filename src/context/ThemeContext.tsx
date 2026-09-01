@@ -1,8 +1,8 @@
-import { createContext, useContext } from 'react';
-import type { ReactNode } from 'react';
-import { useTheme } from '@/hooks/useTheme';
+import { createContext, useContext } from "react";
+import type { ReactNode } from "react";
+import { useTheme } from "@/hooks/useTheme";
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = "light" | "dark" | "system";
 
 interface ThemeContextValue {
   theme: Theme;
@@ -22,7 +22,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 export function useThemeContext(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
   if (!ctx) {
-    throw new Error('useThemeContext must be used within a ThemeProvider');
+    throw new Error("useThemeContext must be used within a ThemeProvider");
   }
   return ctx;
 }

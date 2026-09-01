@@ -1,34 +1,37 @@
-import type { CodingProblem } from '../../types';
+import type { CodingProblem } from "../../types";
 
 export const holyGrailLayoutProblem: CodingProblem = {
-  id: 'holy-grail-layout',
-  title: 'Responsive Holy Grail Layout (CSS Grid & Flexbox)',
-  difficulty: 'Intermediate',
-  category: 'CSS',
-  tags: ['CSS Grid', 'Flexbox', 'Layout', 'Responsive Design', 'Holy Grail'],
+  id: "holy-grail-layout",
+  title: "Responsive Holy Grail Layout (CSS Grid & Flexbox)",
+  difficulty: "Intermediate",
+  category: "CSS",
+  tags: ["CSS Grid", "Flexbox", "Layout", "Responsive Design", "Holy Grail"],
   problem:
-    'Implement the classic Holy Grail layout with a fixed-height header, a 3-column middle area (left navigation sidebar, flexible main content, and right ads/sidebar), and a footer pinned to the bottom of the viewport even when content is short. On mobile viewports (≤ 768px), stack the sections vertically in logical mobile order (Header -> Main Content -> Left Sidebar -> Right Sidebar -> Footer).',
+    "Implement the classic Holy Grail layout with a fixed-height header, a 3-column middle area (left navigation sidebar, flexible main content, and right ads/sidebar), and a footer pinned to the bottom of the viewport even when content is short. On mobile viewports (≤ 768px), stack the sections vertically in logical mobile order (Header -> Main Content -> Left Sidebar -> Right Sidebar -> Footer).",
   requirements: [
-    'Header and Footer span 100% width.',
-    'Left sidebar: fixed 220px width; Right sidebar: fixed 200px width; Middle main content: flexible (1fr) expanding to fill remaining width.',
-    'Footer must stay pinned to the bottom of the screen (min-height: 100vh) without overlapping content.',
-    'On mobile viewports (< 768px), middle columns must collapse to a single vertical column with main content appearing before secondary sidebars.',
-    'Must be pure, semantic HTML and modern CSS Grid without JavaScript.',
+    "Header and Footer span 100% width.",
+    "Left sidebar: fixed 220px width; Right sidebar: fixed 200px width; Middle main content: flexible (1fr) expanding to fill remaining width.",
+    "Footer must stay pinned to the bottom of the screen (min-height: 100vh) without overlapping content.",
+    "On mobile viewports (< 768px), middle columns must collapse to a single vertical column with main content appearing before secondary sidebars.",
+    "Must be pure, semantic HTML and modern CSS Grid without JavaScript.",
   ],
   examples: [
     {
-      input: '<div class="holy-grail"><header>Header</header><aside class="nav">Nav</aside><main>Content</main><aside class="ads">Ads</aside><footer>Footer</footer></div>',
-      output: 'Full viewport responsive 3-column layout desktop, stacked content-first on mobile',
-      explanation: 'Uses CSS Grid grid-template-areas: "header header header" "nav main ads" "footer footer footer" with min-height: 100dvh.',
+      input:
+        '<div class="holy-grail"><header>Header</header><aside class="nav">Nav</aside><main>Content</main><aside class="ads">Ads</aside><footer>Footer</footer></div>',
+      output:
+        "Full viewport responsive 3-column layout desktop, stacked content-first on mobile",
+      explanation:
+        'Uses CSS Grid grid-template-areas: "header header header" "nav main ads" "footer footer footer" with min-height: 100dvh.',
     },
   ],
   edgeCases: [
-    'Short content: footer must stay at the bottom of the window without creating unwanted scrollbars.',
-    'Extremely long content in main: page scrolls naturally without clipping sidebars.',
-    'Mobile browser viewport height shifts: use `100dvh` to prevent mobile address bar jumping.',
+    "Short content: footer must stay at the bottom of the window without creating unwanted scrollbars.",
+    "Extremely long content in main: page scrolls naturally without clipping sidebars.",
+    "Mobile browser viewport height shifts: use `100dvh` to prevent mobile address bar jumping.",
   ],
   optimalApproach:
-    'Use CSS Grid on the container with `min-height: 100dvh`, defining `grid-template-rows: auto 1fr auto`, `grid-template-columns: 220px 1fr 200px`, and named `grid-template-areas`. Use a media query for mobile screens to reorder grid areas so `<main>` appears above secondary navigation.',
+    "Use CSS Grid on the container with `min-height: 100dvh`, defining `grid-template-rows: auto 1fr auto`, `grid-template-columns: 220px 1fr 200px`, and named `grid-template-areas`. Use a media query for mobile screens to reorder grid areas so `<main>` appears above secondary navigation.",
   implementation: `<!-- HTML Structure -->
 <div class="holy-grail">
   <header class="header">Header (Logo & Nav)</header>
@@ -113,50 +116,53 @@ export const holyGrailLayoutProblem: CodingProblem = {
 }
 </style>`,
   stepByStep: [
-    'Define `display: grid` with `min-height: 100dvh` (or `100vh`).',
-    'Set `grid-template-rows: auto 1fr auto` so the middle row expands to take all remaining height.',
-    'Set `grid-template-columns: 220px 1fr 200px` for left sidebar, flexible center, and right widget area.',
-    'Assign `grid-area` identifiers to each semantic child element.',
-    'Add media query `@media (max-width: 768px)` changing grid template areas to a single stacked column.',
+    "Define `display: grid` with `min-height: 100dvh` (or `100vh`).",
+    "Set `grid-template-rows: auto 1fr auto` so the middle row expands to take all remaining height.",
+    "Set `grid-template-columns: 220px 1fr 200px` for left sidebar, flexible center, and right widget area.",
+    "Assign `grid-area` identifiers to each semantic child element.",
+    "Add media query `@media (max-width: 768px)` changing grid template areas to a single stacked column.",
   ],
-  timeComplexity: 'O(1) browser layout reflow',
-  spaceComplexity: 'O(1) DOM nodes',
+  timeComplexity: "O(1) browser layout reflow",
+  spaceComplexity: "O(1) DOM nodes",
   commonMistakes: [
-    'Using float or inline-block with fixed pixel heights which break responsive resizing.',
-    'Using 100vh instead of 100dvh on mobile, causing jumpy overflow when the URL bar collapses.',
-    'Ordering HTML source so secondary sidebars come before main content, harming screen reader accessibility.',
+    "Using float or inline-block with fixed pixel heights which break responsive resizing.",
+    "Using 100vh instead of 100dvh on mobile, causing jumpy overflow when the URL bar collapses.",
+    "Ordering HTML source so secondary sidebars come before main content, harming screen reader accessibility.",
   ],
   followUps: [
-    'How would you implement sticky navigation within the left sidebar during page scroll?',
-    'How would you achieve subgrid alignment between header items and main content columns?',
+    "How would you implement sticky navigation within the left sidebar during page scroll?",
+    "How would you achieve subgrid alignment between header items and main content columns?",
   ],
 };
 
 export const accessibleToggleSwitchProblem: CodingProblem = {
-  id: 'accessible-toggle-switch',
-  title: 'Accessible Custom Toggle Switch (Semantic HTML + Pure CSS)',
-  difficulty: 'Beginner',
-  category: 'HTML & CSS',
-  tags: ['HTML', 'CSS', 'Accessibility', 'ARIA', 'Checkbox'],
+  id: "accessible-toggle-switch",
+  title: "Accessible Custom Toggle Switch (Semantic HTML + Pure CSS)",
+  difficulty: "Beginner",
+  category: "HTML & CSS",
+  tags: ["HTML", "CSS", "Accessibility", "ARIA", "Checkbox"],
   problem:
     'Build an accessible custom toggle switch (slider switch) using semantic HTML and CSS. The switch must support full keyboard navigation (Tab to focus, Space to toggle), announce its state accurately to screen readers via a native checkbox or `role="switch"`, provide high-contrast visible focus rings, and animate smoothly with GPU-accelerated CSS transforms.',
   requirements: [
-    'Must be operable with both mouse click and keyboard (Space/Enter).',
-    'Accessible to screen readers (announce Checked / Unchecked and accessible label).',
-    'Smooth toggle pill slide animation using `transform: translateX()` (not `left` or `margin`).',
-    'Visible focus-visible indicator complying with WCAG 2.1 AA (contrast ratio ≥ 3:1).',
-    'Support disabled state with reduced opacity and `cursor: not-allowed`.',
+    "Must be operable with both mouse click and keyboard (Space/Enter).",
+    "Accessible to screen readers (announce Checked / Unchecked and accessible label).",
+    "Smooth toggle pill slide animation using `transform: translateX()` (not `left` or `margin`).",
+    "Visible focus-visible indicator complying with WCAG 2.1 AA (contrast ratio ≥ 3:1).",
+    "Support disabled state with reduced opacity and `cursor: not-allowed`.",
   ],
   examples: [
     {
-      input: '<label class="switch"><input type="checkbox" role="switch"><span class="slider"></span><span>Enable Notifications</span></label>',
-      output: 'Animated green pill switch toggling smoothly between on/off states',
-      explanation: 'Uses visually hidden input[type="checkbox"] + :checked CSS selector with transform: translateX(20px).',
+      input:
+        '<label class="switch"><input type="checkbox" role="switch"><span class="slider"></span><span>Enable Notifications</span></label>',
+      output:
+        "Animated green pill switch toggling smoothly between on/off states",
+      explanation:
+        'Uses visually hidden input[type="checkbox"] + :checked CSS selector with transform: translateX(20px).',
     },
   ],
   edgeCases: [
-    'Screen reader accessibility: do not use `display: none` on the input, as that removes it from the accessibility tree; use standard `.sr-only` clipping.',
-    'Reduced motion user preference: disable transition animation under `@media (prefers-reduced-motion: reduce)`.',
+    "Screen reader accessibility: do not use `display: none` on the input, as that removes it from the accessibility tree; use standard `.sr-only` clipping.",
+    "Reduced motion user preference: disable transition animation under `@media (prefers-reduced-motion: reduce)`.",
   ],
   optimalApproach:
     'Use a real `<input type="checkbox" role="switch">` visually clipped with `clip: rect(0,0,0,0)`. Use the sibling selector `input:checked + .slider` to update colors and `input:checked + .slider::after` with `transform: translateX()` for GPU 60fps sliding animation.',
@@ -251,49 +257,50 @@ export const accessibleToggleSwitchProblem: CodingProblem = {
 </style>`,
   stepByStep: [
     'Wrap `<input type="checkbox" role="switch">` inside a `<label>` element for built-in click association.',
-    'Hide the checkbox visually using CSS clipping (`clip: rect(0,0,0,0)`) so keyboard focus and screen readers remain 100% active.',
-    'Style `.switch-track` with `border-radius: 9999px` and background color.',
-    'Style `.switch-thumb` with `border-radius: 50%` and `box-shadow`.',
-    'Use `:checked` pseudo-class to transition the track to green and translateX(20px) on the thumb.',
-    'Add `:focus-visible` outline on the track for keyboard tab accessibility.',
+    "Hide the checkbox visually using CSS clipping (`clip: rect(0,0,0,0)`) so keyboard focus and screen readers remain 100% active.",
+    "Style `.switch-track` with `border-radius: 9999px` and background color.",
+    "Style `.switch-thumb` with `border-radius: 50%` and `box-shadow`.",
+    "Use `:checked` pseudo-class to transition the track to green and translateX(20px) on the thumb.",
+    "Add `:focus-visible` outline on the track for keyboard tab accessibility.",
   ],
-  timeComplexity: 'O(1) GPU composite layer',
-  spaceComplexity: 'O(1)',
+  timeComplexity: "O(1) GPU composite layer",
+  spaceComplexity: "O(1)",
   commonMistakes: [
-    'Using `display: none` which breaks screen reader accessibility and tab keyboard navigation.',
-    'Animating `left` property instead of `transform: translateX()`, causing layout thrashing and stutter on low-end devices.',
+    "Using `display: none` which breaks screen reader accessibility and tab keyboard navigation.",
+    "Animating `left` property instead of `transform: translateX()`, causing layout thrashing and stutter on low-end devices.",
     'Forgetting `role="switch"` or accessible label association.',
   ],
   followUps: [
-    'How would you add icons (like Sun/Moon for theme toggle) inside the switch track?',
+    "How would you add icons (like Sun/Moon for theme toggle) inside the switch track?",
   ],
 };
 
 export const nativeDialogModalProblem: CodingProblem = {
-  id: 'dialog-modal-native',
-  title: 'Native HTML5 <dialog> Modal with Backdrop Transition',
-  difficulty: 'Intermediate',
-  category: 'HTML & CSS',
-  tags: ['HTML5', 'CSS', 'Modal', 'Dialog', 'Accessibility'],
+  id: "dialog-modal-native",
+  title: "Native HTML5 <dialog> Modal with Backdrop Transition",
+  difficulty: "Intermediate",
+  category: "HTML & CSS",
+  tags: ["HTML5", "CSS", "Modal", "Dialog", "Accessibility"],
   problem:
-    'Implement an accessible, performant modal dialog using the native HTML5 `<dialog>` element. The dialog must support `.showModal()` with top-layer placement, native keyboard Escape to dismiss, custom animated backdrop blur, and focus trapping without external libraries.',
+    "Implement an accessible, performant modal dialog using the native HTML5 `<dialog>` element. The dialog must support `.showModal()` with top-layer placement, native keyboard Escape to dismiss, custom animated backdrop blur, and focus trapping without external libraries.",
   requirements: [
-    'Use semantic `<dialog>` element with `showModal()` API.',
-    'Custom styled `::backdrop` with soft blur (`backdrop-filter: blur(4px)`) and semi-transparent dark overlay.',
-    'Smooth CSS scale-in and fade-in animation on open.',
-    'Close on clicking the outside backdrop overlay or pressing Escape.',
-    'Focus automatically moves to first focusable element inside the modal.',
+    "Use semantic `<dialog>` element with `showModal()` API.",
+    "Custom styled `::backdrop` with soft blur (`backdrop-filter: blur(4px)`) and semi-transparent dark overlay.",
+    "Smooth CSS scale-in and fade-in animation on open.",
+    "Close on clicking the outside backdrop overlay or pressing Escape.",
+    "Focus automatically moves to first focusable element inside the modal.",
   ],
   examples: [
     {
       input: 'document.querySelector("dialog").showModal()',
-      output: 'Centered modal with backdrop overlay and focus trap',
-      explanation: 'Native <dialog> renders in browser top layer with native Escape key handling.',
+      output: "Centered modal with backdrop overlay and focus trap",
+      explanation:
+        "Native <dialog> renders in browser top layer with native Escape key handling.",
     },
   ],
   edgeCases: [
-    'Closing on backdrop click: detect if click coordinates `(e.clientX, e.clientY)` fall outside the dialog bounding rectangle `dialog.getBoundingClientRect()`.',
-    'Prevent background body scrolling when modal is open.',
+    "Closing on backdrop click: detect if click coordinates `(e.clientX, e.clientY)` fall outside the dialog bounding rectangle `dialog.getBoundingClientRect()`.",
+    "Prevent background body scrolling when modal is open.",
   ],
   optimalApproach:
     'Use `<dialog id="modal">` and open with `modal.showModal()`. Style the native `::backdrop` pseudo-element. Add a click handler on the dialog that checks if click was outside the rect to auto-close.',
@@ -423,50 +430,52 @@ dialog.addEventListener('click', (e) => {
 });
 </script>`,
   stepByStep: [
-    'Create semantic `<dialog>` element containing modal title, body, and action buttons.',
-    'Use `dialog.showModal()` to launch modal into the browser top layer.',
-    'Style `::backdrop` pseudo-element with `background-color` and `backdrop-filter`.',
-    'Add click event checking `getBoundingClientRect()` to close when clicking the outside overlay.',
+    "Create semantic `<dialog>` element containing modal title, body, and action buttons.",
+    "Use `dialog.showModal()` to launch modal into the browser top layer.",
+    "Style `::backdrop` pseudo-element with `background-color` and `backdrop-filter`.",
+    "Add click event checking `getBoundingClientRect()` to close when clicking the outside overlay.",
   ],
-  timeComplexity: 'O(1)',
-  spaceComplexity: 'O(1)',
+  timeComplexity: "O(1)",
+  spaceComplexity: "O(1)",
   commonMistakes: [
-    'Using `dialog.show()` instead of `dialog.showModal()`, which does not create a backdrop or focus trap.',
-    'Trying to implement complex manual focus trap JavaScript when the native `<dialog>` handles it automatically.',
+    "Using `dialog.show()` instead of `dialog.showModal()`, which does not create a backdrop or focus trap.",
+    "Trying to implement complex manual focus trap JavaScript when the native `<dialog>` handles it automatically.",
   ],
   followUps: [
-    'How does the browser Top Layer interact with z-index stacking contexts?',
+    "How does the browser Top Layer interact with z-index stacking contexts?",
   ],
 };
 
 export const cssSkeletonShimmerProblem: CodingProblem = {
-  id: 'css-skeleton-shimmer',
-  title: 'CSS Skeleton Loader with Shimmer Animation',
-  difficulty: 'Beginner',
-  category: 'CSS',
-  tags: ['CSS', 'Animations', 'Performance', 'UX', 'Skeleton'],
+  id: "css-skeleton-shimmer",
+  title: "CSS Skeleton Loader with Shimmer Animation",
+  difficulty: "Beginner",
+  category: "CSS",
+  tags: ["CSS", "Animations", "Performance", "UX", "Skeleton"],
   problem:
-    'Design a reusable, high-performance CSS Skeleton loading component with a smooth diagonal linear-gradient shimmer effect. The skeleton must adapt flexibly to avatar circles, heading lines, and body paragraphs without hardcoded dimensions.',
+    "Design a reusable, high-performance CSS Skeleton loading component with a smooth diagonal linear-gradient shimmer effect. The skeleton must adapt flexibly to avatar circles, heading lines, and body paragraphs without hardcoded dimensions.",
   requirements: [
-    'Use pure CSS keyframe animations with `linear-gradient` shimmer wave.',
-    'Support `.skeleton-circle` (for avatars), `.skeleton-text` (for paragraphs), and `.skeleton-card`.',
-    'Hardware accelerated 60fps smooth animation with infinite loop.',
-    'Respect `prefers-reduced-motion` by displaying a soft static pulse instead of high-frequency shimmer.',
-    'Support seamless Dark and Light themes via CSS variables.',
+    "Use pure CSS keyframe animations with `linear-gradient` shimmer wave.",
+    "Support `.skeleton-circle` (for avatars), `.skeleton-text` (for paragraphs), and `.skeleton-card`.",
+    "Hardware accelerated 60fps smooth animation with infinite loop.",
+    "Respect `prefers-reduced-motion` by displaying a soft static pulse instead of high-frequency shimmer.",
+    "Support seamless Dark and Light themes via CSS variables.",
   ],
   examples: [
     {
-      input: '<div class="skeleton skeleton-circle"></div><div class="skeleton skeleton-text"></div>',
-      output: 'Smooth silver-wave shimmering placeholder card',
-      explanation: 'Uses background-size: 200% 100% and keyframes animating background-position-x.',
+      input:
+        '<div class="skeleton skeleton-circle"></div><div class="skeleton skeleton-text"></div>',
+      output: "Smooth silver-wave shimmering placeholder card",
+      explanation:
+        "Uses background-size: 200% 100% and keyframes animating background-position-x.",
     },
   ],
   edgeCases: [
-    'Multiple skeletons on page: keep gradient angles and timing synced to avoid visual chaos.',
+    "Multiple skeletons on page: keep gradient angles and timing synced to avoid visual chaos.",
     'Accessibility: mark with `aria-hidden="true"` or `aria-busy="true"` on parent.',
   ],
   optimalApproach:
-    'Use `background: linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%)` with `background-size: 200% 100%` and animate `background-position-x: -200%` to `200%` over 1.5s.',
+    "Use `background: linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%)` with `background-size: 200% 100%` and animate `background-position-x: -200%` to `200%` over 1.5s.",
   implementation: `<!-- Skeleton Loader Card -->
 <div class="card-placeholder" aria-busy="true" aria-label="Loading content...">
   <div class="skeleton skeleton-avatar"></div>
@@ -561,19 +570,19 @@ export const cssSkeletonShimmerProblem: CodingProblem = {
 }
 </style>`,
   stepByStep: [
-    'Define `.skeleton` with a 3-stop `linear-gradient` (base color, lighter highlight, base color).',
-    'Set `background-size: 200% 100%` so the highlight wave can translate across.',
-    'Create keyframe `shimmer` translating `background-position-x` from `200%` to `-200%`.',
-    'Create utility shapes: `.skeleton-avatar` (50% border radius), `.skeleton-title`, and `.skeleton-line`.',
+    "Define `.skeleton` with a 3-stop `linear-gradient` (base color, lighter highlight, base color).",
+    "Set `background-size: 200% 100%` so the highlight wave can translate across.",
+    "Create keyframe `shimmer` translating `background-position-x` from `200%` to `-200%`.",
+    "Create utility shapes: `.skeleton-avatar` (50% border radius), `.skeleton-title`, and `.skeleton-line`.",
   ],
-  timeComplexity: 'O(1) GPU rendering',
-  spaceComplexity: 'O(1)',
+  timeComplexity: "O(1) GPU rendering",
+  spaceComplexity: "O(1)",
   commonMistakes: [
-    'Animating `opacity` repeatedly instead of gradient position, which can look flashing and jarring.',
-    'Forgetting `background-size: 200% 100%`, which prevents the gradient from shifting smoothly.',
+    "Animating `opacity` repeatedly instead of gradient position, which can look flashing and jarring.",
+    "Forgetting `background-size: 200% 100%`, which prevents the gradient from shifting smoothly.",
   ],
   followUps: [
-    'How does skeleton rendering improve perceived performance (FCP/LCP) over a spinner icon?',
+    "How does skeleton rendering improve perceived performance (FCP/LCP) over a spinner icon?",
   ],
 };
 

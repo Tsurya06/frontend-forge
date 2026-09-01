@@ -1,17 +1,20 @@
-import { useState, useMemo, useCallback } from 'react';
-import { useQuiz } from '@/hooks/useQuiz';
-import { Card } from '@/components/common/Card';
-import { Badge } from '@/components/common/Badge';
-import { ProgressBar } from '@/components/common/ProgressBar';
-import { allQuestions, categories } from '@/data';
-import type { Difficulty } from '@/types';
-import styles from './Quiz.module.css';
+import { useState, useMemo, useCallback } from "react";
+import { useQuiz } from "@/hooks/useQuiz";
+import { Card } from "@/components/common/Card";
+import { Badge } from "@/components/common/Badge";
+import { ProgressBar } from "@/components/common/ProgressBar";
+import { allQuestions, categories } from "@/data";
+import type { Difficulty } from "@/types";
+import styles from "./Quiz.module.css";
 
-const difficultyVariant: Record<Difficulty, 'beginner' | 'intermediate' | 'advanced' | 'senior'> = {
-  Beginner: 'beginner',
-  Intermediate: 'intermediate',
-  Advanced: 'advanced',
-  Senior: 'senior',
+const difficultyVariant: Record<
+  Difficulty,
+  "beginner" | "intermediate" | "advanced" | "senior"
+> = {
+  Beginner: "beginner",
+  Intermediate: "intermediate",
+  Advanced: "advanced",
+  Senior: "senior",
 };
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -26,8 +29,8 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 export default function Quiz() {
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [difficultyFilter, setDifficultyFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
   const [questionCount, setQuestionCount] = useState(10);
   const [showAnswer, setShowAnswer] = useState(false);
 
@@ -47,11 +50,11 @@ export default function Quiz() {
 
   const availableQuestions = useMemo(() => {
     let qs = [...allQuestions];
-    if (categoryFilter !== 'all') {
-      qs = qs.filter(q => q.category === categoryFilter);
+    if (categoryFilter !== "all") {
+      qs = qs.filter((q) => q.category === categoryFilter);
     }
-    if (difficultyFilter !== 'all') {
-      qs = qs.filter(q => q.difficulty === difficultyFilter);
+    if (difficultyFilter !== "all") {
+      qs = qs.filter((q) => q.difficulty === difficultyFilter);
     }
     return qs;
   }, [categoryFilter, difficultyFilter]);
@@ -62,16 +65,19 @@ export default function Quiz() {
     setShowAnswer(false);
   }, [availableQuestions, questionCount, startQuiz]);
 
-  const handleAnswer = useCallback((correct: boolean) => {
-    if (!currentQuestion) return;
-    answerQuestion(currentQuestion.id, correct);
-    if (isLastQuestion) {
-      nextQuestion();
-    } else {
-      setShowAnswer(false);
-      nextQuestion();
-    }
-  }, [currentQuestion, answerQuestion, isLastQuestion, nextQuestion]);
+  const handleAnswer = useCallback(
+    (correct: boolean) => {
+      if (!currentQuestion) return;
+      answerQuestion(currentQuestion.id, correct);
+      if (isLastQuestion) {
+        nextQuestion();
+      } else {
+        setShowAnswer(false);
+        nextQuestion();
+      }
+    },
+    [currentQuestion, answerQuestion, isLastQuestion, nextQuestion],
+  );
 
   const handleSkip = useCallback(() => {
     skipQuestion();
@@ -84,40 +90,48 @@ export default function Quiz() {
     setShowAnswer(false);
   }, [resetQuiz]);
 
-  const results = phase === 'results' ? getResults() : null;
+  const results = phase === "results" ? getResults() : null;
 
-  if (phase === 'idle' || phase === 'configuring') {
+  if (phase === "idle" || phase === "configuring") {
     return (
       <div className={styles.page}>
         <header className={styles.header}>
           <h1 className={styles.title}>Quiz Mode</h1>
-          <p className={styles.subtitle}>Test your knowledge with a quick quiz</p>
+          <p className={styles.subtitle}>
+            Test your knowledge with a quick quiz
+          </p>
         </header>
 
         <Card>
           <div className={styles.config}>
             <div className={styles.configRow}>
-              <label className={styles.configLabel} htmlFor="quiz-category">Category</label>
+              <label className={styles.configLabel} htmlFor="quiz-category">
+                Category
+              </label>
               <select
                 id="quiz-category"
                 className={styles.select}
                 value={categoryFilter}
-                onChange={e => setCategoryFilter(e.target.value)}
+                onChange={(e) => setCategoryFilter(e.target.value)}
               >
                 <option value="all">All Categories</option>
-                {categories.map(c => (
-                  <option key={c.id} value={c.id}>{c.title}</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.title}
+                  </option>
                 ))}
               </select>
             </div>
 
             <div className={styles.configRow}>
-              <label className={styles.configLabel} htmlFor="quiz-difficulty">Difficulty</label>
+              <label className={styles.configLabel} htmlFor="quiz-difficulty">
+                Difficulty
+              </label>
               <select
                 id="quiz-difficulty"
                 className={styles.select}
                 value={difficultyFilter}
-                onChange={e => setDifficultyFilter(e.target.value)}
+                onChange={(e) => setDifficultyFilter(e.target.value)}
               >
                 <option value="all">All Difficulties</option>
                 <option value="Beginner">Beginner</option>
@@ -128,12 +142,14 @@ export default function Quiz() {
             </div>
 
             <div className={styles.configRow}>
-              <label className={styles.configLabel} htmlFor="quiz-count">Questions</label>
+              <label className={styles.configLabel} htmlFor="quiz-count">
+                Questions
+              </label>
               <select
                 id="quiz-count"
                 className={styles.select}
                 value={questionCount}
-                onChange={e => setQuestionCount(Number(e.target.value))}
+                onChange={(e) => setQuestionCount(Number(e.target.value))}
               >
                 <option value={5}>5</option>
                 <option value={10}>10</option>
@@ -161,10 +177,11 @@ export default function Quiz() {
     );
   }
 
-  if (phase === 'active' && currentQuestion) {
-    const progressPct = totalQuestions > 0
-      ? Math.round(((currentIndex + 1) / totalQuestions) * 100)
-      : 0;
+  if (phase === "active" && currentQuestion) {
+    const progressPct =
+      totalQuestions > 0
+        ? Math.round(((currentIndex + 1) / totalQuestions) * 100)
+        : 0;
 
     return (
       <div className={styles.page}>
@@ -178,10 +195,15 @@ export default function Quiz() {
         <Card>
           <div className={styles.questionCard}>
             <div className={styles.questionMeta}>
-              <Badge variant={difficultyVariant[currentQuestion.difficulty]} size="small">
+              <Badge
+                variant={difficultyVariant[currentQuestion.difficulty]}
+                size="small"
+              >
                 {currentQuestion.difficulty}
               </Badge>
-              <Badge variant="category" size="small">{currentQuestion.category}</Badge>
+              <Badge variant="category" size="small">
+                {currentQuestion.category}
+              </Badge>
             </div>
 
             <h2 className={styles.questionText}>{currentQuestion.question}</h2>
@@ -240,7 +262,7 @@ export default function Quiz() {
     );
   }
 
-  if (phase === 'results' && results) {
+  if (phase === "results" && results) {
     return (
       <div className={styles.page}>
         <header className={styles.header}>
@@ -256,28 +278,44 @@ export default function Quiz() {
 
             <div className={styles.resultsStats}>
               <div className={styles.resultStat}>
-                <span className={styles.resultStatValue}>{results.correct}</span>
+                <span className={styles.resultStatValue}>
+                  {results.correct}
+                </span>
                 <span className={styles.resultStatLabel}>Correct</span>
               </div>
               <div className={styles.resultStat}>
-                <span className={styles.resultStatValue}>{results.answered - results.correct}</span>
+                <span className={styles.resultStatValue}>
+                  {results.answered - results.correct}
+                </span>
                 <span className={styles.resultStatLabel}>Incorrect</span>
               </div>
               <div className={styles.resultStat}>
-                <span className={styles.resultStatValue}>{results.skipped}</span>
+                <span className={styles.resultStatValue}>
+                  {results.skipped}
+                </span>
                 <span className={styles.resultStatLabel}>Skipped</span>
               </div>
               <div className={styles.resultStat}>
-                <span className={styles.resultStatValue}>{results.totalQuestions}</span>
+                <span className={styles.resultStatValue}>
+                  {results.totalQuestions}
+                </span>
                 <span className={styles.resultStatLabel}>Total</span>
               </div>
             </div>
 
             <div className={styles.resultsActions}>
-              <button type="button" className={styles.startBtn} onClick={handleStart}>
+              <button
+                type="button"
+                className={styles.startBtn}
+                onClick={handleStart}
+              >
                 Retake Quiz
               </button>
-              <button type="button" className={styles.secondaryBtn} onClick={handleReset}>
+              <button
+                type="button"
+                className={styles.secondaryBtn}
+                onClick={handleReset}
+              >
                 New Configuration
               </button>
             </div>

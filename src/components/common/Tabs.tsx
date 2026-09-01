@@ -56,11 +56,7 @@ export function Tabs({ tabs, defaultTab, className }: TabsProps) {
 
   return (
     <div className={`${styles.tabs} ${className ?? ""}`}>
-      <div
-        className={styles.tabList}
-        role="tablist"
-        onKeyDown={handleKeyDown}
-      >
+      <div className={styles.tabList} role="tablist" onKeyDown={handleKeyDown}>
         {tabs.map((tab) => (
           <button
             key={tab.id}

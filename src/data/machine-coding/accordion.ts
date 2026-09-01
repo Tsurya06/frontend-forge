@@ -1,31 +1,38 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const accordionProblem: MachineCodingProblem = {
-  id: 'mc-accordion',
-  title: 'Accordion Component',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'accordion', 'accessibility', 'aria', 'keyboard-navigation', 'animation'],
+  id: "mc-accordion",
+  title: "Accordion Component",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "accordion",
+    "accessibility",
+    "aria",
+    "keyboard-navigation",
+    "animation",
+  ],
 
   problemStatement: `Build an Accordion component in React that allows users to expand and collapse content sections. The accordion should support both single-panel mode (only one section open at a time, like a traditional accordion) and multi-panel mode (multiple sections can be open simultaneously). This is a frequently asked machine coding question that tests your understanding of compound components, ARIA patterns, and state management.
 
 The component must be fully keyboard accessible, following the WAI-ARIA Accordion pattern. Users should be able to navigate between accordion headers using arrow keys, expand/collapse panels with Enter or Space, and jump to the first/last header with Home/End keys. Each panel's content should animate smoothly between open and closed states.`,
 
   functionalRequirements: [
-    'Expand/collapse individual accordion panels on header click',
-    'Support single-open mode (collapse others when one opens)',
-    'Support multi-open mode (multiple panels open at once)',
-    'Smooth height animation when opening/closing panels',
-    'Support controlled and uncontrolled usage',
-    'Allow default expanded panels on initial render',
-    'Support disabled state for individual panels',
+    "Expand/collapse individual accordion panels on header click",
+    "Support single-open mode (collapse others when one opens)",
+    "Support multi-open mode (multiple panels open at once)",
+    "Smooth height animation when opening/closing panels",
+    "Support controlled and uncontrolled usage",
+    "Allow default expanded panels on initial render",
+    "Support disabled state for individual panels",
   ],
 
   nonFunctionalRequirements: [
-    'Full keyboard navigation: Enter/Space to toggle, Arrow keys to navigate headers',
-    'ARIA attributes: role, aria-expanded, aria-controls, aria-labelledby',
-    'CSS transitions for smooth open/close animation',
-    'Compound component API for flexible composition',
+    "Full keyboard navigation: Enter/Space to toggle, Arrow keys to navigate headers",
+    "ARIA attributes: role, aria-expanded, aria-controls, aria-labelledby",
+    "CSS transitions for smooth open/close animation",
+    "Compound component API for flexible composition",
   ],
 
   componentHierarchy: `Accordion
@@ -210,33 +217,33 @@ export default function AccordionDemo() {
   performance: `The accordion only re-renders items whose expanded state changes. The compound component pattern with context is efficient because each \`AccordionItem\` subscribes to the same context but only re-renders when \`expandedItems\` changes. Height animation uses CSS transitions on \`maxHeight\` rather than JavaScript animation, leveraging GPU-accelerated compositing. After the open transition completes, \`maxHeight\` is set to \`none\` to allow dynamic content changes without height constraints. The two-frame \`requestAnimationFrame\` trick ensures the browser processes the initial height before transitioning to 0.`,
 
   edgeCases: [
-    'Accordion with dynamic content that changes height after opening',
-    'Rapidly toggling panels before animation completes',
-    'Accordion with zero items should render empty without errors',
-    'Very long content should scroll within the panel if constrained',
-    'Nested accordions should maintain independent state',
+    "Accordion with dynamic content that changes height after opening",
+    "Rapidly toggling panels before animation completes",
+    "Accordion with zero items should render empty without errors",
+    "Very long content should scroll within the panel if constrained",
+    "Nested accordions should maintain independent state",
   ],
 
   testingStrategy: [
-    'Unit test: clicking header toggles panel visibility',
-    'Unit test: single mode collapses other panels when opening one',
-    'Unit test: multi mode allows multiple panels open simultaneously',
-    'Unit test: disabled items cannot be toggled',
-    'Integration test: Arrow keys navigate between accordion headers',
-    'Accessibility audit: verify ARIA attributes and roles',
+    "Unit test: clicking header toggles panel visibility",
+    "Unit test: single mode collapses other panels when opening one",
+    "Unit test: multi mode allows multiple panels open simultaneously",
+    "Unit test: disabled items cannot be toggled",
+    "Integration test: Arrow keys navigate between accordion headers",
+    "Accessibility audit: verify ARIA attributes and roles",
   ],
 
   improvements: [
-    'Add icon customization for expand/collapse indicator',
-    'Support nested accordions with independent state management',
-    'Add lazy rendering of panel content (only render when first opened)',
-    'Implement drag-and-drop reordering of accordion items',
+    "Add icon customization for expand/collapse indicator",
+    "Support nested accordions with independent state management",
+    "Add lazy rendering of panel content (only render when first opened)",
+    "Implement drag-and-drop reordering of accordion items",
   ],
 
   followUpQuestions: [
-    'How would you implement the compound component pattern with TypeScript generics?',
-    'What are the pros and cons of CSS transitions vs JS animation for the accordion?',
-    'How would you lazy-load heavy accordion panel content?',
-    'How does the WAI-ARIA accordion pattern differ from the disclosure pattern?',
+    "How would you implement the compound component pattern with TypeScript generics?",
+    "What are the pros and cons of CSS transitions vs JS animation for the accordion?",
+    "How would you lazy-load heavy accordion panel content?",
+    "How does the WAI-ARIA accordion pattern differ from the disclosure pattern?",
   ],
 };

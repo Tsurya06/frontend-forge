@@ -1,11 +1,18 @@
-import type { CodingProblem } from '../../types';
+import type { CodingProblem } from "../../types";
 
 export const calcChainingMethodProblem: CodingProblem = {
-  id: 'coding-calc-chaining-method',
-  title: 'Implement Calculator Method Chaining (Fluent API)',
-  difficulty: 'Beginner',
-  category: 'Coding',
-  tags: ['javascript', 'method-chaining', 'closures', 'oop', 'fluent-interface', 'calculator'],
+  id: "coding-calc-chaining-method",
+  title: "Implement Calculator Method Chaining (Fluent API)",
+  difficulty: "Beginner",
+  category: "Coding",
+  tags: [
+    "javascript",
+    "method-chaining",
+    "closures",
+    "oop",
+    "fluent-interface",
+    "calculator",
+  ],
 
   problem: `Implement a calculator function \`calc(initialValue = 0)\` that supports continuous method chaining:
 \`\`\`js
@@ -25,31 +32,31 @@ Requirements:
 4. The calculation must support both immutable (returning new instances on each step) and stateful/builder patterns.`,
 
   requirements: [
-    'Support chaining of add, subtract, multiply, divide, power, reset',
-    'Terminate chain with getResult() to extract numeric value',
-    'Support valueOf() and toString() for implicit type coercion',
-    'Handle division by zero gracefully with descriptive Error',
-    'Preserve numerical precision where possible',
+    "Support chaining of add, subtract, multiply, divide, power, reset",
+    "Terminate chain with getResult() to extract numeric value",
+    "Support valueOf() and toString() for implicit type coercion",
+    "Handle division by zero gracefully with descriptive Error",
+    "Preserve numerical precision where possible",
   ],
 
   examples: [
     {
       input: `calc().add(10).subtract(5).multiply(20).divide(2).getResult()`,
-      output: '50',
-      explanation: '(0 + 10 - 5) * 20 / 2 = 5 * 20 / 2 = 100 / 2 = 50',
+      output: "50",
+      explanation: "(0 + 10 - 5) * 20 / 2 = 5 * 20 / 2 = 100 / 2 = 50",
     },
     {
       input: `calc(5).multiply(4).add(10).divide(5).getResult()`,
-      output: '6',
-      explanation: '(5 * 4 + 10) / 5 = (20 + 10) / 5 = 30 / 5 = 6',
+      output: "6",
+      explanation: "(5 * 4 + 10) / 5 = (20 + 10) / 5 = 30 / 5 = 6",
     },
   ],
 
   edgeCases: [
     'Division by zero (throw Error: "Division by zero is undefined")',
-    'Chaining without initial value (defaults to 0)',
-    'Floating point precision (e.g. 0.1 + 0.2 handling)',
-    'Calling getResult multiple times or continuing chain after getResult',
+    "Chaining without initial value (defaults to 0)",
+    "Floating point precision (e.g. 0.1 + 0.2 handling)",
+    "Calling getResult multiple times or continuing chain after getResult",
   ],
 
   naiveApproach: `A naive approach modifies a global variable, which breaks if multiple calculator instances run concurrently in the application.`,
@@ -165,31 +172,31 @@ export function calc(initialValue: number = 0): Calculator {
 }`,
 
   stepByStep: [
-    'Initialize value variable scoped inside calc function closure.',
-    'Create calculator object containing operational methods.',
-    'In each operation method (add, subtract, etc.), update value and return this.',
-    'Implement divide checking for zero divisor.',
-    'Implement getResult() returning the current value.',
-    'Return calculator instance.',
+    "Initialize value variable scoped inside calc function closure.",
+    "Create calculator object containing operational methods.",
+    "In each operation method (add, subtract, etc.), update value and return this.",
+    "Implement divide checking for zero divisor.",
+    "Implement getResult() returning the current value.",
+    "Return calculator instance.",
   ],
 
-  timeComplexity: 'O(1) per chained operation.',
-  spaceComplexity: 'O(1) memory allocation.',
+  timeComplexity: "O(1) per chained operation.",
+  spaceComplexity: "O(1) memory allocation.",
 
   alternativeSolutions: [
-    'ES6 Class implementation with fluent methods',
-    'Immutable Functional approach where each method returns new calc(newValue)',
+    "ES6 Class implementation with fluent methods",
+    "Immutable Functional approach where each method returns new calc(newValue)",
   ],
 
   commonMistakes: [
-    'Forgetting to return this from chained methods, breaking subsequent calls with TypeError.',
-    'Not handling division by zero.',
-    'Mutating a global or shared prototype variable instead of instance-scoped state.',
+    "Forgetting to return this from chained methods, breaking subsequent calls with TypeError.",
+    "Not handling division by zero.",
+    "Mutating a global or shared prototype variable instead of instance-scoped state.",
   ],
 
   followUps: [
-    'How would you implement an immutable calculator where every operation returns a new instance?',
-    'How would you implement an undo() / redo() method in the chain?',
-    'How does JavaScript Symbol.toPrimitive allow implicit arithmetic like `calc(5).add(10) + 5` to equal 20?',
+    "How would you implement an immutable calculator where every operation returns a new instance?",
+    "How would you implement an undo() / redo() method in the chain?",
+    "How does JavaScript Symbol.toPrimitive allow implicit arithmetic like `calc(5).add(10) + 5` to equal 20?",
   ],
 };

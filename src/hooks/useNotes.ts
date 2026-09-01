@@ -1,15 +1,15 @@
-import { useCallback } from 'react';
-import { useLocalStorage } from './useLocalStorage';
+import { useCallback } from "react";
+import { useLocalStorage } from "./useLocalStorage";
 
-const NOTES_KEY = 'feeq-notes';
+const NOTES_KEY = "feeq-notes";
 
 export function useNotes() {
-  const [notes, setNotes] = useLocalStorage<Record<string, string>>(NOTES_KEY, {});
-
-  const getNote = useCallback(
-    (id: string): string => notes[id] ?? '',
-    [notes],
+  const [notes, setNotes] = useLocalStorage<Record<string, string>>(
+    NOTES_KEY,
+    {},
   );
+
+  const getNote = useCallback((id: string): string => notes[id] ?? "", [notes]);
 
   const setNote = useCallback(
     (id: string, text: string) => {

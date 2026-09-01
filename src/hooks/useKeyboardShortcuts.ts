@@ -1,5 +1,5 @@
-import { useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ShortcutCallbacks {
   onNext?: () => void;
@@ -14,7 +14,7 @@ const SEQUENCE_TIMEOUT = 800;
 function isEditableTarget(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false;
   const tag = el.tagName.toLowerCase();
-  if (tag === 'input' || tag === 'textarea' || tag === 'select') return true;
+  if (tag === "input" || tag === "textarea" || tag === "select") return true;
   return el.isContentEditable;
 }
 
@@ -30,22 +30,22 @@ export function useKeyboardShortcuts(callbacks: ShortcutCallbacks = {}) {
 
   const handleSequence = useCallback(
     (keys: string[]) => {
-      const combo = keys.join(' ');
+      const combo = keys.join(" ");
       switch (combo) {
-        case 'g d':
-          navigate('/');
+        case "g d":
+          navigate("/");
           break;
-        case 'g t':
-          navigate('/topics');
+        case "g t":
+          navigate("/topics");
           break;
-        case 'g c':
-          navigate('/coding');
+        case "g c":
+          navigate("/coding");
           break;
-        case 'g m':
-          navigate('/machine-coding');
+        case "g m":
+          navigate("/machine-coding");
           break;
-        case 'g b':
-          navigate('/bookmarks');
+        case "g b":
+          navigate("/bookmarks");
           break;
       }
     },
@@ -59,51 +59,54 @@ export function useKeyboardShortcuts(callbacks: ShortcutCallbacks = {}) {
 
       const key = e.key.toLowerCase();
 
-      if (key === '/') {
+      if (key === "/") {
         e.preventDefault();
         const searchInput = document.querySelector<HTMLInputElement>(
-          '[data-search-input]',
+          "[data-search-input]",
         );
         searchInput?.focus();
         return;
       }
 
-      if (key === '?') {
+      if (key === "?") {
         e.preventDefault();
         callbacksRef.current.onShowShortcuts?.();
         return;
       }
 
-      if (key === 'j') {
+      if (key === "j") {
         callbacksRef.current.onNext?.();
         return;
       }
 
-      if (key === 'k') {
+      if (key === "k") {
         callbacksRef.current.onPrevious?.();
         return;
       }
 
-      if (key === 'b') {
+      if (key === "b") {
         callbacksRef.current.onBookmark?.();
         return;
       }
 
-      if (key === 'm') {
+      if (key === "m") {
         callbacksRef.current.onMarkComplete?.();
         return;
       }
 
-      if (key === 'g') {
+      if (key === "g") {
         if (sequenceTimer.current) clearTimeout(sequenceTimer.current);
-        sequenceBuffer.current = ['g'];
+        sequenceBuffer.current = ["g"];
         sequenceTimer.current = setTimeout(() => {
           sequenceBuffer.current = [];
         }, SEQUENCE_TIMEOUT);
         return;
       }
 
-      if (sequenceBuffer.current.length > 0 && sequenceBuffer.current[0] === 'g') {
+      if (
+        sequenceBuffer.current.length > 0 &&
+        sequenceBuffer.current[0] === "g"
+      ) {
         if (sequenceTimer.current) clearTimeout(sequenceTimer.current);
         const seq = [...sequenceBuffer.current, key];
         sequenceBuffer.current = [];
@@ -111,9 +114,9 @@ export function useKeyboardShortcuts(callbacks: ShortcutCallbacks = {}) {
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
       if (sequenceTimer.current) clearTimeout(sequenceTimer.current);
     };
   }, [handleSequence]);

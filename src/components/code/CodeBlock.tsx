@@ -18,6 +18,49 @@ interface CodeBlockProps {
   language: string;
   title?: string;
   showLineNumbers?: boolean;
+  disablePlayground?: boolean;
+}
+
+const NON_PLAYGROUND_LANGUAGES = new Set([
+  "text",
+  "txt",
+  "plain",
+  "plaintext",
+  "ascii",
+  "tree",
+  "bash",
+  "sh",
+  "shell",
+  "terminal",
+  "markdown",
+  "md",
+  "output",
+  "log",
+  "pseudo",
+  "pseudocode",
+  "dir",
+  "directory",
+]);
+
+function isTreeOrDiagram(text: string): boolean {
+  const trimmed = text.trim();
+  if (
+    trimmed.includes("├──") ||
+    trimmed.includes("└──") ||
+    trimmed.includes("│  ") ||
+    trimmed.includes("├───") ||
+    trimmed.includes("|--")
+  ) {
+    return true;
+  }
+  const lines = trimmed.split("\n");
+  const treeLikeLines = lines.filter((l) =>
+    /^[├└│|\s\-]+[a-zA-Z0-9_\-./]+/.test(l.trim()),
+  );
+  if (treeLikeLines.length >= 2 && treeLikeLines.length >= lines.length * 0.4) {
+    return true;
+  }
+  return false;
 }
 
 interface ConsoleOutputLine {
@@ -31,6 +74,7 @@ export function CodeBlock({
   language,
   title,
   showLineNumbers = false,
+  disablePlayground = false,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
@@ -39,14 +83,27 @@ export function CodeBlock({
   const [consoleOutput, setConsoleOutput] = useState<ConsoleOutputLine[]>([]);
   const [executionTime, setExecutionTime] = useState<number | null>(null);
 
+  const langLower = (language || "").toLowerCase().trim();
+  const isTree = isTreeOrDiagram(code);
+  const isNonCode = NON_PLAYGROUND_LANGUAGES.has(langLower) || isTree;
+
   const isHtmlCss =
-    ["html", "markup", "css", "web"].includes(language.toLowerCase()) ||
-    code.trim().startsWith("<!--") ||
-    code.trim().startsWith("<!DOCTYPE") ||
-    code.trim().startsWith("<div") ||
-    code.trim().startsWith("<style");
+    !isNonCode &&
+    (["html", "markup", "css", "web"].includes(langLower) ||
+      code.trim().startsWith("<!--") ||
+      code.trim().startsWith("<!DOCTYPE") ||
+      code.trim().startsWith("<div") ||
+      code.trim().startsWith("<style"));
+
   const isRunnableJS =
-    ["javascript", "typescript", "js", "ts"].includes(language.toLowerCase()) && !isHtmlCss;
+    !isNonCode &&
+    ["javascript", "typescript", "js", "ts", "jsx", "tsx"].includes(
+      langLower,
+    ) &&
+    !isHtmlCss;
+
+  const isPlaygroundEligible =
+    !disablePlayground && !isNonCode && code.trim().length > 0;
 
   const handleCopy = useCallback(async () => {
     try {
@@ -79,11 +136,18 @@ export function CodeBlock({
 
     const startTime = performance.now();
 
-    const appendLine = (type: ConsoleOutputLine["type"], ...args: unknown[]) => {
+    const appendLine = (
+      type: ConsoleOutputLine["type"],
+      ...args: unknown[]
+    ) => {
       const text = args.map(formatValue).join(" ");
       setConsoleOutput((prev) => [
         ...prev,
-        { id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, type, text },
+        {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          type,
+          text,
+        },
       ]);
     };
 
@@ -110,7 +174,7 @@ export function CodeBlock({
         return (async () => {
           ${jsCode}
         })();
-        `
+        `,
       );
 
       const res = runner(
@@ -119,7 +183,7 @@ export function CodeBlock({
         window.setInterval.bind(window),
         window.clearTimeout.bind(window),
         window.clearInterval.bind(window),
-        Promise
+        Promise,
       );
 
       if (res && typeof res.then === "function") {
@@ -159,7 +223,9 @@ export function CodeBlock({
     const rawLines = code.split("\n");
     return rawLines.map((line) => {
       if (!line) return "&nbsp;";
-      return grammar ? Prism.highlight(line, grammar, grammarLang) : escapeHtml(line);
+      return grammar
+        ? Prism.highlight(line, grammar, grammarLang)
+        : escapeHtml(line);
     });
   }, [code, grammar, grammarLang]);
 
@@ -204,7 +270,9 @@ export function CodeBlock({
           {isHtmlCss && (
             <button
               type="button"
-              className={showHtmlPreview ? styles.previewBtnActive : styles.runBtn}
+              className={
+                showHtmlPreview ? styles.previewBtnActive : styles.runBtn
+              }
               onClick={() => setShowHtmlPreview((prev) => !prev)}
               aria-label="Live HTML/CSS Preview"
               title="Toggle Live Visual Preview"
@@ -213,19 +281,21 @@ export function CodeBlock({
             </button>
           )}
 
-          <Link
-            to={`/playground`}
-            onClick={() => {
-              sessionStorage.setItem("feeq-playground-snippet", code);
-              if (isHtmlCss) {
-                sessionStorage.setItem("feeq-playground-mode", "web");
-              }
-            }}
-            className={styles.playgroundBtn}
-            title="Open in Code Playground"
-          >
-            🛠️ Playground
-          </Link>
+          {isPlaygroundEligible && (
+            <Link
+              to={`/playground`}
+              onClick={() => {
+                sessionStorage.setItem("feeq-playground-snippet", code);
+                if (isHtmlCss) {
+                  sessionStorage.setItem("feeq-playground-mode", "web");
+                }
+              }}
+              className={styles.playgroundBtn}
+              title="Open in Code Playground"
+            >
+              🛠️ Playground
+            </Link>
+          )}
 
           <button
             type="button"
@@ -238,7 +308,9 @@ export function CodeBlock({
         </div>
       </div>
 
-      <pre className={`${styles.pre} ${showLineNumbers ? styles.withLineNumbers : ""}`}>
+      <pre
+        className={`${styles.pre} ${showLineNumbers ? styles.withLineNumbers : ""}`}
+      >
         <code className={`language-${grammarLang}`}>
           {highlightedLines.map((htmlLine, i) => (
             <div
@@ -279,7 +351,9 @@ export function CodeBlock({
             <div className={styles.consoleTitle}>
               <span>📟 Console Output</span>
               {executionTime !== null && (
-                <span className={styles.execTime}>⏱ {executionTime.toFixed(1)}ms</span>
+                <span className={styles.execTime}>
+                  ⏱ {executionTime.toFixed(1)}ms
+                </span>
               )}
             </div>
             <div className={styles.consoleActions}>
@@ -302,7 +376,9 @@ export function CodeBlock({
           <div className={styles.consoleBody}>
             {consoleOutput.length === 0 ? (
               <span className={styles.emptyLog}>
-                {isRunning ? "Executing code..." : "No console output recorded."}
+                {isRunning
+                  ? "Executing code..."
+                  : "No console output recorded."}
               </span>
             ) : (
               consoleOutput.map((l) => (
@@ -312,20 +388,20 @@ export function CodeBlock({
                     l.type === "error"
                       ? styles.consoleError
                       : l.type === "warn"
-                      ? styles.consoleWarn
-                      : l.type === "result"
-                      ? styles.consoleResult
-                      : styles.consoleLog
+                        ? styles.consoleWarn
+                        : l.type === "result"
+                          ? styles.consoleResult
+                          : styles.consoleLog
                   }`}
                 >
                   <span className={styles.consolePrefix}>
                     {l.type === "error"
                       ? "✗"
                       : l.type === "warn"
-                      ? "⚠"
-                      : l.type === "result"
-                      ? "→"
-                      : "›"}
+                        ? "⚠"
+                        : l.type === "result"
+                          ? "→"
+                          : "›"}
                   </span>
                   <span className={styles.consoleText}>{l.text}</span>
                 </div>
@@ -346,7 +422,9 @@ function escapeHtml(text: string): string {
 }
 
 function buildSmartPreview(source: string, lang: string): string {
-  const isPureCSS = lang.toLowerCase() === "css" || (!source.includes("<") && !source.includes("</"));
+  const isPureCSS =
+    lang.toLowerCase() === "css" ||
+    (!source.includes("<") && !source.includes("</"));
 
   if (isPureCSS) {
     // Extract selector class names from CSS (e.g., .card, .box-content, .box-border, etc.)
@@ -354,7 +432,16 @@ function buildSmartPreview(source: string, lang: string): string {
       .map((m) => m[1])
       .filter((c): c is string => Boolean(c));
     const uniqueClasses = Array.from(new Set(classMatches)).filter(
-      (c) => !["hover", "focus", "active", "before", "after", "disabled", "checked"].includes(c)
+      (c) =>
+        ![
+          "hover",
+          "focus",
+          "active",
+          "before",
+          "after",
+          "disabled",
+          "checked",
+        ].includes(c),
     );
 
     return `<!DOCTYPE html>
@@ -403,7 +490,7 @@ function buildSmartPreview(source: string, lang: string): string {
           ? uniqueClasses
               .map(
                 (cls) =>
-                  `<div class="${cls} demo-card-fallback"><strong>.${cls}</strong><p style="margin:4px 0 0;font-size:12px;color:#6b6b6b">CSS styles & animations active</p></div>`
+                  `<div class="${cls} demo-card-fallback"><strong>.${cls}</strong><p style="margin:4px 0 0;font-size:12px;color:#6b6b6b">CSS styles & animations active</p></div>`,
               )
               .join("")
           : `<div class="card demo-card-fallback"><strong>CSS Animation / Style Demo</strong><p style="margin:4px 0 0;font-size:12px;color:#6b6b6b">Live render testbed</p></div>`

@@ -1,32 +1,32 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const ticTacToeProblem: MachineCodingProblem = {
-  id: 'mc-tic-tac-toe',
-  title: 'Tic Tac Toe Game',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'game', 'state-management', 'win-detection', 'two-player'],
+  id: "mc-tic-tac-toe",
+  title: "Tic Tac Toe Game",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: ["react", "game", "state-management", "win-detection", "two-player"],
 
   problemStatement: `Build a Tic Tac Toe game in React with two-player support and win detection. The game should display a 3x3 grid where players alternate placing X and O marks. After each move, the game checks for a winner (three in a row horizontally, vertically, or diagonally) or a draw (all cells filled with no winner). This is a classic coding challenge that tests your understanding of game state management, immutable updates, and algorithmic thinking.
 
 Extend the basic game with features like move history (allowing players to jump back to any previous state), score tracking across multiple rounds, highlighting the winning combination, and an optional AI opponent using the minimax algorithm. The component should display whose turn it is, announce the winner or draw, and allow restarting the game.`,
 
   functionalRequirements: [
-    'Display a 3x3 game grid with clickable cells',
-    'Alternate between X and O players on each move',
-    'Detect win conditions (rows, columns, diagonals)',
-    'Detect draw when all cells are filled with no winner',
-    'Display current player turn and game result',
-    'Highlight the winning combination of cells',
-    'Restart game / new round button',
-    'Move history with ability to jump to any previous state',
+    "Display a 3x3 game grid with clickable cells",
+    "Alternate between X and O players on each move",
+    "Detect win conditions (rows, columns, diagonals)",
+    "Detect draw when all cells are filled with no winner",
+    "Display current player turn and game result",
+    "Highlight the winning combination of cells",
+    "Restart game / new round button",
+    "Move history with ability to jump to any previous state",
   ],
 
   nonFunctionalRequirements: [
-    'Immutable state updates for time-travel (history) support',
-    'Efficient win detection algorithm',
-    'Accessible grid with proper ARIA roles for game board',
-    'Responsive layout that works on mobile',
+    "Immutable state updates for time-travel (history) support",
+    "Efficient win detection algorithm",
+    "Accessible grid with proper ARIA roles for game board",
+    "Responsive layout that works on mobile",
   ],
 
   componentHierarchy: `TicTacToe
@@ -256,34 +256,34 @@ export default function TicTacToe() {
   performance: `The board is represented as a flat 9-element array for O(1) cell access. Win detection checks at most 8 lines per move, which is constant time. Board states are stored as separate arrays (not shared), enabling clean time-travel without copy-on-write complexity. The \`useMemo\` for win detection avoids rechecking on unrelated state changes. The \`useCallback\` on cell click handlers prevents unnecessary re-renders. For the standard 3x3 game, performance is never a concern, but the architecture scales to larger grids.`,
 
   edgeCases: [
-    'Clicking an already-filled cell should be a no-op',
-    'Clicking after game is won should be a no-op',
-    'Time-traveling back and making a different move should truncate future history',
-    'Draw detection must check all 9 cells are filled with no winner',
-    'Score tracking across restart vs new game (restart keeps scores, new game resets)',
+    "Clicking an already-filled cell should be a no-op",
+    "Clicking after game is won should be a no-op",
+    "Time-traveling back and making a different move should truncate future history",
+    "Draw detection must check all 9 cells are filled with no winner",
+    "Score tracking across restart vs new game (restart keeps scores, new game resets)",
   ],
 
   testingStrategy: [
-    'Unit test: checkWinner detects all 8 winning combinations',
-    'Unit test: checkWinner returns null when no winner',
-    'Unit test: PLAY action alternates between X and O',
-    'Unit test: PLAY action is rejected on occupied cell or after game over',
-    'Integration test: full game flow from start to win',
-    'Integration test: time travel to previous move and replay',
+    "Unit test: checkWinner detects all 8 winning combinations",
+    "Unit test: checkWinner returns null when no winner",
+    "Unit test: PLAY action alternates between X and O",
+    "Unit test: PLAY action is rejected on occupied cell or after game over",
+    "Integration test: full game flow from start to win",
+    "Integration test: time travel to previous move and replay",
   ],
 
   improvements: [
-    'Add AI opponent using minimax algorithm with alpha-beta pruning',
-    'Support configurable board size (4x4, 5x5) with adjustable win length',
-    'Add move animations when placing marks',
-    'Implement online multiplayer with WebSocket',
-    'Add game replay feature with auto-playback',
+    "Add AI opponent using minimax algorithm with alpha-beta pruning",
+    "Support configurable board size (4x4, 5x5) with adjustable win length",
+    "Add move animations when placing marks",
+    "Implement online multiplayer with WebSocket",
+    "Add game replay feature with auto-playback",
   ],
 
   followUpQuestions: [
-    'How would you implement the minimax algorithm for an AI opponent?',
-    'How does time-travel work with immutable state in React?',
-    'How would you scale the win detection algorithm for an NxN board?',
-    'What data structure would you use for an undo/redo system in a complex game?',
+    "How would you implement the minimax algorithm for an AI opponent?",
+    "How does time-travel work with immutable state in React?",
+    "How would you scale the win detection algorithm for an NxN board?",
+    "What data structure would you use for an undo/redo system in a complex game?",
   ],
 };

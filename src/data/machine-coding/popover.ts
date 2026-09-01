@@ -1,31 +1,38 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const popoverProblem: MachineCodingProblem = {
-  id: 'mc-popover',
-  title: 'Popover Component',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'positioning', 'outside-click', 'portal', 'tooltip', 'floating-ui'],
+  id: "mc-popover",
+  title: "Popover Component",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "positioning",
+    "outside-click",
+    "portal",
+    "tooltip",
+    "floating-ui",
+  ],
 
   problemStatement: `Build a Popover component in React that displays floating content anchored to a trigger element. The popover should support multiple placement options (top, bottom, left, right) and automatically reposition itself when it would overflow the viewport. This tests understanding of DOM measurement, dynamic positioning, and event handling.
 
 The popover must close when the user clicks outside of it, presses Escape, or when the trigger element loses focus. It should handle edge cases like window resizing, scrolling containers, and viewport boundary detection. The component should be composable and work with any trigger element, not just buttons.`,
 
   functionalRequirements: [
-    'Show/hide popover content on trigger click or hover',
-    'Support placement options: top, bottom, left, right (with auto-flip)',
-    'Close on outside click',
-    'Close on Escape key press',
-    'Auto-reposition when overflowing viewport boundaries',
-    'Support custom offset/spacing from the trigger',
-    'Work with any trigger element via render prop or ref forwarding',
+    "Show/hide popover content on trigger click or hover",
+    "Support placement options: top, bottom, left, right (with auto-flip)",
+    "Close on outside click",
+    "Close on Escape key press",
+    "Auto-reposition when overflowing viewport boundaries",
+    "Support custom offset/spacing from the trigger",
+    "Work with any trigger element via render prop or ref forwarding",
   ],
 
   nonFunctionalRequirements: [
-    'Use React Portal to avoid overflow: hidden clipping',
-    'Position calculation using getBoundingClientRect',
-    'Accessible: proper ARIA attributes for expanded/collapsed state',
-    'Clean event listener management to prevent memory leaks',
+    "Use React Portal to avoid overflow: hidden clipping",
+    "Position calculation using getBoundingClientRect",
+    "Accessible: proper ARIA attributes for expanded/collapsed state",
+    "Clean event listener management to prevent memory leaks",
   ],
 
   componentHierarchy: `Popover
@@ -194,33 +201,33 @@ export default function Popover({
   performance: `Position calculation uses \`getBoundingClientRect()\` which triggers a layout read but is efficient for single-element measurement. Scroll and resize listeners use passive event handling where possible. The popover renders nothing when closed, avoiding unnecessary DOM nodes. Position updates are batched through React state, preventing multiple reflows. For high-frequency scroll events, a \`requestAnimationFrame\` throttle could be added, but the simple approach works well for most use cases.`,
 
   edgeCases: [
-    'Trigger element near viewport edge requires flip/shift positioning',
-    'Scrolling container clips the popover if not using a portal',
-    'Multiple popovers open simultaneously should not interfere',
-    'Window resize while popover is open should reposition correctly',
-    'Popover with interactive content must remain open when clicking inside it',
+    "Trigger element near viewport edge requires flip/shift positioning",
+    "Scrolling container clips the popover if not using a portal",
+    "Multiple popovers open simultaneously should not interfere",
+    "Window resize while popover is open should reposition correctly",
+    "Popover with interactive content must remain open when clicking inside it",
   ],
 
   testingStrategy: [
-    'Unit test: popover opens on trigger click and closes on second click',
-    'Unit test: outside click closes the popover',
-    'Unit test: Escape key closes the popover',
-    'Integration test: popover repositions when near viewport edge',
-    'Integration test: scroll events trigger repositioning',
-    'Accessibility: verify aria-expanded toggles correctly',
+    "Unit test: popover opens on trigger click and closes on second click",
+    "Unit test: outside click closes the popover",
+    "Unit test: Escape key closes the popover",
+    "Integration test: popover repositions when near viewport edge",
+    "Integration test: scroll events trigger repositioning",
+    "Accessibility: verify aria-expanded toggles correctly",
   ],
 
   improvements: [
-    'Add arrow/caret indicator pointing to the trigger element',
-    'Support all 12 placements (top-start, top-end, etc.)',
-    'Add configurable enter/exit animations',
-    'Implement nested popover support with context-based management',
+    "Add arrow/caret indicator pointing to the trigger element",
+    "Support all 12 placements (top-start, top-end, etc.)",
+    "Add configurable enter/exit animations",
+    "Implement nested popover support with context-based management",
   ],
 
   followUpQuestions: [
-    'How does Floating UI / Popper.js solve the positioning problem?',
-    'What is the difference between a tooltip, popover, and dropdown?',
-    'How would you handle a popover inside a scrollable container without a portal?',
-    'How would you implement a popover that stays open when hovering over its content?',
+    "How does Floating UI / Popper.js solve the positioning problem?",
+    "What is the difference between a tooltip, popover, and dropdown?",
+    "How would you handle a popover inside a scrollable container without a portal?",
+    "How would you implement a popover that stays open when hovering over its content?",
   ],
 };

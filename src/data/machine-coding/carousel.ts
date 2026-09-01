@@ -1,31 +1,38 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const carouselProblem: MachineCodingProblem = {
-  id: 'mc-carousel',
-  title: 'Image Carousel / Slider',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'carousel', 'slider', 'autoplay', 'animation', 'touch-events'],
+  id: "mc-carousel",
+  title: "Image Carousel / Slider",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "carousel",
+    "slider",
+    "autoplay",
+    "animation",
+    "touch-events",
+  ],
 
   problemStatement: `Build an Image Carousel component in React that displays a series of images with next/previous navigation, dot indicators, and optional autoplay functionality. The carousel should support smooth sliding transitions between images and wrap around from the last image back to the first.
 
 This problem tests your understanding of CSS transforms for animation, timer management with useEffect cleanup, touch/swipe gesture handling for mobile, and proper state management for circular navigation. The component should be responsive, performant, and accessible to keyboard and screen reader users.`,
 
   functionalRequirements: [
-    'Display one image at a time with smooth sliding transition',
-    'Next and Previous navigation buttons',
-    'Dot indicators showing current slide and allowing direct navigation',
-    'Autoplay with configurable interval that pauses on hover',
-    'Infinite loop (wrap from last to first and vice versa)',
-    'Support touch/swipe gestures for mobile navigation',
-    'Keyboard navigation with arrow keys',
+    "Display one image at a time with smooth sliding transition",
+    "Next and Previous navigation buttons",
+    "Dot indicators showing current slide and allowing direct navigation",
+    "Autoplay with configurable interval that pauses on hover",
+    "Infinite loop (wrap from last to first and vice versa)",
+    "Support touch/swipe gestures for mobile navigation",
+    "Keyboard navigation with arrow keys",
   ],
 
   nonFunctionalRequirements: [
-    'CSS transform-based animation for smooth 60fps transitions',
-    'Proper cleanup of autoplay timers to prevent memory leaks',
-    'Responsive design that adapts to container width',
-    'Accessible with ARIA live region for slide announcements',
+    "CSS transform-based animation for smooth 60fps transitions",
+    "Proper cleanup of autoplay timers to prevent memory leaks",
+    "Responsive design that adapts to container width",
+    "Accessible with ARIA live region for slide announcements",
   ],
 
   componentHierarchy: `Carousel
@@ -198,34 +205,34 @@ export default function Carousel({
   performance: `Slides use CSS \`transform: translateX\` for animation, which is GPU-accelerated and achieves 60fps. All slides are rendered in the DOM but only one is visible, avoiding the cost of mount/unmount on navigation. Images should use \`loading="lazy"\` for offscreen slides to defer network requests. The autoplay timer is a single \`setInterval\` rather than chained \`setTimeout\`s, and is cleaned up properly. Touch event handling uses refs for start position, avoiding state updates during the gesture.`,
 
   edgeCases: [
-    'Carousel with a single image should hide navigation controls',
-    'Very rapid clicking should not skip slides or break animation',
-    'Window resize while transitioning should maintain correct positions',
-    'Images with different aspect ratios should be handled consistently',
-    'Autoplay cleanup on unmount to prevent state updates on unmounted component',
+    "Carousel with a single image should hide navigation controls",
+    "Very rapid clicking should not skip slides or break animation",
+    "Window resize while transitioning should maintain correct positions",
+    "Images with different aspect ratios should be handled consistently",
+    "Autoplay cleanup on unmount to prevent state updates on unmounted component",
   ],
 
   testingStrategy: [
-    'Unit test: next/prev buttons navigate to correct slides',
-    'Unit test: dot indicators navigate to the correct slide directly',
-    'Unit test: autoplay advances slides at the correct interval',
-    'Integration test: hovering pauses and resuming hover restarts autoplay',
-    'Integration test: swipe gestures trigger correct navigation',
-    'Accessibility audit: verify ARIA roles and live region announcements',
+    "Unit test: next/prev buttons navigate to correct slides",
+    "Unit test: dot indicators navigate to the correct slide directly",
+    "Unit test: autoplay advances slides at the correct interval",
+    "Integration test: hovering pauses and resuming hover restarts autoplay",
+    "Integration test: swipe gestures trigger correct navigation",
+    "Accessibility audit: verify ARIA roles and live region announcements",
   ],
 
   improvements: [
-    'Add fade transition option alongside slide transition',
-    'Support vertical sliding direction',
-    'Implement lazy loading with blur-up placeholder images',
-    'Add thumbnail strip navigation below the main carousel',
-    'Support video slides alongside images',
+    "Add fade transition option alongside slide transition",
+    "Support vertical sliding direction",
+    "Implement lazy loading with blur-up placeholder images",
+    "Add thumbnail strip navigation below the main carousel",
+    "Support video slides alongside images",
   ],
 
   followUpQuestions: [
-    'How would you implement an infinite loop carousel without cloning slides?',
-    'What are the trade-offs between transform-based and scroll-based carousels?',
-    'How would you handle variable-width slides?',
-    'How would you make the carousel work with server-side rendering?',
+    "How would you implement an infinite loop carousel without cloning slides?",
+    "What are the trade-offs between transform-based and scroll-based carousels?",
+    "How would you handle variable-width slides?",
+    "How would you make the carousel work with server-side rendering?",
   ],
 };

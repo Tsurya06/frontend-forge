@@ -155,7 +155,9 @@ export function QuestionCard({
 
             {interviewTips && interviewTips.length > 0 && (
               <div className={styles.section}>
-                <div className={styles.sectionTitle}>Engineering Insights & Best Practices</div>
+                <div className={styles.sectionTitle}>
+                  Engineering Insights & Best Practices
+                </div>
                 {interviewTips.map((tip) => (
                   <div key={tip} className={styles.tipBadge}>
                     {"\u{1F4A1}"} {tip}

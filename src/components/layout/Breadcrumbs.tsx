@@ -13,11 +13,23 @@ interface BreadcrumbsProps {
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
     <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
-      <ol style={{ display: "flex", alignItems: "center", gap: "8px", listStyle: "none", margin: 0, padding: 0 }}>
+      <ol
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+        }}
+      >
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
-            <li key={item.label} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <li
+              key={item.label}
+              style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
               {index > 0 && (
                 <span className={styles.separator} aria-hidden="true">
                   {"\u203A"}

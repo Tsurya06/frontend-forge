@@ -1,11 +1,19 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const analogClockProblem: MachineCodingProblem = {
-  id: 'mc-analog-clock',
-  title: 'Analog Clock with Smooth Hands, Theme & Timezones',
-  difficulty: 'Beginner',
-  category: 'Machine Coding',
-  tags: ['react', 'svg', 'canvas', 'css-animations', 'analog-clock', 'timezones', 'requestAnimationFrame'],
+  id: "mc-analog-clock",
+  title: "Analog Clock with Smooth Hands, Theme & Timezones",
+  difficulty: "Beginner",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "svg",
+    "canvas",
+    "css-animations",
+    "analog-clock",
+    "timezones",
+    "requestAnimationFrame",
+  ],
 
   problemStatement: `Build an elegant, high-precision Analog Clock component in React using SVG or Canvas. The clock displays hour, minute, and second hands with smooth, continuous sweep animation (or optional traditional tick-tock mode), 12 hour numerals/markers, 60 minute tick marks, center hub, and date display window.
 
@@ -17,20 +25,20 @@ Extend the component with interactive controls:
 5. **Interactive Drag-to-Set Mode**: Allow users to drag clock hands to set a custom time.`,
 
   functionalRequirements: [
-    'Render a circular clock face with 12 hour numbers and 60 tick marks',
-    'Display 3 distinct hands: Hour hand (thick, short), Minute hand (medium), Second hand (thin, colored accent)',
-    'Real-time clock updates synchronized with system time (or selected timezone)',
-    'Support smooth continuous sweep mode using requestAnimationFrame or fractional seconds',
-    'Timezone switcher supporting standard IANA timezone strings',
-    'Customizable themes (Dark, Light, Slate, Gold)',
-    'Digital time readout alongside analog face (12h / 24h format)',
-    'Alarm setting with visual marker and alert trigger',
+    "Render a circular clock face with 12 hour numbers and 60 tick marks",
+    "Display 3 distinct hands: Hour hand (thick, short), Minute hand (medium), Second hand (thin, colored accent)",
+    "Real-time clock updates synchronized with system time (or selected timezone)",
+    "Support smooth continuous sweep mode using requestAnimationFrame or fractional seconds",
+    "Timezone switcher supporting standard IANA timezone strings",
+    "Customizable themes (Dark, Light, Slate, Gold)",
+    "Digital time readout alongside analog face (12h / 24h format)",
+    "Alarm setting with visual marker and alert trigger",
   ],
 
   nonFunctionalRequirements: [
-    'Sub-pixel smooth rendering using SVG viewBox or Canvas 2D',
-    'Zero layout thrashing: hand rotations computed via CSS transforms with transform-origin at center',
-    'Clean unmount cleanup for animation frames and interval timers',
+    "Sub-pixel smooth rendering using SVG viewBox or Canvas 2D",
+    "Zero layout thrashing: hand rotations computed via CSS transforms with transform-origin at center",
+    "Clean unmount cleanup for animation frames and interval timers",
     'Accessible clock with role="img", aria-label announcing current formatted time, and live status updates',
   ],
 
@@ -305,28 +313,28 @@ export function AnalogClock({
   performance: `Uses hardware-accelerated SVG transform rotations calculated directly in render or through direct ref modification. requestAnimationFrame ensures no work happens while browser tab is hidden or backgrounded. Memory allocation is minimal with no object churn inside animation loop.`,
 
   edgeCases: [
-    'Timezone daylight saving shifts: handled accurately via native Intl API',
-    'Tab background throttling: requestAnimationFrame pauses when hidden and resumes seamlessly on focus',
-    'Leap seconds and sub-second millisecond rollbacks: smoothed by continuous Date polling',
-    'Extreme responsive sizing: scales without distortion using SVG viewBox (0 0 300 300)',
+    "Timezone daylight saving shifts: handled accurately via native Intl API",
+    "Tab background throttling: requestAnimationFrame pauses when hidden and resumes seamlessly on focus",
+    "Leap seconds and sub-second millisecond rollbacks: smoothed by continuous Date polling",
+    "Extreme responsive sizing: scales without distortion using SVG viewBox (0 0 300 300)",
   ],
 
   testingStrategy: [
-    'Unit test: rotation angles match exact mathematical formulas at 3:00, 6:30, and 12:00',
-    'Unit test: timezone conversion correctly adjusts hour value across time zones',
-    'Integration test: switching between Smooth and Tick modes alters update timer strategy',
-    'Integration test: theme change applies correct colors to clock elements',
+    "Unit test: rotation angles match exact mathematical formulas at 3:00, 6:30, and 12:00",
+    "Unit test: timezone conversion correctly adjusts hour value across time zones",
+    "Integration test: switching between Smooth and Tick modes alters update timer strategy",
+    "Integration test: theme change applies correct colors to clock elements",
   ],
 
   improvements: [
-    'Add drag-to-set interactive clock hands using SVG onMouseDown / onTouchMove trigonometry',
-    'Add custom chime / audio hourly tick sounds using Web Audio API synthesized oscillators',
-    'Add chronograph / stopwatch sub-dials',
+    "Add drag-to-set interactive clock hands using SVG onMouseDown / onTouchMove trigonometry",
+    "Add custom chime / audio hourly tick sounds using Web Audio API synthesized oscillators",
+    "Add chronograph / stopwatch sub-dials",
   ],
 
   followUpQuestions: [
-    'How does requestAnimationFrame differ from setInterval(16.6ms) in terms of frame budgeting and display refresh synchronization?',
-    'How would you implement drag-to-rotate interaction for clock hands using Math.atan2(dy, dx)?',
-    'How would you architect a distributed world clock grid showing 50 cities simultaneously without CPU degradation?',
+    "How does requestAnimationFrame differ from setInterval(16.6ms) in terms of frame budgeting and display refresh synchronization?",
+    "How would you implement drag-to-rotate interaction for clock hands using Math.atan2(dy, dx)?",
+    "How would you architect a distributed world clock grid showing 50 cities simultaneously without CPU degradation?",
   ],
 };

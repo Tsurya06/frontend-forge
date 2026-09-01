@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface UseVirtualGridOptions {
   initialCount?: number;
@@ -7,7 +7,7 @@ interface UseVirtualGridOptions {
 
 export function useVirtualGrid<T>(
   items: T[],
-  options: UseVirtualGridOptions = {}
+  options: UseVirtualGridOptions = {},
 ) {
   const { initialCount = 16, batchSize = 12 } = options;
   const [visibleCount, setVisibleCount] = useState(initialCount);
@@ -34,9 +34,9 @@ export function useVirtualGrid<T>(
         }
       },
       {
-        rootMargin: '250px',
+        rootMargin: "250px",
         threshold: 0.1,
-      }
+      },
     );
 
     observer.observe(sentinel);

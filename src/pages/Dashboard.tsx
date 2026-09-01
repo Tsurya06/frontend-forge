@@ -1,368 +1,622 @@
-import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { useProgressContext } from '@/context/ProgressContext';
-import { ProgressBar } from '@/components/common/ProgressBar';
-import { Card } from '@/components/common/Card';
+import { useState, useMemo } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useProgressContext } from "@/context/ProgressContext";
+import { useBookmarkContext } from "@/context/BookmarkContext";
+import { LeftQuickNav } from "@/components/layout/LeftQuickNav";
+import { useVirtualGrid } from "@/hooks/useVirtualGrid";
 import {
-  allQuestions,
   allCodingProblems,
   allMachineCodingProblems,
   allSystemDesignProblems,
-  categories,
-  getTopicsByCategory,
-} from '@/data';
-import styles from './Dashboard.module.css';
+} from "@/data";
+import type { Difficulty } from "@/types";
+import styles from "./Dashboard.module.css";
+
+export interface UnifiedChallenge {
+  id: string;
+  title: string;
+  difficulty: Difficulty;
+  category: string;
+  tags: string[];
+  track: "coding" | "machineCoding" | "systemDesign";
+  link: string;
+  solutionLabel: string;
+  description: string;
+}
+
+const categoryPills = [
+  { id: "all", label: "All Challenges", icon: "🗂️" },
+  { id: "coding", label: "Polyfills & Algorithms (38)", icon: "⚡" },
+  { id: "machine-coding", label: "Machine Coding (35)", icon: "🏗️" },
+  { id: "system-design", label: "System Design (9)", icon: "📐" },
+  { id: "react", label: "React & UI", icon: "⚛️" },
+  { id: "typescript", label: "TypeScript", icon: "📘" },
+  { id: "performance", label: "Performance", icon: "🚀" },
+  { id: "css", label: "CSS & Layouts", icon: "🎨" },
+];
 
 export default function Dashboard() {
-  const {
-    completedQuestions,
-    completedCoding,
-    completedMachineCoding,
-    completedSystemDesign,
-    dailyStreak,
-  } = useProgressContext();
+  const navigate = useNavigate();
+  const { isComplete, dailyStreak } = useProgressContext();
+  const { isBookmarked, toggleBookmark } = useBookmarkContext();
 
-  const totalQuestions = allQuestions.length;
-  const totalCompleted = completedQuestions.length;
-  const overallPercent = totalQuestions > 0 ? Math.round((totalCompleted / totalQuestions) * 100) : 0;
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedTopicChip, setSelectedTopicChip] = useState<string | null>(
+    null,
+  );
+  const [difficultyFilter, setDifficultyFilter] = useState<"all" | Difficulty>(
+    "all",
+  );
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "solved" | "unsolved"
+  >("all");
+  const [tagsExpanded, setTagsExpanded] = useState(false);
 
-  const categoryStats = useMemo(() => {
-    return categories.map(cat => {
-      const topics = getTopicsByCategory(cat.id);
-      const questions = topics.flatMap(t => t.questions);
-      const completed = questions.filter(q => completedQuestions.includes(q.id)).length;
-      const percent = questions.length > 0 ? Math.round((completed / questions.length) * 100) : 0;
-      let progressColor: 'success' | 'warning' | 'primary' = 'primary';
-      if (percent >= 75) progressColor = 'success';
-      else if (percent >= 40) progressColor = 'warning';
-      return { ...cat, completed, total: questions.length, percent, progressColor, topicCount: topics.length };
+  // 1. Unify all 82+ challenges across all 3 tracks
+  const allChallenges = useMemo<UnifiedChallenge[]>(() => {
+    const coding: UnifiedChallenge[] = allCodingProblems.map((p) => ({
+      id: p.id,
+      title: p.title,
+      difficulty: p.difficulty,
+      category: p.category || "JavaScript",
+      tags: p.tags,
+      track: "coding",
+      link: `/coding/${p.id}`,
+      solutionLabel: "⚡ 3 Tiers",
+      description: p.problem,
+    }));
+
+    const machine: UnifiedChallenge[] = allMachineCodingProblems.map((p) => ({
+      id: p.id,
+      title: p.title,
+      difficulty: p.difficulty,
+      category: "Machine Coding",
+      tags: ["Machine Coding", "Component", ...p.tags],
+      track: "machineCoding",
+      link: `/machine-coding/${p.id}`,
+      solutionLabel: "🏗️ Component",
+      description: p.problemStatement,
+    }));
+
+    const sysDesign: UnifiedChallenge[] = allSystemDesignProblems.map((p) => ({
+      id: p.id,
+      title: p.title,
+      difficulty: p.difficulty,
+      category: "System Design",
+      tags: ["System Design", "Architecture", ...p.tags],
+      track: "systemDesign",
+      link: `/system-design/${p.id}`,
+      solutionLabel: "📐 Blueprint",
+      description: p.requirements,
+    }));
+
+    return [...coding, ...machine, ...sysDesign];
+  }, []);
+
+  // 2. Dynamically compute topic tags from all challenges
+  const dynamicTopicTags = useMemo(() => {
+    const tagCountMap = new Map<string, number>();
+    allChallenges.forEach((p) => {
+      p.tags.forEach((tag) => {
+        const clean = tag.trim().toLowerCase();
+        if (
+          clean === "component" ||
+          clean === "machine coding" ||
+          clean === "system design"
+        )
+          return;
+        const formatted = clean.charAt(0).toUpperCase() + clean.slice(1);
+        tagCountMap.set(formatted, (tagCountMap.get(formatted) || 0) + 1);
+      });
     });
-  }, [completedQuestions]);
+    return Array.from(tagCountMap.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [allChallenges]);
 
-  const radius = 54;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (overallPercent / 100) * circumference;
+  // 3. Filter problems across all tracks
+  const filteredProblems = useMemo<UnifiedChallenge[]>(() => {
+    let list = [...allChallenges];
+
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.title.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q) ||
+          p.tags.some((t) => t.toLowerCase().includes(q)),
+      );
+    }
+
+    if (selectedCategory !== "all") {
+      if (selectedCategory === "coding") {
+        list = list.filter((p) => p.track === "coding");
+      } else if (selectedCategory === "machine-coding") {
+        list = list.filter((p) => p.track === "machineCoding");
+      } else if (selectedCategory === "system-design") {
+        list = list.filter((p) => p.track === "systemDesign");
+      } else if (selectedCategory === "react") {
+        list = list.filter(
+          (p) =>
+            p.category.toLowerCase().includes("react") ||
+            p.tags.some(
+              (t) =>
+                t.toLowerCase().includes("react") ||
+                t.toLowerCase().includes("hook") ||
+                t.toLowerCase().includes("dom"),
+            ),
+        );
+      } else if (selectedCategory === "typescript") {
+        list = list.filter(
+          (p) =>
+            p.category.toLowerCase().includes("typescript") ||
+            p.tags.some(
+              (t) =>
+                t.toLowerCase().includes("typescript") ||
+                t.toLowerCase() === "ts",
+            ),
+        );
+      } else if (selectedCategory === "performance") {
+        list = list.filter(
+          (p) =>
+            p.category.toLowerCase().includes("performance") ||
+            p.tags.some(
+              (t) =>
+                t.toLowerCase().includes("performance") ||
+                t.toLowerCase().includes("virtual") ||
+                t.toLowerCase().includes("debounce") ||
+                t.toLowerCase().includes("memoize"),
+            ),
+        );
+      } else if (selectedCategory === "css") {
+        list = list.filter(
+          (p) =>
+            p.category.toLowerCase().includes("css") ||
+            p.tags.some(
+              (t) =>
+                t.toLowerCase().includes("css") ||
+                t.toLowerCase().includes("layout") ||
+                t.toLowerCase().includes("flexbox"),
+            ),
+        );
+      }
+    }
+
+    if (selectedTopicChip) {
+      const chipQ = selectedTopicChip.toLowerCase();
+      list = list.filter((p) => p.tags.some((t) => t.toLowerCase() === chipQ));
+    }
+
+    if (difficultyFilter !== "all") {
+      list = list.filter((p) => p.difficulty === difficultyFilter);
+    }
+
+    if (statusFilter === "solved") {
+      list = list.filter((p) => isComplete(p.id, p.track));
+    } else if (statusFilter === "unsolved") {
+      list = list.filter((p) => !isComplete(p.id, p.track));
+    }
+
+    return list;
+  }, [
+    allChallenges,
+    search,
+    selectedCategory,
+    selectedTopicChip,
+    difficultyFilter,
+    statusFilter,
+    isComplete,
+  ]);
+
+  // Infinite Scroll Hook
+  const { visibleItems, sentinelRef, totalCount, renderedCount } =
+    useVirtualGrid<UnifiedChallenge>(filteredProblems, {
+      initialCount: 15,
+      batchSize: 10,
+    });
+
+  // Pick Random Problem
+  const pickRandomProblem = () => {
+    if (allChallenges.length > 0) {
+      const randomIndex = Math.floor(Math.random() * allChallenges.length);
+      const chosen = allChallenges[randomIndex];
+      if (chosen) {
+        navigate(chosen.link);
+      }
+    }
+  };
+
+  // Calendar dates
+  const today = new Date();
+  const currentDay = today.getDate();
+  const monthName = today
+    .toLocaleString("default", { month: "short" })
+    .toUpperCase();
+
+  const displayedTags = tagsExpanded
+    ? dynamicTopicTags
+    : dynamicTopicTags.slice(0, 9);
 
   return (
-    <div className={styles.dashboard}>
-      {/* Hero Welcome Banner */}
-      <div className={styles.heroBanner}>
-        <div className={styles.heroContent}>
-          <div className={styles.heroBadge}>
-            <span className={styles.pulseDot} />
-            <span>FrontendForge Architecture & Engineering Hub</span>
-          </div>
-          <h1 className={styles.heroTitle}>Master Modern Frontend Engineering & Architecture</h1>
-          <p className={styles.heroSubtitle}>
-            The comprehensive engineering reference and component laboratory for Junior, Mid-Level, Senior, and Staff Engineers. Master core JavaScript internals, modern CSS layouts, React 19, UI components, and large-scale System Architecture.
-          </p>
+    <div className={styles.pageLayout}>
+      {/* ── 1. Left Quick-Nav Sidebar (Desktop) ── */}
+      <LeftQuickNav />
 
-          <div className={styles.quickActions}>
-            <Link to="/roadmap" className={styles.quickActionPrimary}>
-              <span>🗺️</span>
-              <span className={styles.quickActionText}>8-Week Structured Roadmap</span>
+      {/* ── 2. Center Problemset Stream (Scrollable) ── */}
+      <main className={styles.centerStream}>
+        <div className={styles.centerContent}>
+          {/* Top 3 Feature Banner Cards */}
+          <section
+            className={styles.bannerRow}
+            aria-label="Featured Highlights"
+          >
+            <Link
+              to="/coding"
+              className={`${styles.bannerCard} ${styles.bannerGold}`}
+            >
+              <div className={styles.bannerBadge}>POPULAR</div>
+              <h2 className={styles.bannerTitle}>
+                Essential 28 JavaScript Polyfills
+              </h2>
+              <p className={styles.bannerSubtitle}>
+                28 Core Algorithm & Polyfill challenges asked in Tier-1
+                interviews
+              </p>
             </Link>
-            <Link to="/playground" className={styles.quickActionSecondary}>
-              <span>🛠️</span>
-              <span>Code & Live Component Sandbox</span>
+
+            <Link
+              to="/machine-coding"
+              className={`${styles.bannerCard} ${styles.bannerBlue}`}
+            >
+              <div className={styles.bannerBadge}>UI / UX</div>
+              <h2 className={styles.bannerTitle}>
+                35 Machine Coding Components
+              </h2>
+              <p className={styles.bannerSubtitle}>
+                Interactive autocomplete, infinite scroll, virtual lists, and
+                modals
+              </p>
             </Link>
-            <Link to="/machine-coding" className={styles.quickActionSecondary}>
-              <span>🏗️</span>
-              <span>Machine Coding (35)</span>
+
+            <Link
+              to="/system-design"
+              className={`${styles.bannerCard} ${styles.bannerPurple}`}
+            >
+              <div className={styles.bannerBadge}>ARCHITECT</div>
+              <h2 className={styles.bannerTitle}>
+                9 Frontend System Design Blueprints
+              </h2>
+              <p className={styles.bannerSubtitle}>
+                Real-time feeds, video streaming, collaborative docs & caching
+              </p>
             </Link>
-            <Link to="/system-design" className={styles.quickActionSecondary}>
-              <span>📐</span>
-              <span>System Design (9)</span>
-            </Link>
-          </div>
-        </div>
+          </section>
 
-        <div className={styles.streakCard}>
-          <div className={styles.streakIcon}>🔥</div>
-          <div className={styles.streakValue}>{dailyStreak || 1}</div>
-          <div className={styles.streakLabel}>Day Streak</div>
-          <div className={styles.streakSub}>Consistent practice is key</div>
-        </div>
-      </div>
+          {/* ── 3. Topic Tag Chips with Real Problem Counts ── */}
+          <section className={styles.tagChipsSection}>
+            <div className={styles.chipsRow}>
+              {displayedTags.map((tag) => {
+                const isSelected =
+                  selectedTopicChip?.toLowerCase() === tag.name.toLowerCase();
+                return (
+                  <button
+                    key={tag.name}
+                    type="button"
+                    className={`${styles.topicChip} ${isSelected ? styles.topicChipActive : ""}`}
+                    onClick={() =>
+                      setSelectedTopicChip(isSelected ? null : tag.name)
+                    }
+                  >
+                    <span className={styles.topicName}>{tag.name}</span>
+                    <span className={styles.topicCount}>{tag.count}</span>
+                  </button>
+                );
+              })}
 
-      {/* Featured: The Essential 28 JavaScript Playbook */}
-      <section className={styles.essentialBanner}>
-        <div className={styles.essentialContent}>
-          <div className={styles.essentialBadge}>
-            <span>⚡ FEATURED PLAYBOOK</span>
-          </div>
-          <h2 className={styles.essentialTitle}>The Essential 28 JavaScript Challenges & Polyfills</h2>
-          <p className={styles.essentialDesc}>
-            Master the canonical 28 production JavaScript problems with progressive 3-tier solutions (Beginner ➔ Intermediate ➔ Expert), interview trap warnings, WeakMap circular defenses, and interactive live executions.
-          </p>
-          <div className={styles.essentialTags}>
-            <span>Currying & Arity</span>
-            <span>Safe JSON Serialization</span>
-            <span>WeakMap Deep Clone</span>
-            <span>Event Emitter</span>
-            <span>Debounce & Throttle</span>
-            <span>Promise Concurrency</span>
-            <span>DOM Template TreeWalker</span>
-          </div>
-        </div>
-        <div className={styles.essentialAction}>
-          <Link to="/coding" className={styles.essentialBtn}>
-            Explore Essential 28 (3-Tier Solutions) →
-          </Link>
-        </div>
-      </section>
-
-      {/* Guided Career Pathways Section */}
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <div>
-            <h2 className={styles.sectionTitle}>🎯 Engineering Progression Pathways</h2>
-            <p className={styles.sectionSubtitle}>
-              Structured learning & reference tracks organized by engineering tier and technical depth.
-            </p>
-          </div>
-        </div>
-
-        <div className={styles.careerGrid}>
-          {/* Junior / Fresher Pathway */}
-          <div className={styles.careerCard}>
-            <div className={styles.careerCardHeader}>
-              <span className={styles.careerBadgeJunior}>L3 / Junior / Fresher</span>
-              <span className={styles.careerDuration}>Weeks 1–3</span>
+              <button
+                type="button"
+                className={styles.expandTagsBtn}
+                onClick={() => setTagsExpanded(!tagsExpanded)}
+              >
+                {tagsExpanded ? "Collapse ▴" : "Expand ▾"}
+              </button>
             </div>
-            <h3 className={styles.careerTitle}>Frontend Core Foundations & Polyfills</h3>
-            <p className={styles.careerDesc}>
-              Scope, Event Loop, Closures, DOM Manipulation, CSS Grid/Flexbox layouts, and writing JS Polyfills (Promise.all, debounce, throttle, deepClone) from scratch.
-            </p>
-            <div className={styles.careerTags}>
-              <span>JavaScript Internals</span>
-              <span>CSS Layouts</span>
-              <span>Coding Polyfills</span>
+          </section>
+
+          {/* ── 4. Non-Scrolling Clean Category Filter Pills ── */}
+          <div className={styles.categoryPillsRow}>
+            {categoryPills.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                className={`${styles.categoryPill} ${selectedCategory === cat.id ? styles.categoryPillActive : ""}`}
+                onClick={() => {
+                  setSelectedCategory(cat.id);
+                  setSelectedTopicChip(null);
+                }}
+              >
+                <span className={styles.pillIcon}>{cat.icon}</span>
+                <span className={styles.pillText}>{cat.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* ── 5. Search & Filters Toolbar ── */}
+          <div className={styles.filterToolbar}>
+            <div className={styles.searchWrapper}>
+              <span className={styles.searchIcon}>🔍</span>
+              <input
+                type="search"
+                className={styles.searchInput}
+                placeholder="Search questions by title, keyword, or concept..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              {search && (
+                <button
+                  type="button"
+                  className={styles.clearBtn}
+                  onClick={() => setSearch("")}
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
+              )}
             </div>
-            <Link to="/roadmap" className={styles.careerLink}>
-              Start Foundation Track →
-            </Link>
-          </div>
 
-          {/* Mid-Level Pathway */}
-          <div className={styles.careerCard}>
-            <div className={styles.careerCardHeader}>
-              <span className={styles.careerBadgeMid}>L4 / Mid-Level Engineer</span>
-              <span className={styles.careerDuration}>Weeks 3–6</span>
-            </div>
-            <h3 className={styles.careerTitle}>React 19 & Timed Machine Coding</h3>
-            <p className={styles.careerDesc}>
-              Fiber reconciliation, Custom Hooks lifecycle, Redux Toolkit, and 45-minute timed Machine Coding challenges (Autocomplete, Infinite Scroll, Star Rating, Carousel).
-            </p>
-            <div className={styles.careerTags}>
-              <span>React 19 Hooks</span>
-              <span>Machine Coding</span>
-              <span>Accessibility ARIA</span>
-            </div>
-            <Link to="/machine-coding" className={styles.careerLink}>
-              Practice Machine Coding (35) →
-            </Link>
-          </div>
+            <div className={styles.filterControls}>
+              {/* Difficulty Dropdown */}
+              <select
+                className={styles.filterSelect}
+                value={difficultyFilter}
+                onChange={(e) =>
+                  setDifficultyFilter(e.target.value as "all" | Difficulty)
+                }
+                aria-label="Filter by Difficulty"
+              >
+                <option value="all">Difficulty: All</option>
+                <option value="Beginner">Easy</option>
+                <option value="Intermediate">Medium</option>
+                <option value="Advanced">Hard</option>
+              </select>
 
-          {/* Senior & Staff Pathway */}
-          <div className={styles.careerCard}>
-            <div className={styles.careerCardHeader}>
-              <span className={styles.careerBadgeSenior}>L5 / L6 / Senior & Staff</span>
-              <span className={styles.careerDuration}>Weeks 6–8</span>
-            </div>
-            <h3 className={styles.careerTitle}>Frontend Architecture & System Design</h3>
-            <p className={styles.careerDesc}>
-              Scalable client-side architectures for real-time messengers, infinite feeds, collaborative doc editors, Core Web Vitals (LCP, INP, CLS), and staff engineer dilemmas.
-            </p>
-            <div className={styles.careerTags}>
-              <span>System Design</span>
-              <span>Web Vitals</span>
-              <span>Architecture Scenarios</span>
-            </div>
-            <Link to="/system-design" className={styles.careerLink}>
-              Explore System Design (9) →
-            </Link>
-          </div>
-        </div>
-      </section>
+              {/* Status Dropdown */}
+              <select
+                className={styles.filterSelect}
+                value={statusFilter}
+                onChange={(e) =>
+                  setStatusFilter(
+                    e.target.value as "all" | "solved" | "unsolved",
+                  )
+                }
+                aria-label="Filter by Status"
+              >
+                <option value="all">Status: All</option>
+                <option value="solved">Solved</option>
+                <option value="unsolved">Unsolved</option>
+              </select>
 
-      {/* Production Engineering Competency Matrix */}
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <div>
-            <h2 className={styles.sectionTitle}>🏆 Production Engineering Competency Matrix</h2>
-            <p className={styles.sectionSubtitle}>
-              Master core engineering disciplines across all architectural tiers.
-            </p>
-          </div>
-        </div>
-
-        <div className={styles.matrixGrid}>
-          <div className={styles.matrixCard}>
-            <div className={styles.matrixIcon}>⚡</div>
-            <h4 className={styles.matrixTitle}>Level 1: Core Algorithms & Polyfills</h4>
-            <p className={styles.matrixText}>
-              Foundational JS runtime mastery, asynchronous event flow, recursion, memory management, and algorithm polyfills.
-            </p>
-            <Link to="/coding" className={styles.matrixLink}>37 Coding Challenges →</Link>
-          </div>
-
-          <div className={styles.matrixCard}>
-            <div className={styles.matrixIcon}>🏗️</div>
-            <h4 className={styles.matrixTitle}>Level 2: Component Architecture (UI)</h4>
-            <p className={styles.matrixText}>
-              Building real-world, accessible, 60fps UI components with keyboard ARIA, debounce, focus trapping, and resilient error states.
-            </p>
-            <Link to="/machine-coding" className={styles.matrixLink}>35 Machine Coding →</Link>
-          </div>
-
-          <div className={styles.matrixCard}>
-            <div className={styles.matrixIcon}>📐</div>
-            <h4 className={styles.matrixTitle}>Level 3: Large-Scale System Design</h4>
-            <p className={styles.matrixText}>
-              Designing scalable front-end systems for 50M+ users: real-time streaming, optimistic UI, state synchronization, service workers, and telemetry.
-            </p>
-            <Link to="/system-design" className={styles.matrixLink}>9 System Design Cases →</Link>
-          </div>
-
-          <div className={styles.matrixCard}>
-            <div className={styles.matrixIcon}>👔</div>
-            <h4 className={styles.matrixTitle}>Level 4: Staff Architecture & Vitals</h4>
-            <p className={styles.matrixText}>
-              Architectural decision trade-offs, Core Web Vitals optimization, bundle budgeting, code splitting, CI/CD pipelines, and technical design RFCs.
-            </p>
-            <Link to="/senior" className={styles.matrixLink}>Senior Scenarios →</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Progress & Stats Section */}
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>📊 Your Preparation Metrics</h2>
-          <Link to="/progress" className={styles.viewAllLink}>
-            Detailed Progress & Analytics →
-          </Link>
-        </div>
-
-        <div className={styles.statsRow}>
-          {/* Main Progress Circle */}
-          <div className={styles.progressCard}>
-            <div className={styles.progressRingWrapper}>
-              <svg className={styles.progressSvg} viewBox="0 0 120 120">
-                <circle
-                  className={styles.progressBg}
-                  cx="60"
-                  cy="60"
-                  r={radius}
-                />
-                <circle
-                  className={styles.progressFill}
-                  cx="60"
-                  cy="60"
-                  r={radius}
-                  strokeDasharray={circumference}
-                  strokeDashoffset={strokeDashoffset}
-                />
-              </svg>
-              <div className={styles.progressRingText}>
-                <span className={styles.ringPercent}>{overallPercent}%</span>
-                <span className={styles.ringLabel}>Mastery</span>
-              </div>
-            </div>
-            <div className={styles.progressStats}>
-              <div className={styles.statLine}>
-                <span className={styles.statLabel}>Questions Done:</span>
-                <span className={styles.statVal}>{totalCompleted} / {totalQuestions}</span>
-              </div>
-              <div className={styles.statLine}>
-                <span className={styles.statLabel}>Coding Problems:</span>
-                <span className={styles.statVal}>{completedCoding.length} / {allCodingProblems.length}</span>
-              </div>
-              <div className={styles.statLine}>
-                <span className={styles.statLabel}>Machine Coding:</span>
-                <span className={styles.statVal}>{completedMachineCoding.length} / {allMachineCodingProblems.length}</span>
-              </div>
-              <div className={styles.statLine}>
-                <span className={styles.statLabel}>System Design:</span>
-                <span className={styles.statVal}>{completedSystemDesign.length} / {allSystemDesignProblems.length}</span>
-              </div>
+              {/* Pick Random Button */}
+              <button
+                type="button"
+                className={styles.randomPickBtn}
+                onClick={pickRandomProblem}
+                title="Pick Random Problem"
+              >
+                <span>🔀 Pick Random</span>
+              </button>
             </div>
           </div>
 
-          {/* Quick Metrics */}
-          <div className={styles.metricsGrid}>
-            <Card>
-              <div className={styles.metricCard}>
-                <span className={styles.metricIcon}>📚</span>
-                <div className={styles.metricInfo}>
-                  <div className={styles.metricNumber}>85</div>
-                  <div className={styles.metricLabel}>Curriculum Topics</div>
+          {/* ── 6. LeetCode Clean Problem List (Infinite Scroll Stream) ── */}
+          <section
+            className={styles.problemStreamSection}
+            aria-label="Problem List"
+          >
+            {/* Stream Header */}
+            <div className={styles.streamHeaderRow}>
+              <span className={styles.colStatus}>Status</span>
+              <span className={styles.colTitle}>Title</span>
+              <span className={styles.colSolution}>Solutions</span>
+              <span className={styles.colAcceptance}>Acceptance</span>
+              <span className={styles.colDifficulty}>Difficulty</span>
+              <span className={styles.colAction}>Action</span>
+            </div>
+
+            {/* Problem Stream Rows */}
+            <div className={styles.streamList}>
+              {visibleItems.length === 0 ? (
+                <div className={styles.emptyResults}>
+                  <p>No challenges match your active filters.</p>
+                  <button
+                    type="button"
+                    className={styles.resetFiltersBtn}
+                    onClick={() => {
+                      setSearch("");
+                      setSelectedCategory("all");
+                      setSelectedTopicChip(null);
+                      setDifficultyFilter("all");
+                      setStatusFilter("all");
+                    }}
+                  >
+                    Reset All Filters
+                  </button>
                 </div>
-              </div>
-            </Card>
-            <Card>
-              <div className={styles.metricCard}>
-                <span className={styles.metricIcon}>💻</span>
-                <div className={styles.metricInfo}>
-                  <div className={styles.metricNumber}>{allCodingProblems.length}</div>
-                  <div className={styles.metricLabel}>Coding Challenges</div>
+              ) : (
+                visibleItems.map(
+                  (challenge: UnifiedChallenge, index: number) => {
+                    const isDone = isComplete(challenge.id, challenge.track);
+                    const isStarred = isBookmarked(challenge.id);
+                    const diff = challenge.difficulty;
+
+                    let diffClass = styles.diffEasy;
+                    let diffLabel = "Easy";
+                    if (diff === "Intermediate") {
+                      diffClass = styles.diffMedium;
+                      diffLabel = "Med.";
+                    } else if (diff === "Advanced" || diff === "Senior") {
+                      diffClass = styles.diffHard;
+                      diffLabel = "Hard";
+                    }
+
+                    const globalIndex =
+                      allChallenges.findIndex((p) => p.id === challenge.id) + 1;
+
+                    return (
+                      <div
+                        key={challenge.id}
+                        className={`${styles.streamRow} ${index % 2 === 1 ? styles.streamRowAlt : ""}`}
+                      >
+                        {/* Status Checkmark */}
+                        <span className={styles.statusCol}>
+                          {isDone ? (
+                            <span className={styles.solvedCheck} title="Solved">
+                              ✓
+                            </span>
+                          ) : (
+                            <span
+                              className={styles.unsolvedCircle}
+                              title="Unsolved"
+                            >
+                              ○
+                            </span>
+                          )}
+                        </span>
+
+                        {/* Problem Title */}
+                        <div className={styles.titleCol}>
+                          <Link
+                            to={challenge.link}
+                            className={styles.problemLink}
+                          >
+                            <span className={styles.problemNum}>
+                              {globalIndex}.
+                            </span>
+                            <span className={styles.problemName}>
+                              {challenge.title}
+                            </span>
+                          </Link>
+                          {challenge.tags && challenge.tags.length > 0 && (
+                            <div className={styles.rowTags}>
+                              {challenge.tags.slice(0, 3).map((t: string) => (
+                                <span key={t} className={styles.miniTag}>
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Solutions Badge */}
+                        <span className={styles.solutionCol}>
+                          <Link
+                            to={challenge.link}
+                            className={styles.solutionLink}
+                            title="View Solutions & Code"
+                          >
+                            {challenge.solutionLabel}
+                          </Link>
+                        </span>
+
+                        {/* Acceptance */}
+                        <span className={styles.acceptanceCol}>
+                          {diff === "Beginner"
+                            ? "68.4%"
+                            : diff === "Intermediate"
+                              ? "51.2%"
+                              : "38.9%"}
+                        </span>
+
+                        {/* Difficulty Badge */}
+                        <span
+                          className={`${styles.difficultyCol} ${diffClass}`}
+                        >
+                          {diffLabel}
+                        </span>
+
+                        {/* Star Bookmark */}
+                        <button
+                          type="button"
+                          className={`${styles.bookmarkBtn} ${isStarred ? styles.bookmarked : ""}`}
+                          onClick={() => toggleBookmark(challenge.id)}
+                          title={
+                            isStarred ? "Remove Bookmark" : "Bookmark Problem"
+                          }
+                          aria-label="Bookmark"
+                        >
+                          {isStarred ? "⭐" : "☆"}
+                        </button>
+                      </div>
+                    );
+                  },
+                )
+              )}
+
+              {/* Bottom Infinite Sentinel */}
+              {renderedCount < totalCount && (
+                <div ref={sentinelRef} className={styles.loadingSentinel}>
+                  <span className={styles.sentinelSpinner} />
+                  <span>
+                    Loading more problems ({renderedCount} of {totalCount})...
+                  </span>
                 </div>
-              </div>
-            </Card>
-            <Card>
-              <div className={styles.metricCard}>
-                <span className={styles.metricIcon}>🏗️</span>
-                <div className={styles.metricInfo}>
-                  <div className={styles.metricNumber}>{allMachineCodingProblems.length}</div>
-                  <div className={styles.metricLabel}>Machine Coding Tasks</div>
-                </div>
-              </div>
-            </Card>
-            <Card>
-              <div className={styles.metricCard}>
-                <span className={styles.metricIcon}>📐</span>
-                <div className={styles.metricInfo}>
-                  <div className={styles.metricNumber}>{allSystemDesignProblems.length}</div>
-                  <div className={styles.metricLabel}>System Designs</div>
-                </div>
-              </div>
-            </Card>
+              )}
+            </div>
+          </section>
+        </div>
+      </main>
+
+      {/* ── 3. LeetCode Right Sidebar Widgets (Desktop) ── */}
+      <aside className={styles.rightWidgets}>
+        {/* Calendar Widget */}
+        <div className={styles.calendarWidget}>
+          <div className={styles.calendarTop}>
+            <div className={styles.calendarDayHeader}>
+              <span className={styles.dayText}>
+                Day {currentDay} • 🔥 {dailyStreak || 1}d
+              </span>
+              <span className={styles.timeLeft}>Daily Challenge</span>
+            </div>
+            <div className={styles.monthBadge}>
+              <span className={styles.monthNum}>{currentDay}</span>
+              <span className={styles.monthLabel}>{monthName}</span>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Category Breakdown */}
-      <section className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>📚 Curriculum Domain Progress</h2>
-          <Link to="/topics" className={styles.viewAllLink}>
-            Browse All 85 Topics →
-          </Link>
-        </div>
-
-        <div className={styles.categoryGrid}>
-          {categoryStats.map(cat => (
-            <Link key={cat.id} to={`/${cat.id}`} className={styles.categoryCardLink}>
-              <Card>
-                <div className={styles.categoryCard}>
-                  <div className={styles.categoryHeader}>
-                    <span className={styles.catIcon}>{cat.icon}</span>
-                    <span className={styles.catTitle}>{cat.title}</span>
-                    <span className={styles.catCount}>{cat.topicCount} topics</span>
+          {/* Days Grid */}
+          <div className={styles.calendarGrid}>
+            <div className={styles.weekHeaders}>
+              <span>S</span>
+              <span>M</span>
+              <span>T</span>
+              <span>W</span>
+              <span>T</span>
+              <span>F</span>
+              <span>S</span>
+            </div>
+            <div className={styles.daysMatrix}>
+              {[...Array(30)].map((_, i) => {
+                const dayNum = i + 1;
+                const isToday = dayNum === currentDay;
+                return (
+                  <div
+                    key={dayNum}
+                    className={`${styles.calendarDayCell} ${isToday ? styles.todayCell : ""}`}
+                  >
+                    {dayNum}
                   </div>
-                  <ProgressBar
-                    value={cat.percent}
-                    color={cat.progressColor}
-                    size="sm"
-                    showPercentage
-                  />
-                </div>
-              </Card>
-            </Link>
-          ))}
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Quick Start Daily */}
+          <Link to="/daily" className={styles.redeemBtn}>
+            <span>⚡ Start Today's Challenge</span>
+          </Link>
         </div>
-      </section>
+      </aside>
     </div>
   );
 }

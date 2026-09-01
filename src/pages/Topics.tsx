@@ -1,19 +1,19 @@
-import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { useProgressContext } from '@/context/ProgressContext';
-import { SearchInput } from '@/components/common/SearchInput';
-import { Card } from '@/components/common/Card';
-import { Badge } from '@/components/common/Badge';
-import { ProgressBar } from '@/components/common/ProgressBar';
-import { EmptyState } from '@/components/common/EmptyState';
-import { useVirtualGrid } from '@/hooks/useVirtualGrid';
-import { allTopics, categories } from '@/data';
-import type { Difficulty } from '@/types';
-import styles from './Topics.module.css';
+import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { useProgressContext } from "@/context/ProgressContext";
+import { SearchInput } from "@/components/common/SearchInput";
+import { Card } from "@/components/common/Card";
+import { Badge } from "@/components/common/Badge";
+import { ProgressBar } from "@/components/common/ProgressBar";
+import { EmptyState } from "@/components/common/EmptyState";
+import { useVirtualGrid } from "@/hooks/useVirtualGrid";
+import { allTopics, categories } from "@/data";
+import type { Difficulty } from "@/types";
+import styles from "./Topics.module.css";
 
-type SortOption = 'alphabetical' | 'difficulty' | 'progress';
-type CompletionFilter = 'all' | 'complete' | 'incomplete';
-type ViewMode = 'grid' | 'list';
+type SortOption = "alphabetical" | "difficulty" | "progress";
+type CompletionFilter = "all" | "complete" | "incomplete";
+type ViewMode = "grid" | "list";
 
 const difficultyOrder: Record<Difficulty, number> = {
   Beginner: 0,
@@ -22,61 +22,73 @@ const difficultyOrder: Record<Difficulty, number> = {
   Senior: 3,
 };
 
-const difficultyVariant: Record<Difficulty, 'beginner' | 'intermediate' | 'advanced' | 'senior'> = {
-  Beginner: 'beginner',
-  Intermediate: 'intermediate',
-  Advanced: 'advanced',
-  Senior: 'senior',
+const difficultyVariant: Record<
+  Difficulty,
+  "beginner" | "intermediate" | "advanced" | "senior"
+> = {
+  Beginner: "beginner",
+  Intermediate: "intermediate",
+  Advanced: "advanced",
+  Senior: "senior",
 };
 
 export default function Topics() {
   const { completedQuestions } = useProgressContext();
-  const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [difficultyFilter, setDifficultyFilter] = useState('all');
-  const [completionFilter, setCompletionFilter] = useState<CompletionFilter>('all');
-  const [sortBy, setSortBy] = useState<SortOption>('alphabetical');
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
+  const [completionFilter, setCompletionFilter] =
+    useState<CompletionFilter>("all");
+  const [sortBy, setSortBy] = useState<SortOption>("alphabetical");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   const filtered = useMemo(() => {
     let topics = [...allTopics];
 
     if (search) {
       const q = search.toLowerCase();
-      topics = topics.filter(t =>
-        t.title.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q) ||
-        t.tags.some(tag => tag.toLowerCase().includes(q))
+      topics = topics.filter(
+        (t) =>
+          t.title.toLowerCase().includes(q) ||
+          t.description.toLowerCase().includes(q) ||
+          t.tags.some((tag) => tag.toLowerCase().includes(q)),
       );
     }
 
-    if (categoryFilter !== 'all') {
-      topics = topics.filter(t => t.category === categoryFilter);
+    if (categoryFilter !== "all") {
+      topics = topics.filter((t) => t.category === categoryFilter);
     }
 
-    if (difficultyFilter !== 'all') {
-      topics = topics.filter(t => t.difficulty === difficultyFilter);
+    if (difficultyFilter !== "all") {
+      topics = topics.filter((t) => t.difficulty === difficultyFilter);
     }
 
-    if (completionFilter !== 'all') {
-      topics = topics.filter(t => {
-        const done = t.questions.filter(q => completedQuestions.includes(q.id)).length;
-        const isComplete = done === t.questions.length && t.questions.length > 0;
-        return completionFilter === 'complete' ? isComplete : !isComplete;
+    if (completionFilter !== "all") {
+      topics = topics.filter((t) => {
+        const done = t.questions.filter((q) =>
+          completedQuestions.includes(q.id),
+        ).length;
+        const isComplete =
+          done === t.questions.length && t.questions.length > 0;
+        return completionFilter === "complete" ? isComplete : !isComplete;
       });
     }
 
     topics.sort((a, b) => {
       switch (sortBy) {
-        case 'difficulty':
+        case "difficulty":
           return difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty];
-        case 'progress': {
-          const pctA = a.questions.length > 0
-            ? a.questions.filter(q => completedQuestions.includes(q.id)).length / a.questions.length
-            : 0;
-          const pctB = b.questions.length > 0
-            ? b.questions.filter(q => completedQuestions.includes(q.id)).length / b.questions.length
-            : 0;
+        case "progress": {
+          const pctA =
+            a.questions.length > 0
+              ? a.questions.filter((q) => completedQuestions.includes(q.id))
+                  .length / a.questions.length
+              : 0;
+          const pctB =
+            b.questions.length > 0
+              ? b.questions.filter((q) => completedQuestions.includes(q.id))
+                  .length / b.questions.length
+              : 0;
           return pctB - pctA;
         }
         default:
@@ -85,7 +97,14 @@ export default function Topics() {
     });
 
     return topics;
-  }, [search, categoryFilter, difficultyFilter, completionFilter, sortBy, completedQuestions]);
+  }, [
+    search,
+    categoryFilter,
+    difficultyFilter,
+    completionFilter,
+    sortBy,
+    completedQuestions,
+  ]);
 
   const {
     visibleItems: renderedTopics,
@@ -100,7 +119,9 @@ export default function Topics() {
       <div className={styles.stickyTopBar}>
         <header className={styles.header}>
           <h1 className={styles.title}>Topics</h1>
-          <p className={styles.subtitle}>Explore all interview topics ({filtered.length})</p>
+          <p className={styles.subtitle}>
+            Explore all interview topics ({filtered.length})
+          </p>
         </header>
 
         <SearchInput
@@ -113,12 +134,12 @@ export default function Topics() {
         <div className={styles.filters}>
           <select
             value={categoryFilter}
-            onChange={e => setCategoryFilter(e.target.value)}
+            onChange={(e) => setCategoryFilter(e.target.value)}
             className={styles.select}
             aria-label="Filter by category"
           >
             <option value="all">All Categories</option>
-            {categories.map(c => (
+            {categories.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.icon} {c.title}
               </option>
@@ -127,7 +148,7 @@ export default function Topics() {
 
           <select
             value={difficultyFilter}
-            onChange={e => setDifficultyFilter(e.target.value)}
+            onChange={(e) => setDifficultyFilter(e.target.value)}
             className={styles.select}
             aria-label="Filter by difficulty"
           >
@@ -140,7 +161,9 @@ export default function Topics() {
 
           <select
             value={completionFilter}
-            onChange={e => setCompletionFilter(e.target.value as CompletionFilter)}
+            onChange={(e) =>
+              setCompletionFilter(e.target.value as CompletionFilter)
+            }
             className={styles.select}
             aria-label="Filter by completion status"
           >
@@ -151,7 +174,7 @@ export default function Topics() {
 
           <select
             value={sortBy}
-            onChange={e => setSortBy(e.target.value as SortOption)}
+            onChange={(e) => setSortBy(e.target.value as SortOption)}
             className={styles.select}
             aria-label="Sort by"
           >
@@ -163,16 +186,16 @@ export default function Topics() {
           <div className={styles.viewToggle}>
             <button
               type="button"
-              className={`${styles.viewBtn} ${viewMode === 'grid' ? styles.activeView : ''}`}
-              onClick={() => setViewMode('grid')}
+              className={`${styles.viewBtn} ${viewMode === "grid" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("grid")}
               aria-label="Grid view"
             >
               {"▦"}
             </button>
             <button
               type="button"
-              className={`${styles.viewBtn} ${viewMode === 'list' ? styles.activeView : ''}`}
-              onClick={() => setViewMode('list')}
+              className={`${styles.viewBtn} ${viewMode === "list" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("list")}
               aria-label="List view"
             >
               {"☰"}
@@ -182,66 +205,79 @@ export default function Topics() {
       </div>
 
       <div className={styles.scrollableContent}>
+        {filtered.length === 0 ? (
+          <EmptyState
+            icon="🔍"
+            title="No topics found"
+            description="Try adjusting your filters or search query"
+            actionLabel="Clear filters"
+            onAction={() => {
+              setSearch("");
+              setCategoryFilter("all");
+              setDifficultyFilter("all");
+              setCompletionFilter("all");
+            }}
+          />
+        ) : (
+          <>
+            <div className={viewMode === "grid" ? styles.grid : styles.list}>
+              {renderedTopics.map((topic) => {
+                const done = topic.questions.filter((q) =>
+                  completedQuestions.includes(q.id),
+                ).length;
+                const pct =
+                  topic.questions.length > 0
+                    ? Math.round((done / topic.questions.length) * 100)
+                    : 0;
+                const cat = categories.find((c) => c.id === topic.category);
 
-      {filtered.length === 0 ? (
-        <EmptyState
-          icon="🔍"
-          title="No topics found"
-          description="Try adjusting your filters or search query"
-          actionLabel="Clear filters"
-          onAction={() => {
-            setSearch('');
-            setCategoryFilter('all');
-            setDifficultyFilter('all');
-            setCompletionFilter('all');
-          }}
-        />
-      ) : (
-        <>
-          <div className={viewMode === 'grid' ? styles.grid : styles.list}>
-            {renderedTopics.map(topic => {
-              const done = topic.questions.filter(q => completedQuestions.includes(q.id)).length;
-              const pct = topic.questions.length > 0
-                ? Math.round((done / topic.questions.length) * 100)
-                : 0;
-              const cat = categories.find(c => c.id === topic.category);
-
-              return (
-                <Link key={topic.id} to={`/topics/${topic.id}`} className={styles.topicLink}>
-                  <Card>
-                    <div className={styles.topicCard}>
-                      <div className={styles.topicHeader}>
-                        <h3 className={styles.topicTitle}>{topic.title}</h3>
-                        <Badge variant={difficultyVariant[topic.difficulty]} size="small">
-                          {topic.difficulty}
-                        </Badge>
+                return (
+                  <Link
+                    key={topic.id}
+                    to={`/topics/${topic.id}`}
+                    className={styles.topicLink}
+                  >
+                    <Card>
+                      <div className={styles.topicCard}>
+                        <div className={styles.topicHeader}>
+                          <h3 className={styles.topicTitle}>{topic.title}</h3>
+                          <Badge
+                            variant={difficultyVariant[topic.difficulty]}
+                            size="small"
+                          >
+                            {topic.difficulty}
+                          </Badge>
+                        </div>
+                        <p className={styles.topicCategory}>
+                          {cat?.icon} {cat?.title ?? topic.category}
+                          {topic.subcategory ? ` / ${topic.subcategory}` : ""}
+                        </p>
+                        <p className={styles.topicDescription}>
+                          {topic.description}
+                        </p>
+                        <div className={styles.topicFooter}>
+                          <span className={styles.questionCount}>
+                            {topic.questions.length} questions
+                          </span>
+                          <ProgressBar value={pct} size="sm" showPercentage />
+                        </div>
                       </div>
-                      <p className={styles.topicCategory}>
-                        {cat?.icon} {cat?.title ?? topic.category}
-                        {topic.subcategory ? ` / ${topic.subcategory}` : ''}
-                      </p>
-                      <p className={styles.topicDescription}>{topic.description}</p>
-                      <div className={styles.topicFooter}>
-                        <span className={styles.questionCount}>
-                          {topic.questions.length} questions
-                        </span>
-                        <ProgressBar value={pct} size="sm" showPercentage />
-                      </div>
-                    </div>
-                  </Card>
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* Virtual scroll sentinel */}
-          {hasMore && (
-            <div ref={sentinelRef} className={styles.loadingSentinel}>
-              <span>Loading more topics ({renderedCount} of {totalCount})...</span>
+                    </Card>
+                  </Link>
+                );
+              })}
             </div>
-          )}
-        </>
-      )}
+
+            {/* Virtual scroll sentinel */}
+            {hasMore && (
+              <div ref={sentinelRef} className={styles.loadingSentinel}>
+                <span>
+                  Loading more topics ({renderedCount} of {totalCount})...
+                </span>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

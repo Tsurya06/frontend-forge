@@ -1,31 +1,38 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const starRatingProblem: MachineCodingProblem = {
-  id: 'mc-star-rating',
-  title: 'Star Rating Component',
-  difficulty: 'Beginner',
-  category: 'Machine Coding',
-  tags: ['react', 'component', 'accessibility', 'keyboard-navigation', 'hover-state', 'controlled-component'],
+  id: "mc-star-rating",
+  title: "Star Rating Component",
+  difficulty: "Beginner",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "component",
+    "accessibility",
+    "keyboard-navigation",
+    "hover-state",
+    "controlled-component",
+  ],
 
   problemStatement: `Build a reusable Star Rating component in React that allows users to select a rating by clicking on stars. The component should support hover previews so users can see which rating they are about to select before committing. This is one of the most commonly asked machine coding questions in frontend interviews, testing your understanding of event handling, controlled components, and accessibility.
 
 The component should be flexible enough to support a configurable number of stars, read-only mode, and different sizes. It must be fully accessible via keyboard navigation, allowing users to tab into the component and use arrow keys to adjust the rating. Screen readers should announce the current and selected ratings properly using ARIA attributes.`,
 
   functionalRequirements: [
-    'Render a configurable number of stars (default 5)',
-    'Click on a star to select that rating',
-    'Hover over stars to preview the rating before selection',
-    'Support half-star ratings optionally',
-    'Allow clearing the rating by clicking the same star again',
-    'Support read-only mode for display purposes',
-    'Support controlled and uncontrolled usage patterns',
+    "Render a configurable number of stars (default 5)",
+    "Click on a star to select that rating",
+    "Hover over stars to preview the rating before selection",
+    "Support half-star ratings optionally",
+    "Allow clearing the rating by clicking the same star again",
+    "Support read-only mode for display purposes",
+    "Support controlled and uncontrolled usage patterns",
   ],
 
   nonFunctionalRequirements: [
-    'Keyboard accessible: Tab to focus, Arrow keys to change rating, Enter/Space to confirm',
-    'Screen reader friendly with proper ARIA labels and live regions',
-    'Smooth hover transitions with CSS',
-    'No external dependencies beyond React',
+    "Keyboard accessible: Tab to focus, Arrow keys to change rating, Enter/Space to confirm",
+    "Screen reader friendly with proper ARIA labels and live regions",
+    "Smooth hover transitions with CSS",
+    "No external dependencies beyond React",
   ],
 
   componentHierarchy: `StarRating
@@ -188,32 +195,32 @@ export default function StarRating({
   performance: `The component is lightweight with minimal re-renders. Hover state changes only update the container component, and each star receives primitive props, making them easy to memoize with \`React.memo\` if needed. SVG icons are inlined to avoid extra network requests. The \`useCallback\` hooks prevent unnecessary re-creation of event handlers. For very large star counts, individual star components could be virtualized, but this is rarely needed in practice.`,
 
   edgeCases: [
-    'Rating of 0 (no stars selected) must be visually distinct',
-    'Rapid mouse movement across stars should not cause flickering',
-    'Touch devices need tap support without hover preview',
-    'RTL layouts should reverse star order',
-    'Controlled mode where external value changes should override internal state',
+    "Rating of 0 (no stars selected) must be visually distinct",
+    "Rapid mouse movement across stars should not cause flickering",
+    "Touch devices need tap support without hover preview",
+    "RTL layouts should reverse star order",
+    "Controlled mode where external value changes should override internal state",
   ],
 
   testingStrategy: [
-    'Unit test: clicking star N sets rating to N',
-    'Unit test: clicking same star in allowClear mode clears rating',
-    'Unit test: hover previews correct number of filled stars',
-    'Integration test: keyboard navigation cycles through stars with ArrowRight/ArrowLeft',
-    'Accessibility audit: verify ARIA roles and live region announcements',
+    "Unit test: clicking star N sets rating to N",
+    "Unit test: clicking same star in allowClear mode clears rating",
+    "Unit test: hover previews correct number of filled stars",
+    "Integration test: keyboard navigation cycles through stars with ArrowRight/ArrowLeft",
+    "Accessibility audit: verify ARIA roles and live region announcements",
   ],
 
   improvements: [
-    'Add half-star support using mouse position within each star element',
-    'Support custom icons (hearts, thumbs up) via render prop or icon prop',
-    'Add animation/transition effects when rating changes',
-    'Support fractional display ratings (e.g., 3.7 stars) in read-only mode',
+    "Add half-star support using mouse position within each star element",
+    "Support custom icons (hearts, thumbs up) via render prop or icon prop",
+    "Add animation/transition effects when rating changes",
+    "Support fractional display ratings (e.g., 3.7 stars) in read-only mode",
   ],
 
   followUpQuestions: [
-    'How would you implement half-star ratings based on mouse position?',
-    'How would you make this component work with form libraries like React Hook Form?',
-    'What changes are needed to support RTL languages?',
-    'How would you animate the star fill transition?',
+    "How would you implement half-star ratings based on mouse position?",
+    "How would you make this component work with form libraries like React Hook Form?",
+    "What changes are needed to support RTL languages?",
+    "How would you animate the star fill transition?",
   ],
 };

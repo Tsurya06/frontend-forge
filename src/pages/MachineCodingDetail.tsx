@@ -1,20 +1,23 @@
-import { useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useProgressContext } from '@/context/ProgressContext';
-import { useBookmarkContext } from '@/context/BookmarkContext';
-import { Badge } from '@/components/common/Badge';
-import { Tabs } from '@/components/common/Tabs';
-import { EmptyState } from '@/components/common/EmptyState';
-import { CodeBlock } from '@/components/code/CodeBlock';
-import { getMachineCodingProblemById } from '@/data';
-import type { Difficulty } from '@/types';
-import styles from './MachineCodingDetail.module.css';
+import { useMemo } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useProgressContext } from "@/context/ProgressContext";
+import { useBookmarkContext } from "@/context/BookmarkContext";
+import { Badge } from "@/components/common/Badge";
+import { Tabs } from "@/components/common/Tabs";
+import { EmptyState } from "@/components/common/EmptyState";
+import { CodeBlock } from "@/components/code/CodeBlock";
+import { getMachineCodingProblemById } from "@/data";
+import type { Difficulty } from "@/types";
+import styles from "./MachineCodingDetail.module.css";
 
-const difficultyVariant: Record<Difficulty, 'beginner' | 'intermediate' | 'advanced' | 'senior'> = {
-  Beginner: 'beginner',
-  Intermediate: 'intermediate',
-  Advanced: 'advanced',
-  Senior: 'senior',
+const difficultyVariant: Record<
+  Difficulty,
+  "beginner" | "intermediate" | "advanced" | "senior"
+> = {
+  Beginner: "beginner",
+  Intermediate: "intermediate",
+  Advanced: "advanced",
+  Senior: "senior",
 };
 
 export default function MachineCodingDetail() {
@@ -35,19 +38,19 @@ export default function MachineCodingDetail() {
           title="Problem not found"
           description="The machine coding problem you're looking for doesn't exist."
           actionLabel="Browse Problems"
-          onAction={() => window.location.assign('/machine-coding')}
+          onAction={() => window.location.assign("/machine-coding")}
         />
       </div>
     );
   }
 
-  const completed = isComplete(problem.id, 'machineCoding');
+  const completed = isComplete(problem.id, "machineCoding");
   const bookmarked = isBookmarked(problem.id);
 
   const tabs = [
     {
-      id: 'architecture',
-      label: 'Architecture',
+      id: "architecture",
+      label: "Architecture",
       content: (
         <div className={styles.tabContent}>
           <div className={styles.section}>
@@ -56,24 +59,39 @@ export default function MachineCodingDetail() {
           </div>
           <div className={styles.section}>
             <h3 className={styles.subheading}>Component Hierarchy</h3>
-            <CodeBlock code={problem.componentHierarchy} language="text" title="Component Tree" />
+            <CodeBlock
+              code={problem.componentHierarchy}
+              language="text"
+              title="Component Tree"
+              disablePlayground
+            />
           </div>
           <div className={styles.section}>
             <h3 className={styles.subheading}>State Design</h3>
-            <CodeBlock code={problem.stateDesign} language="typescript" title="State" showLineNumbers />
+            <CodeBlock
+              code={problem.stateDesign}
+              language="typescript"
+              title="State"
+              showLineNumbers
+            />
           </div>
           {problem.propsApiDesign && (
             <div className={styles.section}>
               <h3 className={styles.subheading}>Props / API Design</h3>
-              <CodeBlock code={problem.propsApiDesign} language="typescript" title="Props API" showLineNumbers />
+              <CodeBlock
+                code={problem.propsApiDesign}
+                language="typescript"
+                title="Props API"
+                showLineNumbers
+              />
             </div>
           )}
         </div>
       ),
     },
     {
-      id: 'implementation',
-      label: 'Implementation',
+      id: "implementation",
+      label: "Implementation",
       content: (
         <div className={styles.tabContent}>
           <CodeBlock
@@ -86,8 +104,8 @@ export default function MachineCodingDetail() {
       ),
     },
     {
-      id: 'accessibility',
-      label: 'Accessibility',
+      id: "accessibility",
+      label: "Accessibility",
       content: (
         <div className={styles.tabContent}>
           <p className={styles.sectionText}>{problem.accessibility}</p>
@@ -95,8 +113,8 @@ export default function MachineCodingDetail() {
       ),
     },
     {
-      id: 'testing',
-      label: 'Testing',
+      id: "testing",
+      label: "Testing",
       content: (
         <div className={styles.tabContent}>
           <div className={styles.section}>
@@ -140,9 +158,13 @@ export default function MachineCodingDetail() {
     <div className={styles.page}>
       <div className={styles.stickyTopBar}>
         <nav className={styles.breadcrumbs}>
-          <Link to="/" className={styles.breadcrumbLink}>Home</Link>
+          <Link to="/" className={styles.breadcrumbLink}>
+            Home
+          </Link>
           <span className={styles.breadcrumbSep}>/</span>
-          <Link to="/machine-coding" className={styles.breadcrumbLink}>Machine Coding</Link>
+          <Link to="/machine-coding" className={styles.breadcrumbLink}>
+            Machine Coding
+          </Link>
           <span className={styles.breadcrumbSep}>/</span>
           <span className={styles.breadcrumbCurrent}>{problem.title}</span>
         </nav>
@@ -151,27 +173,31 @@ export default function MachineCodingDetail() {
           <div className={styles.headerTop}>
             <h1 className={styles.title}>{problem.title}</h1>
             <div className={styles.meta}>
-              <Badge variant={difficultyVariant[problem.difficulty]}>{problem.difficulty}</Badge>
-              {problem.tags.map(tag => (
-                <Badge key={tag} variant="tag" size="small">{tag}</Badge>
+              <Badge variant={difficultyVariant[problem.difficulty]}>
+                {problem.difficulty}
+              </Badge>
+              {problem.tags.map((tag) => (
+                <Badge key={tag} variant="tag" size="small">
+                  {tag}
+                </Badge>
               ))}
             </div>
           </div>
           <div className={styles.actions}>
             <button
               type="button"
-              className={`${styles.actionBtn} ${completed ? styles.completedBtn : ''}`}
-              onClick={() => markComplete(problem.id, 'machineCoding')}
+              className={`${styles.actionBtn} ${completed ? styles.completedBtn : ""}`}
+              onClick={() => markComplete(problem.id, "machineCoding")}
               disabled={completed}
             >
-              {completed ? '✓ Completed' : 'Mark Complete'}
+              {completed ? "✓ Completed" : "Mark Complete"}
             </button>
             <button
               type="button"
-              className={`${styles.actionBtn} ${bookmarked ? styles.bookmarkedBtn : ''}`}
+              className={`${styles.actionBtn} ${bookmarked ? styles.bookmarkedBtn : ""}`}
               onClick={() => toggleBookmark(problem.id)}
             >
-              {bookmarked ? '🔖 Bookmarked' : '🔗 Bookmark'}
+              {bookmarked ? "🔖 Bookmarked" : "🔗 Bookmark"}
             </button>
           </div>
         </header>
@@ -193,7 +219,9 @@ export default function MachineCodingDetail() {
             </ul>
           </section>
           <section className={styles.section}>
-            <h2 className={styles.sectionHeading}>Non-Functional Requirements</h2>
+            <h2 className={styles.sectionHeading}>
+              Non-Functional Requirements
+            </h2>
             <ul className={styles.infoList}>
               {problem.nonFunctionalRequirements.map((r, i) => (
                 <li key={i}>{r}</li>

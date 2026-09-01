@@ -1,10 +1,13 @@
-import { useCallback, useMemo } from 'react';
-import { useLocalStorage } from './useLocalStorage';
+import { useCallback, useMemo } from "react";
+import { useLocalStorage } from "./useLocalStorage";
 
-const BOOKMARKS_KEY = 'feeq-bookmarks';
+const BOOKMARKS_KEY = "feeq-bookmarks";
 
 export function useBookmarks() {
-  const [bookmarks, setBookmarks] = useLocalStorage<string[]>(BOOKMARKS_KEY, []);
+  const [bookmarks, setBookmarks] = useLocalStorage<string[]>(
+    BOOKMARKS_KEY,
+    [],
+  );
 
   const bookmarkSet = useMemo(() => new Set(bookmarks), [bookmarks]);
 

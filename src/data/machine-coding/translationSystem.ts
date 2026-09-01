@@ -1,29 +1,36 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const translationSystemProblem: MachineCodingProblem = {
-  id: 'mc-translation',
-  title: 'Translation System (i18n)',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['i18n', 'context', 'translation', 'interpolation', 'pluralization', 'provider-pattern'],
+  id: "mc-translation",
+  title: "Translation System (i18n)",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "i18n",
+    "context",
+    "translation",
+    "interpolation",
+    "pluralization",
+    "provider-pattern",
+  ],
   problemStatement: `Build a lightweight internationalization (i18n) system in React that allows the entire application to switch between languages dynamically. The system should use React Context to provide translation functions to any component in the tree without prop drilling.
 
 The translation system must support a dictionary-based approach where each language has a flat or nested key-value map. It should handle string interpolation (e.g., "Hello, {{name}}") and basic pluralization rules. Components should re-render efficiently when the language changes. The system should gracefully fall back to a default language if a key is missing in the current locale.
 
 This problem tests understanding of the Context API, custom hooks, string processing, and building reusable infrastructure code.`,
   functionalRequirements: [
-    'Switch the active language via a dropdown or button group',
+    "Switch the active language via a dropdown or button group",
     'Translate keys to strings using a t("key") function available throughout the component tree',
     'Support string interpolation: t("greeting", { name: "Alice" }) → "Hello, Alice"',
     'Support basic pluralization: t("item_count", { count: 5 }) → "5 items"',
-    'Fall back to default language (e.g., English) when a key is missing in the selected locale',
-    'Display a warning in development when a translation key is entirely missing',
-    'Persist the selected language in localStorage and restore on mount',
+    "Fall back to default language (e.g., English) when a key is missing in the selected locale",
+    "Display a warning in development when a translation key is entirely missing",
+    "Persist the selected language in localStorage and restore on mount",
   ],
   nonFunctionalRequirements: [
-    'Efficient re-renders: only components consuming translations should update on language change',
-    'Type-safe translation keys using TypeScript generics or mapped types',
-    'Extensible: easy to add new languages by providing a new dictionary file',
+    "Efficient re-renders: only components consuming translations should update on language change",
+    "Type-safe translation keys using TypeScript generics or mapped types",
+    "Extensible: easy to add new languages by providing a new dictionary file",
   ],
   componentHierarchy: `App
 ├── I18nProvider (context provider)
@@ -239,32 +246,32 @@ function TranslationDemoContent() {
   accessibility: `The language selector uses a native <select> with an associated <label> for screen reader support. All text content is translated so screen readers read in the active language. The html lang attribute should be updated when locale changes (in a full app). Navigation links are semantic <a> elements. The UI avoids icon-only language toggles that would be inaccessible.`,
   performance: `The context value is memoized with useMemo to prevent unnecessary re-renders of consumers. The t() function is memoized with useCallback and only changes when locale changes. Dictionary lookups are O(1) hash map access. For very large apps, consider splitting dictionaries by route and lazy-loading them to reduce initial bundle size.`,
   edgeCases: [
-    'Missing translation key — fall back to default locale, then return the key itself',
-    'Missing interpolation param — leave the {{placeholder}} token visible as a signal',
-    'Count of 0 — uses _other suffix in English pluralization rules',
-    'Locale in localStorage is invalid or removed — fall back to default locale',
-    'Nested key notation (dot-separated) — could be supported by splitting and traversing',
+    "Missing translation key — fall back to default locale, then return the key itself",
+    "Missing interpolation param — leave the {{placeholder}} token visible as a signal",
+    "Count of 0 — uses _other suffix in English pluralization rules",
+    "Locale in localStorage is invalid or removed — fall back to default locale",
+    "Nested key notation (dot-separated) — could be supported by splitting and traversing",
     'RTL languages (Arabic, Hebrew) — need dir="rtl" on the document and layout adjustments',
   ],
   testingStrategy: [
-    'Unit test: interpolate replaces all {{placeholders}} with provided params',
-    'Unit test: t() returns correct translation for each locale',
-    'Unit test: t() falls back to default locale for missing keys',
-    'Unit test: pluralization selects _one vs _other correctly',
-    'Integration test: switching language re-renders all translated text',
-    'Integration test: locale persists in localStorage and restores on remount',
+    "Unit test: interpolate replaces all {{placeholders}} with provided params",
+    "Unit test: t() returns correct translation for each locale",
+    "Unit test: t() falls back to default locale for missing keys",
+    "Unit test: pluralization selects _one vs _other correctly",
+    "Integration test: switching language re-renders all translated text",
+    "Integration test: locale persists in localStorage and restores on remount",
   ],
   improvements: [
     'Support nested key paths like t("nav.home") resolving nested dictionary objects',
-    'Lazy-load translation dictionaries per locale to reduce bundle size',
-    'Add number and date formatting using Intl APIs based on locale',
-    'Support gender-based translations in addition to pluralization',
-    'Add a translation management UI for non-developer contributors',
+    "Lazy-load translation dictionaries per locale to reduce bundle size",
+    "Add number and date formatting using Intl APIs based on locale",
+    "Support gender-based translations in addition to pluralization",
+    "Add a translation management UI for non-developer contributors",
   ],
   followUpQuestions: [
-    'How would you handle right-to-left (RTL) languages in your layout?',
-    'How would you lazy-load translation files for each locale?',
-    'What are the limitations of this approach vs a full library like react-intl or i18next?',
-    'How would you add support for complex pluralization rules (e.g., Arabic has 6 plural forms)?',
+    "How would you handle right-to-left (RTL) languages in your layout?",
+    "How would you lazy-load translation files for each locale?",
+    "What are the limitations of this approach vs a full library like react-intl or i18next?",
+    "How would you add support for complex pluralization rules (e.g., Arabic has 6 plural forms)?",
   ],
 };

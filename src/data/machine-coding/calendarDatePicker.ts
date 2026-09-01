@@ -1,33 +1,40 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const calendarDatePickerProblem: MachineCodingProblem = {
-  id: 'mc-calendar-date-picker',
-  title: 'Calendar / Date Picker Component',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'ui-component', 'date-picker', 'calendar', 'accessibility', 'keyboard-navigation'],
+  id: "mc-calendar-date-picker",
+  title: "Calendar / Date Picker Component",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "ui-component",
+    "date-picker",
+    "calendar",
+    "accessibility",
+    "keyboard-navigation",
+  ],
 
   problemStatement: `Build an accessible, feature-rich Calendar / Date Picker component in React. The component should feature an interactive popover calendar triggered by clicking a date input or calendar button, complete with month and year navigation, quick month/year selectors, date range selection (start date to end date), min/max date boundaries, disabled dates (e.g., weekends or holidays), and full keyboard navigation (arrows to navigate days, PageUp/PageDown for months).
 
 The component should support both controlled and uncontrolled usage, format dates according to local or customizable formatting strings (e.g. YYYY-MM-DD), handle internationalization (first day of week: Sunday vs Monday), and provide clean popover positioning with outside click detection and Escape key dismissal.`,
 
   functionalRequirements: [
-    'Trigger input displaying selected date or placeholder, with calendar toggle button',
-    'Monthly calendar grid displaying days with correct padding for weekday start',
-    'Previous/Next month and year navigation buttons',
-    'Clicking a day selects it and updates the input value',
-    'Support date range selection (start date, hover preview, end date)',
-    'Support minDate, maxDate, and custom disabledDates predicates',
-    'Highlight today\'s date, selected date(s), and in-range dates',
-    'Month and year dropdown/quick picker',
-    'Close on outside click or Escape key press',
+    "Trigger input displaying selected date or placeholder, with calendar toggle button",
+    "Monthly calendar grid displaying days with correct padding for weekday start",
+    "Previous/Next month and year navigation buttons",
+    "Clicking a day selects it and updates the input value",
+    "Support date range selection (start date, hover preview, end date)",
+    "Support minDate, maxDate, and custom disabledDates predicates",
+    "Highlight today's date, selected date(s), and in-range dates",
+    "Month and year dropdown/quick picker",
+    "Close on outside click or Escape key press",
   ],
 
   nonFunctionalRequirements: [
     'WAI-ARIA Date Picker dialog pattern: role="dialog" or "grid", role="gridcell", aria-selected, aria-disabled',
-    'Complete keyboard navigation: Arrow keys move focus across days, Enter/Space selects, PageUp/Down shifts month',
-    'Performant calendar matrix calculation without heavy third-party date libraries (use native Date or lightweight helpers)',
-    'Responsive popover that repositions if cut off by viewport edge',
+    "Complete keyboard navigation: Arrow keys move focus across days, Enter/Space selects, PageUp/Down shifts month",
+    "Performant calendar matrix calculation without heavy third-party date libraries (use native Date or lightweight helpers)",
+    "Responsive popover that repositions if cut off by viewport edge",
   ],
 
   componentHierarchy: `DatePicker
@@ -283,31 +290,31 @@ export function CalendarDatePicker({
   performance: `Generates days using purely functional mathematical operations without full moment.js or large libraries. The grid calculation is memoized on [year, month]. Renders in under 2ms. Portal rendering prevents CSS z-index and overflow clipping issues in complex parent layouts.`,
 
   edgeCases: [
-    'Leap years (February 29th calculation in 2024, 2028, etc.)',
-    'Daylight saving transitions (hour adjustments when crossing DST boundaries)',
-    'Min/Max date constraints that fall in the middle of a month',
-    'Selecting dates in different locales where Monday is the first day of the week',
-    'Rapid clicking between year and month navigation without re-render stutter',
+    "Leap years (February 29th calculation in 2024, 2028, etc.)",
+    "Daylight saving transitions (hour adjustments when crossing DST boundaries)",
+    "Min/Max date constraints that fall in the middle of a month",
+    "Selecting dates in different locales where Monday is the first day of the week",
+    "Rapid clicking between year and month navigation without re-render stutter",
   ],
 
   testingStrategy: [
-    'Unit test: daysInMonth returns 29 for February in leap years and 28 in non-leap years',
-    'Unit test: startDay offset correctly positions the 1st of each month',
-    'Integration test: clicking a day fires onChange with correct Date object and closes popover',
-    'Integration test: navigating months updates header and days grid',
-    'Keyboard test: ArrowLeft/ArrowRight changes focused day, Enter selects',
+    "Unit test: daysInMonth returns 29 for February in leap years and 28 in non-leap years",
+    "Unit test: startDay offset correctly positions the 1st of each month",
+    "Integration test: clicking a day fires onChange with correct Date object and closes popover",
+    "Integration test: navigating months updates header and days grid",
+    "Keyboard test: ArrowLeft/ArrowRight changes focused day, Enter selects",
   ],
 
   improvements: [
-    'Add full Date Range selection with hover styling between start and end date',
+    "Add full Date Range selection with hover styling between start and end date",
     'Add Quick Select presets ("Today", "This Week", "Last 30 Days")',
-    'Time selection addon (TimePicker integration with hours/minutes sliders)',
-    'Internationalization using Intl.DateTimeFormat for localized month/day names',
+    "Time selection addon (TimePicker integration with hours/minutes sliders)",
+    "Internationalization using Intl.DateTimeFormat for localized month/day names",
   ],
 
   followUpQuestions: [
-    'How do you handle timezones when sending the selected date to a backend API?',
-    'How would you implement virtualization if rendering an infinite scrolling multi-month calendar?',
-    'What is the difference between storing dates as ISO 8601 strings vs UTC timestamps in client state?',
+    "How do you handle timezones when sending the selected date to a backend API?",
+    "How would you implement virtualization if rendering an infinite scrolling multi-month calendar?",
+    "What is the difference between storing dates as ISO 8601 strings vs UTC timestamps in client state?",
   ],
 };

@@ -1,11 +1,19 @@
-import type { CodingProblem } from '../../types';
+import type { CodingProblem } from "../../types";
 
 export const webVitalsScenariosProblem: CodingProblem = {
-  id: 'coding-web-vitals-scenarios',
-  title: 'Web Vitals Instrumentation & Scenario Diagnostic Engine',
-  difficulty: 'Senior',
-  category: 'Coding',
-  tags: ['performance', 'web-vitals', 'inp', 'lcp', 'cls', 'performance-observer', 'browser'],
+  id: "coding-web-vitals-scenarios",
+  title: "Web Vitals Instrumentation & Scenario Diagnostic Engine",
+  difficulty: "Senior",
+  category: "Coding",
+  tags: [
+    "performance",
+    "web-vitals",
+    "inp",
+    "lcp",
+    "cls",
+    "performance-observer",
+    "browser",
+  ],
 
   problem: `Implement a production-grade Web Vitals instrumentation utility and scenario analysis engine in JavaScript/TypeScript.
 
@@ -23,31 +31,33 @@ The utility must:
 3. Report metrics safely via \`navigator.sendBeacon\` or custom analytics callback.`,
 
   requirements: [
-    'Observe LCP, INP, CLS, FCP, TTFB via PerformanceObserver',
+    "Observe LCP, INP, CLS, FCP, TTFB via PerformanceObserver",
     'Calculate metric ratings ("good", "needs-improvement", "poor")',
-    'CLS session windowing (maximum session window of 5s with 1s gap)',
-    'INP calculation using 98th percentile for long sessions or maximum interaction duration',
-    'Programmatic scenario diagnosis function evaluating latency bottlenecks',
+    "CLS session windowing (maximum session window of 5s with 1s gap)",
+    "INP calculation using 98th percentile for long sessions or maximum interaction duration",
+    "Programmatic scenario diagnosis function evaluating latency bottlenecks",
   ],
 
   examples: [
     {
       input: `const monitor = initWebVitalsMonitor(metric => console.log(metric));\n// Triggers real-time metric reporting as user interacts with page`,
       output: `{ name: 'LCP', value: 1420, rating: 'good', element: 'img.hero-banner' }`,
-      explanation: 'Reports LCP at 1.42 seconds (within the 2.5s good threshold).',
+      explanation:
+        "Reports LCP at 1.42 seconds (within the 2.5s good threshold).",
     },
     {
       input: `diagnoseScenario('SSR server rendered document query takes 3500ms before returning initial byte')`,
       output: `{ primaryMetric: 'TTFB', impact: 'high', cascadedMetrics: ['FCP', 'LCP'], rootCause: 'Server-side database delay or un-cached SSR generation' }`,
-      explanation: 'Identifies TTFB as the initial failure point cascading to FCP and LCP.',
+      explanation:
+        "Identifies TTFB as the initial failure point cascading to FCP and LCP.",
     },
   ],
 
   edgeCases: [
-    'Page loaded in background tab: discard or flag LCP metric per spec',
-    'User navigates away before LCP/INP resolves: flush buffered metrics on visibilitychange (hidden)',
-    'Layout shifts caused by user interaction within 500ms: must be excluded via hadRecentInput check',
-    'Browsers without PerformanceObserver support: graceful degradation without throwing',
+    "Page loaded in background tab: discard or flag LCP metric per spec",
+    "User navigates away before LCP/INP resolves: flush buffered metrics on visibilitychange (hidden)",
+    "Layout shifts caused by user interaction within 500ms: must be excluded via hadRecentInput check",
+    "Browsers without PerformanceObserver support: graceful degradation without throwing",
   ],
 
   naiveApproach: `A naive approach tries using \`window.performance.timing\` (deprecated PerformanceTiming API) or single timestamp measurements, failing to capture dynamic shifts (CLS), user interaction responsiveness (INP), or actual largest contentful painted elements.`,
@@ -273,30 +283,31 @@ export function diagnosePerformanceBottleneck(scenarioDescription: string): Scen
 }`,
 
   stepByStep: [
-    'Instantiate PerformanceObserver instances for navigation, paint, LCP, layout-shift, and interaction entries.',
-    'Implement CLS session window grouping with 1-second gap and 5-second maximum session ceiling.',
-    'Classify metric scores against Core Web Vitals threshold boundaries.',
-    'Flush LCP and CLS on document visibilitychange to hidden.',
-    'Implement diagnostic evaluation matching scenario prompts to root causes and mitigation strategies.',
+    "Instantiate PerformanceObserver instances for navigation, paint, LCP, layout-shift, and interaction entries.",
+    "Implement CLS session window grouping with 1-second gap and 5-second maximum session ceiling.",
+    "Classify metric scores against Core Web Vitals threshold boundaries.",
+    "Flush LCP and CLS on document visibilitychange to hidden.",
+    "Implement diagnostic evaluation matching scenario prompts to root causes and mitigation strategies.",
   ],
 
-  timeComplexity: 'O(1) observation overhead; asynchronous PerformanceObserver runs on background browser threads.',
-  spaceComplexity: 'O(1) memory footprint.',
+  timeComplexity:
+    "O(1) observation overhead; asynchronous PerformanceObserver runs on background browser threads.",
+  spaceComplexity: "O(1) memory footprint.",
 
   alternativeSolutions: [
-    'Google web-vitals npm package',
-    'Chrome User Experience Report (CrUX) API integration',
+    "Google web-vitals npm package",
+    "Chrome User Experience Report (CrUX) API integration",
   ],
 
   commonMistakes: [
-    'Treating FID as a modern Core Web Vital (FID was officially replaced by INP in March 2024).',
-    'Calculating CLS as a naive cumulative sum without session windowing.',
-    'Missing the cascading relationship where TTFB bottlenecks automatically inflate FCP and LCP.',
+    "Treating FID as a modern Core Web Vital (FID was officially replaced by INP in March 2024).",
+    "Calculating CLS as a naive cumulative sum without session windowing.",
+    "Missing the cascading relationship where TTFB bottlenecks automatically inflate FCP and LCP.",
   ],
 
   followUps: [
-    'What is the difference between Lab data (Lighthouse) and Field data (RUM / CrUX)?',
-    'How does React 19 Server Components (RSC) and progressive hydration affect Web Vitals?',
-    'How do you debug INP in Chrome DevTools Performance panel using the Interactions track?',
+    "What is the difference between Lab data (Lighthouse) and Field data (RUM / CrUX)?",
+    "How does React 19 Server Components (RSC) and progressive hydration affect Web Vitals?",
+    "How do you debug INP in Chrome DevTools Performance panel using the Interactions track?",
   ],
 };

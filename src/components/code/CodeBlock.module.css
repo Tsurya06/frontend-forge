@@ -2,16 +2,18 @@
   border-radius: var(--radius-xl);
   overflow: hidden;
   border: 1px solid var(--border-color);
-  background-color: #1e1e24;
-  color: #ececf1;
+  background-color: #181818;
+  color: #eff2f6;
   margin: var(--space-4) 0;
   box-shadow: var(--shadow-sm);
   transition: border-color var(--transition-fast);
+  content-visibility: auto;
+  contain-intrinsic-size: 200px;
 }
 
 [data-theme="dark"] .codeBlock {
-  border-color: rgba(255, 255, 255, 0.1);
-  background-color: #171717;
+  border-color: #3e3e3e;
+  background-color: #181818;
 }
 
 /* ── Header Bar ── */
@@ -40,9 +42,15 @@
   border-radius: 50%;
 }
 
-.dotRed { background-color: #ff5f56; }
-.dotYellow { background-color: #ffbd2e; }
-.dotGreen { background-color: #27c93f; }
+.dotRed {
+  background-color: #ff5f56;
+}
+.dotYellow {
+  background-color: #ffbd2e;
+}
+.dotGreen {
+  background-color: #27c93f;
+}
 
 .titleWrapper {
   display: flex;
@@ -243,8 +251,14 @@
 }
 
 @keyframes slideDown {
-  from { opacity: 0; max-height: 0; }
-  to { opacity: 1; max-height: 320px; }
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 320px;
+  }
 }
 
 .consoleHeader {

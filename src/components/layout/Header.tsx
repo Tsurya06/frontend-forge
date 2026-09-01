@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, NavLink } from "react-router-dom";
+import { useProgressContext } from "@/context/ProgressContext";
 import styles from "./Header.module.css";
 
 interface HeaderProps {
@@ -14,11 +15,23 @@ function getInitialTheme(): "light" | "dark" {
     : "light";
 }
 
+const navItems = [
+  { label: "Explore", path: "/topics" },
+  { label: "Problems", path: "/coding" },
+  { label: "Machine Coding", path: "/machine-coding" },
+  { label: "System Design", path: "/system-design" },
+  { label: "Roadmap", path: "/roadmap" },
+  { label: "Daily", path: "/daily" },
+  { label: "Sandbox", path: "/playground" },
+];
+
 export function Header({ onMenuToggle }: HeaderProps) {
   const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
   const [query, setQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const { dailyStreak } = useProgressContext();
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -38,7 +51,8 @@ export function Header({ onMenuToggle }: HeaderProps) {
         )
       ) {
         e.preventDefault();
-        inputRef.current?.focus();
+        setIsSearchOpen(true);
+        setTimeout(() => inputRef.current?.focus(), 50);
       }
     }
     document.addEventListener("keydown", handleKeyDown);
@@ -50,45 +64,100 @@ export function Header({ onMenuToggle }: HeaderProps) {
     const trimmed = query.trim();
     if (trimmed) {
       navigate(`/search?q=${encodeURIComponent(trimmed)}`);
+      setIsSearchOpen(false);
     }
   }
 
   return (
     <header className={styles.header}>
-      <button
-        className={styles.menuButton}
-        onClick={onMenuToggle}
-        aria-label="Toggle menu"
-        type="button"
-      >
-        {"\u2630"}
-      </button>
-      <Link to="/" className={styles.headerBrand}>
-        <img
-          src={import.meta.env.BASE_URL + "favicon-32.png"}
-          alt="FrontendForge Logo"
-          className={styles.headerLogo}
-        />
-        <span className={styles.title}>FrontendForge</span>
-      </Link>
-      <form className={styles.search} onSubmit={handleSubmit} role="search">
-        <span className={styles.searchIcon} aria-hidden="true">
-          {"\u{1F50D}"}
-        </span>
-        <input
-          ref={inputRef}
-          type="search"
-          className={styles.searchInput}
-          placeholder="Search questions, topics..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search"
-        />
-        <span className={styles.shortcutHint} aria-hidden="true">
-          /
-        </span>
-      </form>
-      <div className={styles.actions}>
+      <div className={styles.leftGroup}>
+        <button
+          className={styles.menuButton}
+          onClick={onMenuToggle}
+          aria-label="Toggle navigation menu"
+          type="button"
+        >
+          {"\u2630"}
+        </button>
+
+        <Link to="/" className={styles.headerBrand}>
+          <img
+            src={import.meta.env.BASE_URL + "favicon-32.png"}
+            alt="FrontendForge"
+            className={styles.headerLogo}
+          />
+          <span className={styles.brandText}>FrontendForge</span>
+        </Link>
+
+        {/* LeetCode Horizontal Nav Links (Desktop) */}
+        <nav className={styles.desktopNav} aria-label="Main Navigation">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.activeNavLink : ""}`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+
+      <div className={styles.rightGroup}>
+        {/* Search Bar */}
+        <form
+          className={`${styles.search} ${isSearchOpen ? styles.searchExpanded : ""}`}
+          onSubmit={handleSubmit}
+          role="search"
+        >
+          <span className={styles.searchIcon} aria-hidden="true">
+            {"\u{1F50D}"}
+          </span>
+          <input
+            ref={inputRef}
+            type="search"
+            className={styles.searchInput}
+            placeholder="Search problems, topics..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => setIsSearchOpen(true)}
+            onBlur={() => setIsSearchOpen(false)}
+            aria-label="Search problems"
+          />
+          <span className={styles.shortcutHint} aria-hidden="true">
+            /
+          </span>
+        </form>
+
+        {/* Daily Streak Pill */}
+        <Link to="/daily" className={styles.streakPill} title="Current Streak">
+          <span className={styles.streakFlame}>🔥</span>
+          <span className={styles.streakCount}>{dailyStreak || 1}</span>
+        </Link>
+
+        {/* Bookmarks */}
+        <Link
+          to="/bookmarks"
+          className={styles.iconBtn}
+          title="Saved Bookmarks"
+          aria-label="Bookmarks"
+        >
+          ⭐
+        </Link>
+
+        {/* Analytics Profile */}
+        <Link
+          to="/progress"
+          className={styles.iconBtn}
+          title="My Progress & Analytics"
+          aria-label="Progress & Analytics"
+        >
+          📊
+        </Link>
+
+        {/* Theme Toggle */}
         <button
           className={styles.themeToggle}
           onClick={toggleTheme}

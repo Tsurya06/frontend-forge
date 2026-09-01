@@ -1,0 +1,191 @@
+.leftNav {
+  display: none;
+  flex-direction: column;
+  width: 210px;
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-2);
+  gap: var(--space-3);
+  user-select: none;
+}
+
+.primaryNav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.navItem:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.navItem.active {
+  color: var(--text-primary);
+  background-color: var(--bg-hover);
+  font-weight: var(--font-bold);
+}
+
+.navIcon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.navLabel {
+  flex: 1;
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.06);
+  margin: 0 var(--space-2);
+}
+
+/* ── My Lists ── */
+.myListsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.listHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-3);
+  font-size: 0.75rem;
+  font-weight: var(--font-semibold);
+  color: var(--text-muted);
+}
+
+.listActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.addBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.addBtn:hover {
+  color: var(--text-primary);
+}
+
+.chevron {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.listItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.listItem:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.starIcon {
+  font-size: 0.8rem;
+  color: #ffa116;
+}
+
+.sheetIcon {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.listItemName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  background: rgba(255, 161, 22, 0.1);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-semibold);
+}
+
+/* ── Footer Status Note ── */
+.footerNote {
+  margin-top: auto;
+  padding: var(--space-3);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.progressStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.7rem;
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+.flameIcon {
+  font-size: 0.8rem;
+}
+
+.profileLink {
+  font-size: 0.68rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: var(--font-medium);
+}
+
+.profileLink:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 1200px) {
+  .leftNav {
+    display: flex;
+  }
+}

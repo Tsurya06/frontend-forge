@@ -1,12 +1,20 @@
-import type { SystemDesignProblem } from '../../types';
+import type { SystemDesignProblem } from "../../types";
 
 export const systemDesignProblems: SystemDesignProblem[] = [
   {
-    id: 'sd-autocomplete',
-    title: 'Autocomplete / Search Suggestions System',
-    difficulty: 'Advanced',
-    category: 'System Design',
-    tags: ['search', 'debouncing', 'caching', 'keyboard-navigation', 'accessibility', 'trie', 'api-design'],
+    id: "sd-autocomplete",
+    title: "Autocomplete / Search Suggestions System",
+    difficulty: "Advanced",
+    category: "System Design",
+    tags: [
+      "search",
+      "debouncing",
+      "caching",
+      "keyboard-navigation",
+      "accessibility",
+      "trie",
+      "api-design",
+    ],
     requirements: `The autocomplete system must provide real-time search suggestions as the user types into a search input field. The primary requirement is to display a ranked list of up to 10 suggestions within 100ms of user input, creating a seamless and responsive experience. The system should support prefix matching, fuzzy matching for typo tolerance, and recently searched terms that are personalized per user session.
 
 Beyond basic suggestions, the system must handle multi-language input, support highlighted matching text within suggestions (bolding the matched portion), and allow keyboard navigation through the suggestion list using arrow keys, Enter to select, and Escape to dismiss. Each suggestion item should support different types — recent searches, trending searches, product suggestions, and category suggestions — each rendered with distinct iconography and layout.
@@ -89,14 +97,21 @@ For extreme scale, the suggestion rendering itself must be optimized. The compon
 
 Client-side caching introduces the tradeoff between freshness and speed. Aggressively caching suggestions (long TTLs) means the user might see stale results — a product that's out of stock might still appear in suggestions. Short TTLs maintain freshness but negate the caching benefit. The hybrid approach (short TTL for personalized, longer for trending) adds complexity. Similarly, the prefix-based local filtering (showing filtered cached results for "reac" from "rea" cache) trades accuracy for perceived speed — the locally filtered results might not match the API's ranking.
 
-The combobox accessibility pattern forces certain UX decisions. ARIA requires aria-activedescendant to be set on the input, which means focus must remain on the input during keyboard navigation — this conflicts with some designs that want focus to move into the suggestion list. Using role="listbox" limits each suggestion to role="option", which cannot contain interactive elements (like a delete button on recent searches). The workaround of placing delete buttons outside the option role adds DOM complexity. The choice between a controlled and uncontrolled input pattern also matters: controlled gives precise state management but may cause input lag on slow devices, while uncontrolled is faster but harder to synchronize with the suggestion lifecycle.`
+The combobox accessibility pattern forces certain UX decisions. ARIA requires aria-activedescendant to be set on the input, which means focus must remain on the input during keyboard navigation — this conflicts with some designs that want focus to move into the suggestion list. Using role="listbox" limits each suggestion to role="option", which cannot contain interactive elements (like a delete button on recent searches). The workaround of placing delete buttons outside the option role adds DOM complexity. The choice between a controlled and uncontrolled input pattern also matters: controlled gives precise state management but may cause input lag on slow devices, while uncontrolled is faster but harder to synchronize with the suggestion lifecycle.`,
   },
   {
-    id: 'sd-news-feed',
-    title: 'News Feed System',
-    difficulty: 'Advanced',
-    category: 'System Design',
-    tags: ['infinite-scroll', 'real-time', 'optimistic-ui', 'content-ranking', 'virtualization', 'feed-algorithm'],
+    id: "sd-news-feed",
+    title: "News Feed System",
+    difficulty: "Advanced",
+    category: "System Design",
+    tags: [
+      "infinite-scroll",
+      "real-time",
+      "optimistic-ui",
+      "content-ranking",
+      "virtualization",
+      "feed-algorithm",
+    ],
     requirements: `The news feed system must display a continuously updating stream of content items including text posts, images, videos, shared links, and user interactions (likes, comments, shares). The primary feed should support infinite scrolling with smooth loading of new content as the user scrolls down. New content should appear in near-real-time (within 5 seconds of creation) when the user is viewing the top of their feed, with a "New posts available" banner rather than disruptive auto-insertion.
 
 Each feed item must support rich interactions: like/react (with multiple reaction types), comment (with nested replies), share/repost, bookmark, and report. Interactions should use optimistic UI updates — the like count increments immediately on click, and if the server request fails, the UI reverts with a toast notification. The feed must support content ranking based on relevance (engagement score, recency, author relationship) with the option to switch between "Top" and "Latest" sorting modes.
@@ -179,14 +194,21 @@ For global scale, the feed must be edge-cached. The initial feed page (for logge
 
 Optimistic UI versus confirmed UI is a spectrum. Full optimistic updates (instantly showing the like, then rolling back on failure) provide the best UX but risk showing incorrect state. Confirmed updates (showing a loading spinner until the server responds) are always consistent but feel slow. The hybrid approach (optimistic for low-risk actions like likes, confirmed for high-risk actions like delete/report) adds complexity in distinguishing action types but provides the best user experience while maintaining data integrity.
 
-Virtualization introduces the tradeoff between scroll performance and feature richness. A virtualized list unmounts off-screen items, which means features like "find in page" (Ctrl+F) won't search off-screen content, and anchor links to specific posts won't work without custom scroll-to-item logic. Content that relies on being in the DOM (like ongoing video playback, active animations) gets disrupted when unmounted. The alternative of keeping all items in the DOM with CSS-based hiding preserves these features but fails at scale. The chosen approach uses virtualization with compensation — scroll-to-item via API, and pinning the currently-playing video item to prevent unmounting.`
+Virtualization introduces the tradeoff between scroll performance and feature richness. A virtualized list unmounts off-screen items, which means features like "find in page" (Ctrl+F) won't search off-screen content, and anchor links to specific posts won't work without custom scroll-to-item logic. Content that relies on being in the DOM (like ongoing video playback, active animations) gets disrupted when unmounted. The alternative of keeping all items in the DOM with CSS-based hiding preserves these features but fails at scale. The chosen approach uses virtualization with compensation — scroll-to-item via API, and pinning the currently-playing video item to prevent unmounting.`,
   },
   {
-    id: 'sd-chat',
-    title: 'Chat Application',
-    difficulty: 'Advanced',
-    category: 'System Design',
-    tags: ['real-time', 'websocket', 'messaging', 'typing-indicators', 'presence', 'encryption'],
+    id: "sd-chat",
+    title: "Chat Application",
+    difficulty: "Advanced",
+    category: "System Design",
+    tags: [
+      "real-time",
+      "websocket",
+      "messaging",
+      "typing-indicators",
+      "presence",
+      "encryption",
+    ],
     requirements: `The chat application must support real-time one-on-one and group messaging with sub-second message delivery. Users must be able to send text messages, emoji reactions, file attachments (images, documents, audio), and reply to specific messages (threaded replies). The system must display typing indicators showing when other participants are composing messages, and read receipts showing which messages have been seen by each participant.
 
 The conversation list must show all active conversations sorted by most recent activity, with unread message counts, the last message preview, and the sender's online/offline status. Group conversations must support up to 100 participants, with admin controls for adding/removing members, changing the group name and avatar, and muting notifications. The search functionality must allow users to search through message history within a conversation and across all conversations.
@@ -269,14 +291,21 @@ For massive scale, the architecture shifts toward a pub/sub model where the WebS
 
 Local-first vs server-first architecture is a fundamental tradeoff. The local-first approach (IndexedDB as source of truth, synced to server) provides instant message rendering and full offline support but requires complex conflict resolution, data migration strategies when the schema changes, and careful storage quota management. The server-first approach (server as source of truth, local cache for performance) simplifies consistency but degrades the offline experience and adds latency to every interaction. The hybrid approach chosen here — IndexedDB as a local replica with server reconciliation — balances both but requires a SyncEngine with significant complexity.
 
-End-to-end encryption provides strong privacy guarantees but severely limits server-side functionality. With E2EE, the server cannot index messages for search (search must happen client-side), cannot moderate content proactively, cannot generate message previews for push notifications (only "You have a new message"), and cannot migrate message history to new devices without the user's key backup. The tradeoff between privacy and functionality is managed by making E2EE opt-in per conversation, with clear UX indicators showing which conversations are encrypted.`
+End-to-end encryption provides strong privacy guarantees but severely limits server-side functionality. With E2EE, the server cannot index messages for search (search must happen client-side), cannot moderate content proactively, cannot generate message previews for push notifications (only "You have a new message"), and cannot migrate message history to new devices without the user's key backup. The tradeoff between privacy and functionality is managed by making E2EE opt-in per conversation, with clear UX indicators showing which conversations are encrypted.`,
   },
   {
-    id: 'sd-file-upload',
-    title: 'File Upload System',
-    difficulty: 'Advanced',
-    category: 'System Design',
-    tags: ['chunked-upload', 'progress-tracking', 'retry', 'cancellation', 'drag-drop', 'resumable'],
+    id: "sd-file-upload",
+    title: "File Upload System",
+    difficulty: "Advanced",
+    category: "System Design",
+    tags: [
+      "chunked-upload",
+      "progress-tracking",
+      "retry",
+      "cancellation",
+      "drag-drop",
+      "resumable",
+    ],
     requirements: `The file upload system must support single and multiple file uploads with drag-and-drop, file picker, and paste-from-clipboard input methods. It must handle files up to 5GB in size using chunked uploading, with real-time progress tracking per file and overall progress for batch uploads. Each upload must be individually pausable, resumable, and cancellable without affecting other uploads in the batch.
 
 The system must validate files before upload: checking file type against an allowlist (configurable per context), file size limits, file name length and character restrictions, and optionally image dimensions and aspect ratios. Validation must provide clear, actionable error messages. After upload, the system should display a preview — image thumbnails, video previews, document icons with file type indicators, and audio waveform previews.
@@ -359,14 +388,21 @@ At 100x throughput (many users uploading simultaneously), the architecture must 
 
 Client-side hashing for deduplication adds upload latency — hashing a 1GB file takes 2-5 seconds on modern hardware. This delay frustrates users who want to see immediate upload progress. The tradeoff is latency vs bandwidth savings. For contexts where deduplication savings are high (backup systems, collaboration tools with shared files), the hashing delay is justified. For contexts where duplicates are rare (photo uploads, document submissions), hashing can be skipped or deferred. The system makes hashing opt-in at the configuration level.
 
-Web Worker usage for hash computation and thumbnail generation adds complexity (message passing, blob transfer via structured clone or transferable objects) but keeps the main thread responsive. Without Workers, a 5-second hash computation would freeze the UI entirely. The complexity tradeoff is especially significant for the file resume scenario — the Worker must be re-initialized on page reload, and the file data must be re-transferred to it. The system uses a WorkerPool with 2 Workers, balancing parallelism (hash + thumbnail simultaneously) with memory overhead.`
+Web Worker usage for hash computation and thumbnail generation adds complexity (message passing, blob transfer via structured clone or transferable objects) but keeps the main thread responsive. Without Workers, a 5-second hash computation would freeze the UI entirely. The complexity tradeoff is especially significant for the file resume scenario — the Worker must be re-initialized on page reload, and the file data must be re-transferred to it. The system uses a WorkerPool with 2 Workers, balancing parallelism (hash + thumbnail simultaneously) with memory overhead.`,
   },
   {
-    id: 'sd-analytics',
-    title: 'Analytics Dashboard',
-    difficulty: 'Advanced',
-    category: 'System Design',
-    tags: ['charts', 'real-time-data', 'filters', 'data-aggregation', 'performance', 'visualization'],
+    id: "sd-analytics",
+    title: "Analytics Dashboard",
+    difficulty: "Advanced",
+    category: "System Design",
+    tags: [
+      "charts",
+      "real-time-data",
+      "filters",
+      "data-aggregation",
+      "performance",
+      "visualization",
+    ],
     requirements: `The analytics dashboard must display multiple data visualizations including line charts (time series), bar charts (categorical comparisons), pie/donut charts (proportions), area charts (cumulative metrics), tables with sorting and pagination, and KPI cards with sparklines. The dashboard must support a configurable date range picker with presets (today, last 7 days, last 30 days, custom range) that updates all visualizations simultaneously.
 
 Users must be able to apply global filters (by region, product category, user segment, traffic source) that propagate to all dashboard widgets. Each widget should also support widget-level filters for drill-down analysis. The dashboard layout must be configurable — users should be able to rearrange widgets via drag-and-drop, resize them, add new widgets from a catalog, and save custom dashboard layouts. Dashboard state (layout, filters, date range) must be serializable as a URL for sharing.
@@ -449,14 +485,21 @@ At organizational scale (1000 users viewing the same dashboard), the real-time d
 
 Query granularity presents a freshness-vs-performance tradeoff. Fine-grained queries (per-minute data) provide detailed insights but generate massive payloads and slow rendering. Coarse-grained queries (per-day data) load fast but hide intraday patterns. The dashboard uses adaptive granularity — zooming into a chart section automatically increases granularity for that range, similar to how mapping applications load detail on zoom. This adaptive approach adds complexity in the data layer but provides the best user experience.
 
-Dashboard sharing via URL state vs saved server-side state involves tradeoffs in functionality and complexity. URL state is shareable without authentication (the state is self-contained) but limited in size (URLs beyond 2KB may be truncated), and exposes filter parameters in browser history. Server-side saved state supports unlimited complexity and access control but requires authentication and a database table. The system uses both — compact states are URL-encoded, and large states are saved server-side with a short URL reference.`
+Dashboard sharing via URL state vs saved server-side state involves tradeoffs in functionality and complexity. URL state is shareable without authentication (the state is self-contained) but limited in size (URLs beyond 2KB may be truncated), and exposes filter parameters in browser history. Server-side saved state supports unlimited complexity and access control but requires authentication and a database table. The system uses both — compact states are URL-encoded, and large states are saved server-side with a short URL reference.`,
   },
   {
-    id: 'sd-notifications',
-    title: 'Notification System',
-    difficulty: 'Advanced',
-    category: 'System Design',
-    tags: ['push-notifications', 'in-app', 'real-time', 'priority', 'preferences', 'service-worker'],
+    id: "sd-notifications",
+    title: "Notification System",
+    difficulty: "Advanced",
+    category: "System Design",
+    tags: [
+      "push-notifications",
+      "in-app",
+      "real-time",
+      "priority",
+      "preferences",
+      "service-worker",
+    ],
     requirements: `The notification system must support multiple notification channels: in-app notifications (bell icon with dropdown panel), browser push notifications (via the Push API and service worker), email notifications (triggered by backend events), and mobile push notifications (via platform-specific services). Each channel must be independently configurable per notification type — users should be able to receive "new comment" notifications in-app and via push but not email, while receiving "security alert" notifications on all channels.
 
 In-app notifications must display in a scrollable panel accessible via a bell icon in the header, with an unread count badge. Each notification shows an icon (typed by notification category), a title, a description, a relative timestamp, and an action button (e.g., "View comment", "Accept invite"). Notifications must be grouped by category (social, system, security, activity) with section headers. Mark-as-read must work both individually (clicking a notification) and in bulk (mark all as read button).
@@ -539,14 +582,21 @@ For platforms with millions of users, push notification delivery requires a dist
 
 Notification aggregation timing is a key tradeoff. Shorter aggregation windows (5 seconds) deliver notifications quickly but result in many individual notifications during burst activity. Longer windows (60 seconds) produce cleaner aggregated notifications but delay delivery noticeably. The system uses adaptive aggregation — short windows during low activity (user gets individual notifications promptly) and longer windows during high activity (bursts are aggregated), with the server tracking per-user notification velocity to adjust the window dynamically.
 
-Client-side vs server-side preference enforcement affects architecture complexity and reliability. Client-side enforcement (the client decides which channels to use) is simpler but unreliable — a buggy client might show suppressed notifications, and push notifications can't be easily suppressed client-side after they're sent. Server-side enforcement (the server applies preferences before dispatching to channels) is more reliable but requires the server to be aware of all client state (DND status, active tab). The system uses server-side enforcement for push and email channels (which the client can't control) and client-side enforcement for in-app notifications (which the client fully controls), combining both approaches.`
+Client-side vs server-side preference enforcement affects architecture complexity and reliability. Client-side enforcement (the client decides which channels to use) is simpler but unreliable — a buggy client might show suppressed notifications, and push notifications can't be easily suppressed client-side after they're sent. Server-side enforcement (the server applies preferences before dispatching to channels) is more reliable but requires the server to be aware of all client state (DND status, active tab). The system uses server-side enforcement for push and email channels (which the client can't control) and client-side enforcement for in-app notifications (which the client fully controls), combining both approaches.`,
   },
   {
-    id: 'sd-video',
-    title: 'Video Streaming Frontend',
-    difficulty: 'Senior',
-    category: 'System Design',
-    tags: ['adaptive-streaming', 'hls', 'buffering', 'video-controls', 'fullscreen', 'accessibility'],
+    id: "sd-video",
+    title: "Video Streaming Frontend",
+    difficulty: "Senior",
+    category: "System Design",
+    tags: [
+      "adaptive-streaming",
+      "hls",
+      "buffering",
+      "video-controls",
+      "fullscreen",
+      "accessibility",
+    ],
     requirements: `The video streaming frontend must support adaptive bitrate streaming (ABR) using HLS (HTTP Live Streaming) or DASH protocols, automatically adjusting video quality based on network conditions and device capabilities. The system must provide a full-featured player with custom controls: play/pause, seek bar with preview thumbnails, volume control with mute toggle, playback speed selector (0.5x to 2x), quality selector (auto + manual override), fullscreen toggle, picture-in-picture mode, and captions/subtitles toggle.
 
 The player must support multiple content types: on-demand video (VOD) with full seek capability, live streaming with configurable latency (standard 10-30s or low-latency 2-5s), and live DVR (ability to seek back in a live stream's buffer). Content protection must be supported via DRM (Widevine for Chrome, FairPlay for Safari, PlayReady for Edge) for premium content. The system must display a video thumbnail/poster before playback, loading/buffering states, and a slate/overlay when content is unavailable.
@@ -629,14 +679,22 @@ For live streaming at scale (millions of concurrent viewers on a single stream),
 
 HLS vs DASH protocol choice affects codec support, DRM support, and implementation complexity. HLS is natively supported on Safari (no library needed) and has broad CDN support, but requires hls.js for other browsers and has historically been limited to H.264/AAC (though CMAF with HEVC/AV1 support is emerging). DASH is more flexible with codec support and has better adaptive streaming specifications, but requires a JavaScript library on all browsers and has less mature tooling. Many production systems support both, using HLS for Safari and DASH for other browsers, at the cost of encoding and serving both formats.
 
-The buffer size tradeoff balances rebuffering prevention against memory usage and seek latency. Large buffers (60+ seconds) virtually eliminate rebuffering but consume significant memory (150MB+ for high-quality video), waste bandwidth if the user stops watching, and make quality switches slower (the buffer must drain before higher-quality segments appear). Small buffers (5-10 seconds) use less memory and enable faster quality adaptation but risk rebuffering on variable networks. The adaptive approach — starting with a 15-second buffer and expanding or contracting based on network stability — adds implementation complexity but optimizes for both scenarios.`
+The buffer size tradeoff balances rebuffering prevention against memory usage and seek latency. Large buffers (60+ seconds) virtually eliminate rebuffering but consume significant memory (150MB+ for high-quality video), waste bandwidth if the user stops watching, and make quality switches slower (the buffer must drain before higher-quality segments appear). Small buffers (5-10 seconds) use less memory and enable faster quality adaptation but risk rebuffering on variable networks. The adaptive approach — starting with a 15-second buffer and expanding or contracting based on network stability — adds implementation complexity but optimizes for both scenarios.`,
   },
   {
-    id: 'sd-ecommerce',
-    title: 'E-Commerce Frontend',
-    difficulty: 'Senior',
-    category: 'System Design',
-    tags: ['product-listing', 'cart', 'checkout', 'search', 'filters', 'performance', 'seo'],
+    id: "sd-ecommerce",
+    title: "E-Commerce Frontend",
+    difficulty: "Senior",
+    category: "System Design",
+    tags: [
+      "product-listing",
+      "cart",
+      "checkout",
+      "search",
+      "filters",
+      "performance",
+      "seo",
+    ],
     requirements: `The e-commerce frontend must support the complete shopping experience: product discovery (search, browse categories, filters, sorting), product detail viewing (images, descriptions, variants, reviews, related products), cart management (add/remove items, quantity adjustment, saved items), and checkout flow (shipping, payment, order confirmation). The system must handle a catalog of 1 million+ products with performant search and filtering.
 
 Product listing pages must support faceted filtering (price range, brand, color, size, rating, availability) with real-time count updates as filters are applied. Sorting options include relevance, price (low/high), popularity, rating, and newest. The listing must use either infinite scroll or paginated navigation (configurable per user preference). Each product card shows image, title, price (with sale price and discount percentage), rating stars, "Add to Cart" button, and wishlist toggle.
@@ -719,14 +777,21 @@ At global scale, the frontend must support multi-region deployment with locale-s
 
 The BFF pattern vs direct API access tradeoff affects development velocity and performance. The BFF adds a layer between the frontend and backend microservices, requiring maintenance and deployment. However, it eliminates waterfall API calls (one BFF request replaces 3-4 microservice calls), enables frontend-optimized data shapes, and provides a single point for caching and error handling. Without BFF, the frontend either makes multiple parallel requests (slower, more error-prone) or the backend provides frontend-specific endpoints (coupling backend to frontend needs).
 
-Optimistic cart updates vs confirmed cart updates involve UX and data consistency tradeoffs. Optimistic updates (showing the item in the cart immediately) provide the best UX but risk showing incorrect state (item out of stock, price changed). Confirmed updates (spinner until server responds) are always consistent but feel slow (200-500ms delay per action). The hybrid approach (optimistic for quantity changes and non-critical updates, confirmed for add-to-cart with real-time stock check) balances speed and accuracy but adds conditional logic in the cart state management.`
+Optimistic cart updates vs confirmed cart updates involve UX and data consistency tradeoffs. Optimistic updates (showing the item in the cart immediately) provide the best UX but risk showing incorrect state (item out of stock, price changed). Confirmed updates (spinner until server responds) are always consistent but feel slow (200-500ms delay per action). The hybrid approach (optimistic for quantity changes and non-critical updates, confirmed for add-to-cart with real-time stock check) balances speed and accuracy but adds conditional logic in the cart state management.`,
   },
   {
-    id: 'sd-collaborative-editor',
-    title: 'Collaborative Text Editor',
-    difficulty: 'Senior',
-    category: 'System Design',
-    tags: ['real-time-collaboration', 'crdt', 'operational-transform', 'conflict-resolution', 'cursor-sync', 'rich-text'],
+    id: "sd-collaborative-editor",
+    title: "Collaborative Text Editor",
+    difficulty: "Senior",
+    category: "System Design",
+    tags: [
+      "real-time-collaboration",
+      "crdt",
+      "operational-transform",
+      "conflict-resolution",
+      "cursor-sync",
+      "rich-text",
+    ],
     requirements: `The collaborative text editor must support simultaneous real-time editing by multiple users (up to 50 concurrent collaborators per document) with sub-second synchronization of changes. The editor must handle rich text formatting (bold, italic, underline, strikethrough, headings, lists, blockquotes, code blocks, links, images, tables), with formatting operations that are also collaboratively synchronized.
 
 Each collaborator's cursor and selection must be visible to all other collaborators in real-time, rendered with a unique color and a name label. The system must handle conflict resolution seamlessly — when two users type at the same position simultaneously, both edits must be preserved in a deterministic order without data loss. The editor must maintain a complete version history, allowing users to view the document at any point in time, compare versions, and restore previous versions.
@@ -809,6 +874,6 @@ At 100x document count (thousands of collaborative documents in an organization)
 
 ProseMirror vs Slate vs custom editor engine is a rich text framework tradeoff. ProseMirror has a robust, well-tested document model with a mature ecosystem and good CRDT bindings (yjs-prosemirror). Its functional, immutable design makes it predictable but has a steeper learning curve. Slate has a more React-native API and is easier to customize, but its document model has historically had instability issues. A custom engine provides full control but requires enormous development effort for features like text shaping, IME handling, and cross-browser compatibility. ProseMirror is chosen for its reliability and CRDT compatibility.
 
-Real-time cursor broadcasting vs on-demand cursor fetching involves bandwidth and UX tradeoffs. Broadcasting cursors in real-time (every 50ms during movement) provides a lively collaborative feeling but generates significant network traffic with many users (50 users × 20 cursor updates/second × 100 bytes = 100KB/s of cursor data alone). On-demand fetching (fetching cursor positions only when the user looks at a specific document section) saves bandwidth but makes the collaboration feel less dynamic. The throttled broadcasting approach (50ms for nearby cursors, 500ms for distant cursors, no updates for offscreen cursors) balances both concerns.`
-  }
+Real-time cursor broadcasting vs on-demand cursor fetching involves bandwidth and UX tradeoffs. Broadcasting cursors in real-time (every 50ms during movement) provides a lively collaborative feeling but generates significant network traffic with many users (50 users × 20 cursor updates/second × 100 bytes = 100KB/s of cursor data alone). On-demand fetching (fetching cursor positions only when the user looks at a specific document section) saves bandwidth but makes the collaboration feel less dynamic. The throttled broadcasting approach (50ms for nearby cursors, 500ms for distant cursors, no updates for offscreen cursors) balances both concerns.`,
+  },
 ];

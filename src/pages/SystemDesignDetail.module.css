@@ -37,10 +37,19 @@
   font-size: var(--text-sm);
 }
 
-.breadcrumbLink { color: var(--text-link); text-decoration: none; }
-.breadcrumbLink:hover { text-decoration: underline; }
-.breadcrumbSep { color: var(--text-muted); }
-.breadcrumbCurrent { color: var(--text-secondary); }
+.breadcrumbLink {
+  color: var(--text-link);
+  text-decoration: none;
+}
+.breadcrumbLink:hover {
+  text-decoration: underline;
+}
+.breadcrumbSep {
+  color: var(--text-muted);
+}
+.breadcrumbCurrent {
+  color: var(--text-secondary);
+}
 
 .header {
   display: flex;
@@ -74,7 +83,9 @@
   align-self: flex-start;
 }
 
-.actionBtn:hover { background: var(--bg-hover); }
+.actionBtn:hover {
+  background: var(--bg-hover);
+}
 
 .bookmarkedBtn {
   background: var(--color-warning-light);

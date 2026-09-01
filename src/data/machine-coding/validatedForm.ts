@@ -1,32 +1,39 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const validatedFormProblem: MachineCodingProblem = {
-  id: 'mc-validated-form',
-  title: 'Form with Real-Time Validation',
-  difficulty: 'Intermediate',
-  category: 'Machine Coding',
-  tags: ['react', 'forms', 'validation', 'controlled-components', 'error-handling', 'ux'],
+  id: "mc-validated-form",
+  title: "Form with Real-Time Validation",
+  difficulty: "Intermediate",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "forms",
+    "validation",
+    "controlled-components",
+    "error-handling",
+    "ux",
+  ],
 
   problemStatement: `Build a registration form in React with real-time field validation for email, password, and confirm password fields. The form should validate inputs as the user types (with debouncing) and display inline error messages. The submit button should only be enabled when all validations pass. This tests your understanding of controlled form components, validation patterns, and user experience best practices.
 
 The form should handle various validation rules: email format checking with regex, password strength requirements (minimum length, uppercase, lowercase, number, special character), and password confirmation matching. Error messages should appear after the user has interacted with a field (touched state) to avoid showing errors on an empty form. The component should be extensible to support additional fields and custom validation rules.`,
 
   functionalRequirements: [
-    'Email field with format validation (regex pattern)',
-    'Password field with strength requirements display',
-    'Confirm password field that matches the password',
-    'Real-time validation with debounced error display',
-    'Inline error messages below each field',
-    'Submit button disabled until all fields are valid',
-    'Visual indicators (green/red borders) for valid/invalid fields',
-    'Password strength meter showing weak/medium/strong',
+    "Email field with format validation (regex pattern)",
+    "Password field with strength requirements display",
+    "Confirm password field that matches the password",
+    "Real-time validation with debounced error display",
+    "Inline error messages below each field",
+    "Submit button disabled until all fields are valid",
+    "Visual indicators (green/red borders) for valid/invalid fields",
+    "Password strength meter showing weak/medium/strong",
   ],
 
   nonFunctionalRequirements: [
-    'Debounced validation to avoid validating on every keystroke',
-    'Touched state tracking to show errors only after interaction',
-    'Accessible error messages linked via aria-describedby',
-    'Form submission prevention when invalid',
+    "Debounced validation to avoid validating on every keystroke",
+    "Touched state tracking to show errors only after interaction",
+    "Accessible error messages linked via aria-describedby",
+    "Form submission prevention when invalid",
   ],
 
   componentHierarchy: `ValidatedForm
@@ -261,34 +268,34 @@ export default function ValidatedForm() {
   performance: `Validation runs synchronously on each render via \`useMemo\`, which is efficient for simple rule checking. For expensive async validations (e.g., email uniqueness checks), debouncing with \`useEffect\` would be more appropriate. The \`useCallback\` wrappers on event handlers prevent unnecessary re-renders of child components. The password strength calculation is memoized to avoid recalculating on unrelated field changes. The form state is consolidated to minimize render cycles.`,
 
   edgeCases: [
-    'Pasting a long string into the email field should validate correctly',
-    'Password and confirm password typed in different order should cross-validate',
-    'Form submission while async validation is pending',
-    'Browser autofill may not trigger onChange events consistently',
-    'Password managers may fill fields without triggering blur events',
+    "Pasting a long string into the email field should validate correctly",
+    "Password and confirm password typed in different order should cross-validate",
+    "Form submission while async validation is pending",
+    "Browser autofill may not trigger onChange events consistently",
+    "Password managers may fill fields without triggering blur events",
   ],
 
   testingStrategy: [
-    'Unit test: email validation accepts valid formats and rejects invalid ones',
-    'Unit test: password validation checks all strength requirements',
-    'Unit test: confirm password shows error when mismatched',
-    'Integration test: submit button is disabled until all fields are valid',
-    'Integration test: errors only appear after field is touched (blurred)',
-    'Accessibility audit: error messages are linked via aria-describedby',
+    "Unit test: email validation accepts valid formats and rejects invalid ones",
+    "Unit test: password validation checks all strength requirements",
+    "Unit test: confirm password shows error when mismatched",
+    "Integration test: submit button is disabled until all fields are valid",
+    "Integration test: errors only appear after field is touched (blurred)",
+    "Accessibility audit: error messages are linked via aria-describedby",
   ],
 
   improvements: [
-    'Add debounced async validation for email uniqueness',
-    'Support dynamic form fields via configuration object',
-    'Add show/hide password toggle button',
-    'Integrate with a form library like React Hook Form for complex forms',
-    'Add field-level async validation with loading spinners',
+    "Add debounced async validation for email uniqueness",
+    "Support dynamic form fields via configuration object",
+    "Add show/hide password toggle button",
+    "Integrate with a form library like React Hook Form for complex forms",
+    "Add field-level async validation with loading spinners",
   ],
 
   followUpQuestions: [
-    'How would you implement async validation (e.g., checking if email exists)?',
-    'What are the trade-offs between controlled and uncontrolled form inputs?',
-    'How would you design a generic form validation hook?',
-    'How does React Hook Form achieve better performance than controlled components?',
+    "How would you implement async validation (e.g., checking if email exists)?",
+    "What are the trade-offs between controlled and uncontrolled form inputs?",
+    "How would you design a generic form validation hook?",
+    "How does React Hook Form achieve better performance than controlled components?",
   ],
 };

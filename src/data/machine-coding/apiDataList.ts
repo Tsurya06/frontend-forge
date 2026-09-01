@@ -1,29 +1,37 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const apiDataListProblem: MachineCodingProblem = {
-  id: 'mc-api-data-list',
-  title: 'API Data List',
-  difficulty: 'Beginner',
-  category: 'Machine Coding',
-  tags: ['api', 'fetch', 'loading-state', 'error-handling', 'retry', 'empty-state', 'useEffect'],
+  id: "mc-api-data-list",
+  title: "API Data List",
+  difficulty: "Beginner",
+  category: "Machine Coding",
+  tags: [
+    "api",
+    "fetch",
+    "loading-state",
+    "error-handling",
+    "retry",
+    "empty-state",
+    "useEffect",
+  ],
   problemStatement: `Build an API Data List component that fetches data from a REST endpoint, displays it in a structured list, and properly handles all asynchronous states: loading, success, error, and empty results.
 
 The component should show a loading spinner while data is being fetched, an error message with a retry button when the request fails, and a friendly empty-state illustration when the API returns zero results. Data should be displayed in a clean card-based layout with relevant metadata. The component must gracefully handle race conditions when the user triggers multiple fetches in quick succession (e.g., via a refresh button or filter change).
 
 This is a foundational pattern used in virtually every production React app — demonstrating mastery of async data fetching, state machines for request lifecycle, and resilient UX.`,
   functionalRequirements: [
-    'Fetch data from a configurable API endpoint on mount',
-    'Display a loading spinner/skeleton while the request is in flight',
-    'Render data items in a card or list layout showing key fields',
+    "Fetch data from a configurable API endpoint on mount",
+    "Display a loading spinner/skeleton while the request is in flight",
+    "Render data items in a card or list layout showing key fields",
     'Show an error message with a "Retry" button when fetch fails',
-    'Display an empty-state message when the response is an empty array',
-    'Support a manual refresh button to re-fetch data',
-    'Abort in-flight requests on unmount to prevent state updates on unmounted components',
+    "Display an empty-state message when the response is an empty array",
+    "Support a manual refresh button to re-fetch data",
+    "Abort in-flight requests on unmount to prevent state updates on unmounted components",
   ],
   nonFunctionalRequirements: [
-    'Use a clear state-machine pattern (idle → loading → success/error) to avoid impossible states',
+    "Use a clear state-machine pattern (idle → loading → success/error) to avoid impossible states",
     'Accessible: loading spinner has role="status" and aria-live for screen readers',
-    'Responsive layout that adapts from single-column mobile to multi-column desktop',
+    "Responsive layout that adapts from single-column mobile to multi-column desktop",
   ],
   componentHierarchy: `ApiDataList
 ├── RefreshButton
@@ -194,31 +202,31 @@ export default function ApiDataList() {
   accessibility: `The loading spinner has role="status" and aria-live="polite" so screen readers announce when data is loading. The error message uses role="alert" to immediately announce failures. The data list uses role="list" and role="listitem" for semantic structure. The refresh button has an aria-label and is disabled during loading. Each DataCard is an <article> element providing semantic grouping.`,
   performance: `The custom hook uses AbortController to cancel in-flight requests on unmount or refetch, preventing memory leaks and state updates on unmounted components. The discriminated union state avoids redundant re-renders from multiple setState calls. For large lists, consider virtualization (react-window) or pagination. Memoize DataCard with React.memo if the list is long and parent re-renders frequently.`,
   edgeCases: [
-    'Rapid refresh clicks — abort previous request before starting new one',
-    'Component unmounts during fetch — AbortController prevents setState on unmounted component',
-    'API returns 200 but invalid JSON — catch parsing error and show error state',
-    'Network timeout — set a timeout on fetch and show appropriate error',
-    'API returns partial data — validate shape before rendering to avoid runtime crashes',
+    "Rapid refresh clicks — abort previous request before starting new one",
+    "Component unmounts during fetch — AbortController prevents setState on unmounted component",
+    "API returns 200 but invalid JSON — catch parsing error and show error state",
+    "Network timeout — set a timeout on fetch and show appropriate error",
+    "API returns partial data — validate shape before rendering to avoid runtime crashes",
   ],
   testingStrategy: [
-    'Unit test: useFetch transitions through idle → loading → success states correctly',
-    'Unit test: useFetch transitions to error state on network failure',
-    'Integration test: component renders loading spinner, then data cards on successful fetch',
-    'Integration test: retry button re-fetches and shows data on second attempt',
-    'Integration test: empty state shown when API returns empty array',
-    'Mock test: MSW or jest.mock to simulate various API responses',
+    "Unit test: useFetch transitions through idle → loading → success states correctly",
+    "Unit test: useFetch transitions to error state on network failure",
+    "Integration test: component renders loading spinner, then data cards on successful fetch",
+    "Integration test: retry button re-fetches and shows data on second attempt",
+    "Integration test: empty state shown when API returns empty array",
+    "Mock test: MSW or jest.mock to simulate various API responses",
   ],
   improvements: [
-    'Add skeleton loading placeholders instead of a plain spinner',
-    'Implement pagination or infinite scroll for large datasets',
-    'Add client-side search/filter over fetched data',
-    'Cache responses in memory or localStorage to reduce redundant requests',
-    'Add optimistic updates and stale-while-revalidate pattern',
+    "Add skeleton loading placeholders instead of a plain spinner",
+    "Implement pagination or infinite scroll for large datasets",
+    "Add client-side search/filter over fetched data",
+    "Cache responses in memory or localStorage to reduce redundant requests",
+    "Add optimistic updates and stale-while-revalidate pattern",
   ],
   followUpQuestions: [
-    'How would you implement stale-while-revalidate caching for this data?',
-    'What are the trade-offs between a discriminated union and boolean flags for async state?',
-    'How would you add pagination: offset-based vs cursor-based?',
-    'How would you test this component using Mock Service Worker (MSW)?',
+    "How would you implement stale-while-revalidate caching for this data?",
+    "What are the trade-offs between a discriminated union and boolean flags for async state?",
+    "How would you add pagination: offset-based vs cursor-based?",
+    "How would you test this component using Mock Service Worker (MSW)?",
   ],
 };

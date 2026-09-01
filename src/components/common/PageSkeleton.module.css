@@ -1,0 +1,311 @@
+/* ── Base Shimmer Animation ── */
+.shimmerItem {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 20%,
+    var(--bg-hover) 50%,
+    var(--bg-tertiary) 80%
+  );
+  background-size: 250% 100%;
+  animation: pageSkeletonShimmer 1.5s infinite ease-in-out;
+  border-radius: var(--radius-md);
+}
+
+@keyframes pageSkeletonShimmer {
+  0% {
+    background-position: -250% 0;
+  }
+  100% {
+    background-position: 250% 0;
+  }
+}
+
+/* ── Problem / Split Pane Skeleton ── */
+.problemContainer {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 50px);
+  overflow: hidden;
+  background: var(--background);
+}
+
+.leftSpecPane {
+  width: 45%;
+  height: 100%;
+  padding: var(--space-5) var(--space-6);
+  border-right: 1px solid var(--border-color);
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  overflow: hidden;
+}
+
+.breadcrumbShimmer {
+  composes: shimmerItem;
+  height: 14px;
+  width: 35%;
+}
+
+.specTitleShimmer {
+  composes: shimmerItem;
+  height: 28px;
+  width: 75%;
+}
+
+.metaRowShimmer {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.badgeShimmer {
+  composes: shimmerItem;
+  height: 22px;
+  width: 70px;
+  border-radius: var(--radius-full);
+}
+
+.sectionHeaderShimmer {
+  composes: shimmerItem;
+  height: 18px;
+  width: 40%;
+  margin-top: var(--space-3);
+}
+
+.textLineShimmer {
+  composes: shimmerItem;
+  height: 14px;
+  width: 100%;
+}
+
+.boxShimmer {
+  composes: shimmerItem;
+  height: 110px;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  margin: var(--space-2) 0;
+}
+
+/* ── Right Editor Pane Skeleton ── */
+.rightEditorPane {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+}
+
+.editorHeaderShimmer {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabShimmer {
+  composes: shimmerItem;
+  height: 24px;
+  width: 80px;
+  border-radius: var(--radius-sm);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.btnShimmer {
+  composes: shimmerItem;
+  height: 28px;
+  width: 70px;
+  border-radius: var(--radius-md);
+}
+
+.editorBodyShimmer {
+  flex: 1;
+  display: flex;
+  background: var(--bg-primary, #1e1e1e);
+  padding: var(--space-3) 0;
+}
+
+.editorGutter {
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: var(--space-3);
+  opacity: 0.3;
+  user-select: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.gutterLine {
+  height: 22px;
+  line-height: 22px;
+}
+
+.editorLines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.codeLine {
+  composes: shimmerItem;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.codeLineIndent {
+  composes: shimmerItem;
+  height: 16px;
+  margin-left: 24px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.consolePaneShimmer {
+  height: 220px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+}
+
+.consoleHeaderShimmer {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.consoleBodyShimmer {
+  flex: 1;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.consoleLineShimmer {
+  composes: shimmerItem;
+  height: 14px;
+}
+
+/* ── Grid Skeleton ── */
+.gridContainer {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.headerSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.titleShimmer {
+  composes: shimmerItem;
+  height: 32px;
+  width: 40%;
+}
+
+.subtitleShimmer {
+  composes: shimmerItem;
+  height: 16px;
+  width: 60%;
+}
+
+.pillsRowShimmer {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.pillShimmer {
+  composes: shimmerItem;
+  height: 28px;
+  width: 90px;
+  border-radius: var(--radius-full);
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-4);
+}
+
+.cardShimmer {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 160px;
+}
+
+.cardTopShimmer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardTitleShimmer {
+  composes: shimmerItem;
+  height: 18px;
+  width: 60%;
+}
+
+.cardBadgeShimmer {
+  composes: shimmerItem;
+  height: 20px;
+  width: 50px;
+  border-radius: var(--radius-sm);
+}
+
+.cardDescShimmer {
+  composes: shimmerItem;
+  height: 13px;
+  width: 90%;
+}
+
+.cardDescShimmerShort {
+  composes: shimmerItem;
+  height: 13px;
+  width: 65%;
+}
+
+.cardFooterShimmer {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+
+.tagShimmer {
+  composes: shimmerItem;
+  height: 16px;
+  width: 60px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Standalone Editor Shimmer ── */
+.editorLoadingSkeleton {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background: var(--bg-card);
+  padding: var(--space-3) 0;
+}

@@ -3,7 +3,9 @@
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xs);
-  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+  transition:
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 .card.clickable {

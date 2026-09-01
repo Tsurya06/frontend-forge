@@ -1,31 +1,31 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const counterProblem: MachineCodingProblem = {
-  id: 'mc-counter',
-  title: 'Counter Component',
-  difficulty: 'Beginner',
-  category: 'Machine Coding',
-  tags: ['react', 'state-management', 'hooks', 'useReducer', 'beginner'],
+  id: "mc-counter",
+  title: "Counter Component",
+  difficulty: "Beginner",
+  category: "Machine Coding",
+  tags: ["react", "state-management", "hooks", "useReducer", "beginner"],
 
   problemStatement: `Build a Counter component in React with increment, decrement, and reset functionality. While this may seem trivially simple, a well-implemented counter demonstrates understanding of state management patterns, controlled vs uncontrolled components, and proper component API design. Interviewers use this as a warm-up question to assess coding style and attention to detail.
 
 Extend the basic counter with additional features: configurable step size, min/max boundaries, custom increment/decrement amounts, and an undo/redo history. Support both a simple useState approach and a useReducer approach to demonstrate when each pattern is appropriate. The component should handle edge cases like exceeding boundaries and rapid clicking gracefully.`,
 
   functionalRequirements: [
-    'Increment button increases count by step size',
-    'Decrement button decreases count by step size',
-    'Reset button returns count to initial value',
-    'Configurable min and max boundaries',
-    'Configurable step size (default 1)',
-    'Display current count prominently',
-    'Undo/redo functionality for count history',
+    "Increment button increases count by step size",
+    "Decrement button decreases count by step size",
+    "Reset button returns count to initial value",
+    "Configurable min and max boundaries",
+    "Configurable step size (default 1)",
+    "Display current count prominently",
+    "Undo/redo functionality for count history",
   ],
 
   nonFunctionalRequirements: [
-    'Buttons disabled at min/max boundaries',
-    'Keyboard accessible: Enter/Space on focused buttons',
-    'Visual feedback for boundary states',
-    'Clean, readable component API',
+    "Buttons disabled at min/max boundaries",
+    "Keyboard accessible: Enter/Space on focused buttons",
+    "Visual feedback for boundary states",
+    "Clean, readable component API",
   ],
 
   componentHierarchy: `Counter
@@ -221,33 +221,33 @@ export default function Counter({
   performance: `The \`useReducer\` pattern returns the same state reference when no change occurs (e.g., incrementing at max), preventing unnecessary re-renders. The undo/redo history grows linearly but is bounded by user interactions, making it practical for real use. \`useCallback\` memoizes event handlers to avoid recreating them on every render. For extremely long sessions, a maximum history length could cap memory usage. The component has zero external dependencies and minimal DOM complexity.`,
 
   edgeCases: [
-    'Count at exactly min or max boundary should disable the correct button',
-    'Step size larger than remaining range should clamp to boundary',
-    'Undo when history is empty should be a no-op',
-    'Reset when already at initial value should not add to history',
-    'Floating point step sizes may cause precision issues (e.g., 0.1 + 0.2)',
+    "Count at exactly min or max boundary should disable the correct button",
+    "Step size larger than remaining range should clamp to boundary",
+    "Undo when history is empty should be a no-op",
+    "Reset when already at initial value should not add to history",
+    "Floating point step sizes may cause precision issues (e.g., 0.1 + 0.2)",
   ],
 
   testingStrategy: [
-    'Unit test: increment/decrement changes count by step value',
-    'Unit test: count respects min and max boundaries',
-    'Unit test: reset returns to initial value',
-    'Unit test: undo reverts to previous value, redo re-applies',
-    'Integration test: buttons are disabled at boundaries',
-    'Snapshot test: component renders correctly with all props',
+    "Unit test: increment/decrement changes count by step value",
+    "Unit test: count respects min and max boundaries",
+    "Unit test: reset returns to initial value",
+    "Unit test: undo reverts to previous value, redo re-applies",
+    "Integration test: buttons are disabled at boundaries",
+    "Snapshot test: component renders correctly with all props",
   ],
 
   improvements: [
-    'Add animation on count change (e.g., number flip/slide)',
-    'Support keyboard shortcuts (+ and - keys) for quick adjustment',
-    'Add long-press to continuously increment/decrement',
-    'Persist count to localStorage for page refresh survival',
+    "Add animation on count change (e.g., number flip/slide)",
+    "Support keyboard shortcuts (+ and - keys) for quick adjustment",
+    "Add long-press to continuously increment/decrement",
+    "Persist count to localStorage for page refresh survival",
   ],
 
   followUpQuestions: [
-    'When would you choose useState over useReducer for this component?',
-    'How would you implement a long-press auto-increment feature?',
-    'How would you share counter state across multiple components without prop drilling?',
-    'What are the implications of storing the entire history array in state?',
+    "When would you choose useState over useReducer for this component?",
+    "How would you implement a long-press auto-increment feature?",
+    "How would you share counter state across multiple components without prop drilling?",
+    "What are the implications of storing the entire history array in state?",
   ],
 };

@@ -1,31 +1,38 @@
-import type { MachineCodingProblem } from '../../types';
+import type { MachineCodingProblem } from "../../types";
 
 export const infiniteScrollProblem: MachineCodingProblem = {
-  id: 'mc-infinite-scroll',
-  title: 'Infinite Scroll with IntersectionObserver',
-  difficulty: 'Advanced',
-  category: 'Machine Coding',
-  tags: ['react', 'infinite-scroll', 'intersection-observer', 'pagination', 'performance', 'lazy-loading'],
+  id: "mc-infinite-scroll",
+  title: "Infinite Scroll with IntersectionObserver",
+  difficulty: "Advanced",
+  category: "Machine Coding",
+  tags: [
+    "react",
+    "infinite-scroll",
+    "intersection-observer",
+    "pagination",
+    "performance",
+    "lazy-loading",
+  ],
 
   problemStatement: `Build an Infinite Scroll component in React that automatically loads more content as the user scrolls near the bottom of the list. Instead of traditional pagination buttons, content loads seamlessly, creating a continuous browsing experience similar to social media feeds. The implementation must use the IntersectionObserver API for efficient scroll detection.
 
 This problem tests your understanding of the IntersectionObserver API, async data fetching patterns, loading/error states, and performance optimization. The component should handle rapid scrolling, network errors, empty results, and the "end of data" scenario gracefully. It should also support a manual "Load More" fallback button for accessibility and prevent duplicate fetches when a request is already in flight.`,
 
   functionalRequirements: [
-    'Automatically fetch next page when sentinel element enters viewport',
-    'Display loading spinner while fetching new data',
-    'Show error state with retry button on fetch failure',
+    "Automatically fetch next page when sentinel element enters viewport",
+    "Display loading spinner while fetching new data",
+    "Show error state with retry button on fetch failure",
     'Display "end of list" message when all data is loaded',
-    'Prevent duplicate requests while a fetch is in progress',
-    'Support pull-to-refresh to reload from the beginning',
+    "Prevent duplicate requests while a fetch is in progress",
+    "Support pull-to-refresh to reload from the beginning",
     'Manual "Load More" button as fallback/accessibility alternative',
   ],
 
   nonFunctionalRequirements: [
-    'IntersectionObserver for scroll detection (not scroll events)',
-    'Threshold and rootMargin configurable for prefetch timing',
-    'Cleanup observer on unmount to prevent memory leaks',
-    'Smooth integration with any data-fetching library',
+    "IntersectionObserver for scroll detection (not scroll events)",
+    "Threshold and rootMargin configurable for prefetch timing",
+    "Cleanup observer on unmount to prevent memory leaks",
+    "Smooth integration with any data-fetching library",
   ],
 
   componentHierarchy: `InfiniteScroll
@@ -234,34 +241,34 @@ export default function InfiniteScroll<T>({
   performance: `IntersectionObserver is significantly more efficient than scroll event listeners because it runs outside the main thread and doesn't cause layout thrashing. The \`rootMargin\` of "200px" starts loading before the user reaches the bottom, masking network latency. A ref (\`isLoadingRef\`) prevents race conditions more reliably than state, since refs update synchronously. Items are appended to the array rather than spread into a new array from all pages. The observer is properly disconnected on cleanup to prevent memory leaks. For very long lists, windowing/virtualization should be added to limit DOM nodes.`,
 
   edgeCases: [
-    'Rapid scrolling should not trigger multiple simultaneous fetches',
-    'Network error during fetch should show error state and allow retry',
-    'Empty first page response should show appropriate empty state',
-    'API returning exact pageSize items (ambiguous hasMore) needs careful handling',
-    'Component unmounting during a pending fetch should not cause state updates',
+    "Rapid scrolling should not trigger multiple simultaneous fetches",
+    "Network error during fetch should show error state and allow retry",
+    "Empty first page response should show appropriate empty state",
+    "API returning exact pageSize items (ambiguous hasMore) needs careful handling",
+    "Component unmounting during a pending fetch should not cause state updates",
   ],
 
   testingStrategy: [
-    'Unit test: initial render triggers first page fetch',
-    'Unit test: IntersectionObserver callback triggers subsequent fetches',
-    'Unit test: isLoading prevents duplicate concurrent fetches',
-    'Unit test: error state displays retry button that re-fetches',
-    'Integration test: items accumulate across multiple page loads',
-    'Integration test: end-of-list state appears when hasMore is false',
+    "Unit test: initial render triggers first page fetch",
+    "Unit test: IntersectionObserver callback triggers subsequent fetches",
+    "Unit test: isLoading prevents duplicate concurrent fetches",
+    "Unit test: error state displays retry button that re-fetches",
+    "Integration test: items accumulate across multiple page loads",
+    "Integration test: end-of-list state appears when hasMore is false",
   ],
 
   improvements: [
-    'Add virtualization (react-window) for long lists to limit DOM nodes',
-    'Implement scroll position restoration for browser back navigation',
-    'Add skeleton loading placeholders instead of a simple spinner',
-    'Support bidirectional infinite scroll (load previous items on scroll up)',
-    'Add optimistic loading with prefetch of next page',
+    "Add virtualization (react-window) for long lists to limit DOM nodes",
+    "Implement scroll position restoration for browser back navigation",
+    "Add skeleton loading placeholders instead of a simple spinner",
+    "Support bidirectional infinite scroll (load previous items on scroll up)",
+    "Add optimistic loading with prefetch of next page",
   ],
 
   followUpQuestions: [
-    'How does IntersectionObserver differ from scroll event listeners in terms of performance?',
-    'How would you implement scroll position restoration when navigating back to this page?',
-    'What is windowing/virtualization and when would you add it to infinite scroll?',
-    'How would you implement cursor-based pagination instead of page numbers?',
+    "How does IntersectionObserver differ from scroll event listeners in terms of performance?",
+    "How would you implement scroll position restoration when navigating back to this page?",
+    "What is windowing/virtualization and when would you add it to infinite scroll?",
+    "How would you implement cursor-based pagination instead of page numbers?",
   ],
 };
