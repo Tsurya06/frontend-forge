@@ -6,6 +6,7 @@ import { Card } from '@/components/common/Card';
 import { Badge } from '@/components/common/Badge';
 import { ProgressBar } from '@/components/common/ProgressBar';
 import { EmptyState } from '@/components/common/EmptyState';
+import { useVirtualGrid } from '@/hooks/useVirtualGrid';
 import { allTopics, categories } from '@/data';
 import type { Difficulty } from '@/types';
 import styles from './Topics.module.css';
@@ -86,12 +87,20 @@ export default function Topics() {
     return topics;
   }, [search, categoryFilter, difficultyFilter, completionFilter, sortBy, completedQuestions]);
 
+  const {
+    visibleItems: renderedTopics,
+    hasMore,
+    sentinelRef,
+    totalCount,
+    renderedCount,
+  } = useVirtualGrid(filtered, { initialCount: 16, batchSize: 12 });
+
   return (
     <div className={styles.page}>
       <div className={styles.stickyTopBar}>
         <header className={styles.header}>
           <h1 className={styles.title}>Topics</h1>
-          <p className={styles.subtitle}>Explore all interview topics</p>
+          <p className={styles.subtitle}>Explore all interview topics ({filtered.length})</p>
         </header>
 
         <SearchInput
@@ -103,21 +112,23 @@ export default function Topics() {
 
         <div className={styles.filters}>
           <select
-            className={styles.select}
             value={categoryFilter}
             onChange={e => setCategoryFilter(e.target.value)}
+            className={styles.select}
             aria-label="Filter by category"
           >
             <option value="all">All Categories</option>
             {categories.map(c => (
-              <option key={c.id} value={c.id}>{c.title}</option>
+              <option key={c.id} value={c.id}>
+                {c.icon} {c.title}
+              </option>
             ))}
           </select>
 
           <select
-            className={styles.select}
             value={difficultyFilter}
             onChange={e => setDifficultyFilter(e.target.value)}
+            className={styles.select}
             aria-label="Filter by difficulty"
           >
             <option value="all">All Difficulties</option>
@@ -128,23 +139,23 @@ export default function Topics() {
           </select>
 
           <select
-            className={styles.select}
             value={completionFilter}
             onChange={e => setCompletionFilter(e.target.value as CompletionFilter)}
-            aria-label="Filter by completion"
+            className={styles.select}
+            aria-label="Filter by completion status"
           >
-            <option value="all">All</option>
+            <option value="all">All Status</option>
             <option value="complete">Completed</option>
             <option value="incomplete">Incomplete</option>
           </select>
 
           <select
-            className={styles.select}
             value={sortBy}
             onChange={e => setSortBy(e.target.value as SortOption)}
+            className={styles.select}
             aria-label="Sort by"
           >
-            <option value="alphabetical">A-Z</option>
+            <option value="alphabetical">Name</option>
             <option value="difficulty">Difficulty</option>
             <option value="progress">Progress</option>
           </select>
@@ -186,41 +197,50 @@ export default function Topics() {
           }}
         />
       ) : (
-        <div className={viewMode === 'grid' ? styles.grid : styles.list}>
-          {filtered.map(topic => {
-            const done = topic.questions.filter(q => completedQuestions.includes(q.id)).length;
-            const pct = topic.questions.length > 0
-              ? Math.round((done / topic.questions.length) * 100)
-              : 0;
-            const cat = categories.find(c => c.id === topic.category);
+        <>
+          <div className={viewMode === 'grid' ? styles.grid : styles.list}>
+            {renderedTopics.map(topic => {
+              const done = topic.questions.filter(q => completedQuestions.includes(q.id)).length;
+              const pct = topic.questions.length > 0
+                ? Math.round((done / topic.questions.length) * 100)
+                : 0;
+              const cat = categories.find(c => c.id === topic.category);
 
-            return (
-              <Link key={topic.id} to={`/topics/${topic.id}`} className={styles.topicLink}>
-                <Card>
-                  <div className={styles.topicCard}>
-                    <div className={styles.topicHeader}>
-                      <h3 className={styles.topicTitle}>{topic.title}</h3>
-                      <Badge variant={difficultyVariant[topic.difficulty]} size="small">
-                        {topic.difficulty}
-                      </Badge>
+              return (
+                <Link key={topic.id} to={`/topics/${topic.id}`} className={styles.topicLink}>
+                  <Card>
+                    <div className={styles.topicCard}>
+                      <div className={styles.topicHeader}>
+                        <h3 className={styles.topicTitle}>{topic.title}</h3>
+                        <Badge variant={difficultyVariant[topic.difficulty]} size="small">
+                          {topic.difficulty}
+                        </Badge>
+                      </div>
+                      <p className={styles.topicCategory}>
+                        {cat?.icon} {cat?.title ?? topic.category}
+                        {topic.subcategory ? ` / ${topic.subcategory}` : ''}
+                      </p>
+                      <p className={styles.topicDescription}>{topic.description}</p>
+                      <div className={styles.topicFooter}>
+                        <span className={styles.questionCount}>
+                          {topic.questions.length} questions
+                        </span>
+                        <ProgressBar value={pct} size="sm" showPercentage />
+                      </div>
                     </div>
-                    <p className={styles.topicCategory}>
-                      {cat?.icon} {cat?.title ?? topic.category}
-                      {topic.subcategory ? ` / ${topic.subcategory}` : ''}
-                    </p>
-                    <p className={styles.topicDescription}>{topic.description}</p>
-                    <div className={styles.topicFooter}>
-                      <span className={styles.questionCount}>
-                        {topic.questions.length} questions
-                      </span>
-                      <ProgressBar value={pct} size="sm" showPercentage />
-                    </div>
-                  </div>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Virtual scroll sentinel */}
+          {hasMore && (
+            <div ref={sentinelRef} className={styles.loadingSentinel}>
+              <span>Loading more topics ({renderedCount} of {totalCount})...</span>
+            </div>
+          )}
+        </>
       )}
       </div>
     </div>

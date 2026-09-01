@@ -133,8 +133,9 @@
   text-decoration: none;
   color: inherit;
   display: flex;
-  height: 100%;
   transition: transform var(--transition-fast);
+  content-visibility: auto;
+  contain-intrinsic-size: 140px;
 }
 
 .topicLink > * {
@@ -144,6 +145,16 @@
 
 .topicLink:hover {
   transform: translateY(-2px);
+}
+
+.loadingSentinel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
 }
 
 .topicCard {

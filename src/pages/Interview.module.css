@@ -68,7 +68,7 @@
   align-self: flex-start;
 }
 
-.startBtn:hover { background: var(--color-primary-hover); }
+.startBtn:hover { background: var(--color-primary-hover); color: #ffffff !important; }
 
 .secondaryBtn {
   padding: var(--space-3) var(--space-6);

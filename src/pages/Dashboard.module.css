@@ -96,6 +96,7 @@
 
 .quickActionPrimary:hover {
   background-color: var(--accent-hover);
+  color: #ffffff !important;
   text-decoration: none;
 }
 
@@ -618,6 +619,7 @@
 
 .essentialBtn:hover {
   background: var(--accent-hover);
+  color: #ffffff !important;
   text-decoration: none;
 }
 

@@ -74,7 +74,7 @@
   align-self: flex-start;
 }
 
-.startBtn:hover { background: var(--color-primary-hover); }
+.startBtn:hover { background: var(--color-primary-hover); color: #ffffff !important; }
 .startBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .secondaryBtn {

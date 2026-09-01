@@ -16,6 +16,8 @@ const difficultyVariant: Record<Difficulty, 'beginner' | 'intermediate' | 'advan
   Senior: 'senior',
 };
 
+import { useVirtualGrid } from '@/hooks/useVirtualGrid';
+
 type CompletionFilter = 'all' | 'complete' | 'incomplete';
 
 export default function Coding() {
@@ -50,6 +52,14 @@ export default function Coding() {
     return problems;
   }, [search, difficultyFilter, completionFilter, completedCoding]);
 
+  const {
+    visibleItems: renderedProblems,
+    hasMore,
+    sentinelRef,
+    totalCount,
+    renderedCount,
+  } = useVirtualGrid(filtered, { initialCount: 16, batchSize: 12 });
+
   const totalDone = completedCoding.length;
   const total = allCodingProblems.length;
 
@@ -57,16 +67,16 @@ export default function Coding() {
     <div className={styles.page}>
       <div className={styles.stickyTopBar}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Coding Problems</h1>
+          <h1 className={styles.title}>The Essential 28 & Polyfills</h1>
           <p className={styles.subtitle}>
-            {totalDone}/{total} completed
+            {totalDone}/{total} completed • 3-Tier progressive solutions
           </p>
         </header>
 
         <SearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Search coding problems..."
+          placeholder="Search coding problems and polyfills..."
         />
 
         <div className={styles.filters}>
@@ -89,7 +99,7 @@ export default function Coding() {
             onChange={e => setCompletionFilter(e.target.value as CompletionFilter)}
             aria-label="Filter by completion"
           >
-            <option value="all">All</option>
+            <option value="all">All Status</option>
             <option value="complete">Completed</option>
             <option value="incomplete">Incomplete</option>
           </select>
@@ -110,40 +120,48 @@ export default function Coding() {
             }}
           />
         ) : (
-          <div className={styles.grid}>
-            {filtered.map(problem => {
-              const done = completedCoding.includes(problem.id);
-              return (
-                <Link key={problem.id} to={`/coding/${problem.id}`} className={styles.problemLink}>
-                  <Card>
-                    <div className={styles.problemCard}>
-                      <div className={styles.problemHeader}>
-                        <h3 className={styles.problemTitle}>{problem.title}</h3>
-                        <Badge variant={difficultyVariant[problem.difficulty]} size="small">
-                          {problem.difficulty}
-                        </Badge>
-                      </div>
-                      <p className={styles.problemDesc}>{problem.problem}</p>
-                      <div className={styles.problemFooter}>
-                        <div className={styles.tags}>
-                          {problem.tags.slice(0, 3).map(tag => (
-                            <Badge key={tag} variant="tag" size="small">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                        {done && (
-                          <Badge variant="beginner" size="small">
-                            ✓ Done
+          <>
+            <div className={styles.grid}>
+              {renderedProblems.map(problem => {
+                const done = completedCoding.includes(problem.id);
+                return (
+                  <Link key={problem.id} to={`/coding/${problem.id}`} className={styles.problemLink}>
+                    <Card>
+                      <div className={styles.problemCard}>
+                        <div className={styles.problemHeader}>
+                          <h3 className={styles.problemTitle}>{problem.title}</h3>
+                          <Badge variant={difficultyVariant[problem.difficulty]} size="small">
+                            {problem.difficulty}
                           </Badge>
-                        )}
+                        </div>
+                        <p className={styles.problemDesc}>{problem.problem}</p>
+                        <div className={styles.problemFooter}>
+                          <div className={styles.tags}>
+                            {problem.tags.slice(0, 3).map(tag => (
+                              <Badge key={tag} variant="tag" size="small">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                          {done && (
+                            <Badge variant="beginner" size="small">
+                              ✓ Done
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Card>
-                </Link>
-              );
-            })}
-          </div>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {hasMore && (
+              <div ref={sentinelRef} className={styles.loadingSentinel}>
+                <span>Loading more challenges ({renderedCount} of {totalCount})...</span>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -82,7 +82,7 @@ export function Sidebar({ onNavigate }: SidebarProps) {
     <nav className={styles.sidebar} aria-label="Main navigation">
       <Link to="/" className={styles.logo}>
         <div className={styles.logoBadge}>
-          <span className={styles.logoIcon}>⚡</span>
+          <img src={import.meta.env.BASE_URL + "favicon-192.png"} alt="FrontendForge Logo" className={styles.logoImg} />
         </div>
         <div className={styles.logoTextGroup}>
           <span className={styles.logoTitle}>FrontendForge</span>

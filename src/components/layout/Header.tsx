@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styles from "./Header.module.css";
 
 interface HeaderProps {
@@ -63,7 +63,14 @@ export function Header({ onMenuToggle }: HeaderProps) {
       >
         {"\u2630"}
       </button>
-      <span className={styles.title}>{"\u26A1"} FrontendForge</span>
+      <Link to="/" className={styles.headerBrand}>
+        <img
+          src={import.meta.env.BASE_URL + "favicon-32.png"}
+          alt="FrontendForge Logo"
+          className={styles.headerLogo}
+        />
+        <span className={styles.title}>FrontendForge</span>
+      </Link>
       <form className={styles.search} onSubmit={handleSubmit} role="search">
         <span className={styles.searchIcon} aria-hidden="true">
           {"\u{1F50D}"}
