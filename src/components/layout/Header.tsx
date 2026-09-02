@@ -118,6 +118,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
           <input
             ref={inputRef}
             type="search"
+            data-search-input="true"
             className={styles.searchInput}
             placeholder="Search problems, topics..."
             value={query}
@@ -155,6 +156,16 @@ export function Header({ onMenuToggle }: HeaderProps) {
           aria-label="Progress & Analytics"
         >
           📊
+        </Link>
+
+        {/* Settings */}
+        <Link
+          to="/settings"
+          className={styles.iconBtn}
+          title="Settings & Data Management"
+          aria-label="Settings"
+        >
+          ⚙️
         </Link>
 
         {/* Theme Toggle */}

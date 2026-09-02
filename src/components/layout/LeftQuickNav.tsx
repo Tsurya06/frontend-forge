@@ -100,6 +100,11 @@ export function LeftQuickNav() {
             <span className={styles.starIcon}>📊</span>
             <span className={styles.listItemName}>Progress</span>
           </Link>
+
+          <Link to="/settings" className={styles.listItem}>
+            <span className={styles.starIcon}>⚙️</span>
+            <span className={styles.listItemName}>Settings</span>
+          </Link>
         </div>
       </div>
 
