@@ -78,7 +78,7 @@ export default function Coding() {
       <div className={styles.stickyTopBar}>
         <header className={styles.header}>
           <div className={styles.headerTitleRow}>
-            <h1 className={styles.title}>LeetCode Problem Set</h1>
+            <h1 className={styles.title}>FrontendForge LeetCode Problem Set</h1>
             <div className={styles.statsBadge}>
               <span className={styles.statsCompleted}>{totalDone}</span> /{" "}
               {total} Solved

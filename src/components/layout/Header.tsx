@@ -125,6 +125,12 @@ export function Header({ onMenuToggle }: HeaderProps) {
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setIsSearchOpen(true)}
             onBlur={() => setIsSearchOpen(false)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                inputRef.current?.blur();
+                setIsSearchOpen(false);
+              }
+            }}
             aria-label="Search problems"
           />
           <span className={styles.shortcutHint} aria-hidden="true">

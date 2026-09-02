@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { Outlet } from "react-router-dom";
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { Modal } from "@/components/common/Modal";
@@ -6,7 +7,7 @@ import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import styles from "./Layout.module.css";
 
 interface LayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const SHORTCUT_SECTIONS = [
@@ -23,10 +24,10 @@ const SHORTCUT_SECTIONS = [
   {
     title: "Global Quick Actions",
     items: [
-      { keys: "/", desc: "Focus search bar" },
-      { keys: "?", desc: "Show keyboard shortcuts cheatsheet" },
-      { keys: "j", desc: "Next item / card" },
-      { keys: "k", desc: "Previous item / card" },
+      { keys: "/", desc: "Focus search bar (Esc to exit)" },
+      { keys: "?", desc: "Toggle shortcuts cheatsheet" },
+      { keys: "j", desc: "Scroll down / next item" },
+      { keys: "k", desc: "Scroll up / previous item" },
       { keys: "b", desc: "Toggle bookmark on active problem" },
       { keys: "m", desc: "Mark active problem complete" },
     ],
@@ -38,7 +39,7 @@ export function Layout({ children }: LayoutProps) {
   const [shortcutsModalOpen, setShortcutsModalOpen] = useState(false);
 
   useKeyboardShortcuts({
-    onShowShortcuts: () => setShortcutsModalOpen(true),
+    onShowShortcuts: () => setShortcutsModalOpen((prev) => !prev),
   });
 
   const toggleDrawer = useCallback(() => {
@@ -80,7 +81,7 @@ export function Layout({ children }: LayoutProps) {
       </aside>
 
       {/* Main Content Area */}
-      <main className={styles.content}>{children}</main>
+      <main className={styles.content}>{children || <Outlet />}</main>
 
       {/* Keyboard Shortcuts Modal */}
       <Modal
