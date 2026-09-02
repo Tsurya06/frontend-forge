@@ -63,7 +63,7 @@ export default function Dashboard() {
       tags: p.tags,
       track: "coding",
       link: `/coding/${p.id}`,
-      solutionLabel: "⚡ 3 Tiers",
+      solutionLabel: "📄 Solution",
       description: p.problem,
     }));
 
@@ -511,7 +511,7 @@ export default function Dashboard() {
                         {/* Solutions Badge */}
                         <span className={styles.solutionCol}>
                           <Link
-                            to={challenge.link}
+                            to={`${challenge.link}?tab=solutions`}
                             className={styles.solutionLink}
                             title="View Solutions & Code"
                           >

@@ -1,5 +1,32 @@
 /* ── Base Shimmer Animation ── */
-.shimmerItem {
+@keyframes pageSkeletonShimmer {
+  0% {
+    background-position: -250% 0;
+  }
+  100% {
+    background-position: 250% 0;
+  }
+}
+
+.breadcrumbShimmer,
+.specTitleShimmer,
+.badgeShimmer,
+.sectionHeaderShimmer,
+.textLineShimmer,
+.boxShimmer,
+.tabShimmer,
+.btnShimmer,
+.codeLine,
+.codeLineIndent,
+.consoleLineShimmer,
+.titleShimmer,
+.subtitleShimmer,
+.pillShimmer,
+.cardTitleShimmer,
+.cardBadgeShimmer,
+.cardDescShimmer,
+.cardDescShimmerShort,
+.tagShimmer {
   background: linear-gradient(
     90deg,
     var(--bg-tertiary) 20%,
@@ -9,15 +36,6 @@
   background-size: 250% 100%;
   animation: pageSkeletonShimmer 1.5s infinite ease-in-out;
   border-radius: var(--radius-md);
-}
-
-@keyframes pageSkeletonShimmer {
-  0% {
-    background-position: -250% 0;
-  }
-  100% {
-    background-position: 250% 0;
-  }
 }
 
 /* ── Problem / Split Pane Skeleton ── */
@@ -42,13 +60,11 @@
 }
 
 .breadcrumbShimmer {
-  composes: shimmerItem;
   height: 14px;
   width: 35%;
 }
 
 .specTitleShimmer {
-  composes: shimmerItem;
   height: 28px;
   width: 75%;
 }
@@ -59,27 +75,23 @@
 }
 
 .badgeShimmer {
-  composes: shimmerItem;
   height: 22px;
   width: 70px;
   border-radius: var(--radius-full);
 }
 
 .sectionHeaderShimmer {
-  composes: shimmerItem;
   height: 18px;
   width: 40%;
   margin-top: var(--space-3);
 }
 
 .textLineShimmer {
-  composes: shimmerItem;
   height: 14px;
   width: 100%;
 }
 
 .boxShimmer {
-  composes: shimmerItem;
   height: 110px;
   width: 100%;
   border-radius: var(--radius-lg);
@@ -106,7 +118,6 @@
 }
 
 .tabShimmer {
-  composes: shimmerItem;
   height: 24px;
   width: 80px;
   border-radius: var(--radius-sm);
@@ -117,7 +128,6 @@
 }
 
 .btnShimmer {
-  composes: shimmerItem;
   height: 28px;
   width: 70px;
   border-radius: var(--radius-md);
@@ -157,13 +167,11 @@
 }
 
 .codeLine {
-  composes: shimmerItem;
   height: 16px;
   background: rgba(255, 255, 255, 0.08);
 }
 
 .codeLineIndent {
-  composes: shimmerItem;
   height: 16px;
   margin-left: 24px;
   background: rgba(255, 255, 255, 0.08);
@@ -195,7 +203,6 @@
 }
 
 .consoleLineShimmer {
-  composes: shimmerItem;
   height: 14px;
 }
 
@@ -216,13 +223,11 @@
 }
 
 .titleShimmer {
-  composes: shimmerItem;
   height: 32px;
   width: 40%;
 }
 
 .subtitleShimmer {
-  composes: shimmerItem;
   height: 16px;
   width: 60%;
 }
@@ -234,7 +239,6 @@
 }
 
 .pillShimmer {
-  composes: shimmerItem;
   height: 28px;
   width: 90px;
   border-radius: var(--radius-full);
@@ -264,26 +268,22 @@
 }
 
 .cardTitleShimmer {
-  composes: shimmerItem;
   height: 18px;
   width: 60%;
 }
 
 .cardBadgeShimmer {
-  composes: shimmerItem;
   height: 20px;
   width: 50px;
   border-radius: var(--radius-sm);
 }
 
 .cardDescShimmer {
-  composes: shimmerItem;
   height: 13px;
   width: 90%;
 }
 
 .cardDescShimmerShort {
-  composes: shimmerItem;
   height: 13px;
   width: 65%;
 }
@@ -295,7 +295,6 @@
 }
 
 .tagShimmer {
-  composes: shimmerItem;
   height: 16px;
   width: 60px;
   border-radius: var(--radius-sm);

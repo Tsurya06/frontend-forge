@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback, useRef, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import Editor, { type OnMount } from "@monaco-editor/react";
 import type * as Monaco from "monaco-editor";
 import { useProgressContext } from "@/context/ProgressContext";
@@ -8,7 +8,7 @@ import { Badge } from "@/components/common/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PageSkeleton } from "@/components/common/PageSkeleton";
 import { CodeBlock } from "@/components/code/CodeBlock";
-import { allCodingProblems, getCodingProblemById } from "@/data";
+import { allCodingProblems } from "@/data";
 import {
   evaluateProblem,
   type ProblemEvaluationResult,
@@ -61,13 +61,13 @@ interface UserSubmission {
 
 export default function CodingDetail() {
   const { problemId } = useParams<{ problemId: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { isComplete, markComplete } = useProgressContext();
   const { isBookmarked, toggleBookmark } = useBookmarkContext();
 
   const problem = useMemo(() => {
-    if (!problemId) return undefined;
-    return getCodingProblemById(problemId);
+    return allCodingProblems.find((p) => p.id === problemId);
   }, [problemId]);
 
   const currentIndex = useMemo(() => {
@@ -88,45 +88,72 @@ export default function CodingDetail() {
     [problem],
   );
 
-  // Starter template
+  // Starter template (clean function / prototype / class signature with empty body)
   const defaultStarterCode = useMemo(() => {
     if (!problem) return "";
 
     // HTML/CSS problems get an HTML starter
     if (isHtmlCssProblem(problem)) {
-      return `<!-- Write your implementation for ${problem.title} below -->
-
-<!-- HTML Structure -->
-<div>
-  <!-- Your HTML here -->
-</div>
-
-<style>
-/* Your CSS here */
-
-</style>
-`;
+      return `<!-- Write your implementation for ${problem.title} below -->\n\n<!-- HTML Structure -->\n<div class="container">\n  <!-- Your HTML here -->\n</div>\n\n<style>\n/* Your CSS here */\n\n</style>\n`;
     }
 
-    const match = problem.implementation.match(
-      /function\s+([a-zA-Z0-9_$]+)\s*\(([^)]*)\)/,
+    const trimmed = problem.implementation.trim();
+    let targetCode = trimmed;
+    const fnOrClassMatch = trimmed.match(
+      /(?:(?:async\s+)?function\s+[a-zA-Z0-9_$]+|class\s+[a-zA-Z0-9_$]+|[A-Za-z0-9_$]+(?:\.prototype)?\.[a-zA-Z0-9_$]+\s*=\s*(?:async\s+)?function|(?:const|let|var)\s+[a-zA-Z0-9_$]+\s*=\s*(?:async\s+)?(?:\([^)]*\)|[a-zA-Z0-9_$]+)\s*=>)/,
     );
-    if (match) {
-      const fnName = match[1];
-      const params = match[2];
-      return `/**\n * Problem: ${problem.title}\n * Difficulty: ${problem.difficulty}\n * Category: ${problem.category}\n */\n\nfunction ${fnName}(${params}) {\n  // Write your solution here\n  \n}\n`;
+    if (fnOrClassMatch && typeof fnOrClassMatch.index === "number") {
+      targetCode = trimmed.slice(fnOrClassMatch.index);
     }
-    return (
-      `// Write your implementation for ${problem.title} below:\n\n` +
-      problem.implementation
-    );
+
+    let openParen = 0;
+    let inString = false;
+    let stringChar = "";
+
+    for (let i = 0; i < targetCode.length; i++) {
+      const ch = targetCode[i];
+      if (inString) {
+        if (ch === stringChar && targetCode[i - 1] !== "\\") inString = false;
+        continue;
+      }
+      if (ch === '"' || ch === "'" || ch === "`") {
+        inString = true;
+        stringChar = ch;
+        continue;
+      }
+      if (ch === "(") openParen++;
+      else if (ch === ")") openParen--;
+      else if (ch === "{" && openParen === 0) {
+        const sig = targetCode.slice(0, i).trim().replace(/^\/\/.*$/gm, "").trim();
+        return `/**\n * Problem: ${problem.title}\n * Difficulty: ${problem.difficulty}\n * Category: ${problem.category}\n */\n\n${sig} {\n  // Write your solution here\n  \n}\n`;
+      }
+    }
+
+    return `/**\n * Problem: ${problem.title}\n * Difficulty: ${problem.difficulty}\n * Category: ${problem.category}\n */\n\nfunction solution() {\n  // Write your solution here\n  \n}\n`;
   }, [problem]);
 
   const [userCode, setUserCode] = useState<string>("");
   const [selectedLang, setSelectedLang] = useState<
     "javascript" | "typescript" | "html"
   >("javascript");
-  const [leftTab, setLeftTab] = useState<LeftTab>("description");
+
+  const tabParam = searchParams.get("tab") as LeftTab;
+  const [leftTab, setLeftTab] = useState<LeftTab>(
+    tabParam && ["description", "editorial", "solutions", "submissions"].includes(tabParam)
+      ? tabParam
+      : "description",
+  );
+
+  useEffect(() => {
+    const currentTab = searchParams.get("tab") as LeftTab;
+    if (
+      currentTab &&
+      ["description", "editorial", "solutions", "submissions"].includes(currentTab)
+    ) {
+      setLeftTab(currentTab);
+    }
+  }, [searchParams]);
+
   const [rightTab, setRightTab] = useState<RightTab>("testcase");
   const [activeTestCaseIdx, setActiveTestCaseIdx] = useState(0);
   const [selectedSolutionTier, setSelectedSolutionTier] = useState<
@@ -151,7 +178,16 @@ export default function CodingDetail() {
   useEffect(() => {
     if (problem) {
       const savedCode = localStorage.getItem(`feeq-code-${problem.id}`);
-      setUserCode(savedCode || defaultStarterCode);
+      // Heal any previously saved corrupted signature
+      const isCorrupted =
+        savedCode &&
+        (savedCode.includes("cache = new WeakMap() {") ||
+          savedCode.includes("new WeakMap() {"));
+      if (isCorrupted) {
+        localStorage.removeItem(`feeq-code-${problem.id}`);
+      }
+
+      setUserCode((!isCorrupted && savedCode) || defaultStarterCode);
       setEvaluationResult(null);
 
       // Set correct editor language for HTML/CSS problems

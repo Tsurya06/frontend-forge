@@ -233,10 +233,11 @@ export default function Coding() {
                         </td>
                         <td>
                           <Link
-                            to={`/coding/${problem.id}`}
+                            to={`/coding/${problem.id}?tab=solutions`}
                             className={styles.solutionLink}
+                            title="View Solutions & Code"
                           >
-                            ⚡ 3-Tier
+                            📄 Solution
                           </Link>
                         </td>
                         <td>
