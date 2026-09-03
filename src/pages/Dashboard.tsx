@@ -1,8 +1,24 @@
+import type { ReactNode } from "react";
 import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  Star,
+  Flame,
+  LayoutGrid,
+  Zap,
+  Component,
+  Layers,
+  Atom,
+  FileCode2,
+  Gauge,
+  Palette,
+  Search,
+  X,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { useProgressContext } from "@/context/ProgressContext";
 import { useBookmarkContext } from "@/context/BookmarkContext";
-import { LeftQuickNav } from "@/components/layout/LeftQuickNav";
 import { useVirtualGrid } from "@/hooks/useVirtualGrid";
 import {
   allCodingProblems,
@@ -24,15 +40,21 @@ export interface UnifiedChallenge {
   description: string;
 }
 
-const categoryPills = [
-  { id: "all", label: "All Challenges", icon: "🗂️" },
-  { id: "coding", label: "Polyfills & Algorithms (38)", icon: "⚡" },
-  { id: "machine-coding", label: "Machine Coding (35)", icon: "🏗️" },
-  { id: "system-design", label: "System Design (9)", icon: "📐" },
-  { id: "react", label: "React & UI", icon: "⚛️" },
-  { id: "typescript", label: "TypeScript", icon: "📘" },
-  { id: "performance", label: "Performance", icon: "🚀" },
-  { id: "css", label: "CSS & Layouts", icon: "🎨" },
+interface CategoryPill {
+  id: string;
+  label: string;
+  icon: ReactNode;
+}
+
+const categoryPills: CategoryPill[] = [
+  { id: "all", label: "All Challenges", icon: <LayoutGrid size={14} /> },
+  { id: "coding", label: "Polyfills & Algorithms (38)", icon: <Zap size={14} /> },
+  { id: "machine-coding", label: "Machine Coding (35)", icon: <Component size={14} /> },
+  { id: "system-design", label: "System Design (9)", icon: <Layers size={14} /> },
+  { id: "react", label: "React & UI", icon: <Atom size={14} /> },
+  { id: "typescript", label: "TypeScript", icon: <FileCode2 size={14} /> },
+  { id: "performance", label: "Performance", icon: <Gauge size={14} /> },
+  { id: "css", label: "CSS & Layouts", icon: <Palette size={14} /> },
 ];
 
 export default function Dashboard() {
@@ -240,10 +262,7 @@ export default function Dashboard() {
 
   return (
     <div className={styles.pageLayout}>
-      {/* ── 1. Left Quick-Nav Sidebar (Desktop) ── */}
-      <LeftQuickNav />
-
-      {/* ── 2. Center Problemset Stream (Scrollable) ── */}
+      {/* ── Center Problemset Stream (Scrollable) ── */}
       <main className={styles.centerStream}>
         <div className={styles.centerContent}>
           {/* Top 3 Feature Banner Cards */}
@@ -291,6 +310,20 @@ export default function Dashboard() {
                 Real-time feeds, video streaming, collaborative docs & caching
               </p>
             </Link>
+
+            <Link
+              to="/visualizer"
+              className={`${styles.bannerCard} ${styles.bannerEmerald}`}
+            >
+              <div className={styles.bannerBadge}>NEW · INTERACTIVE</div>
+              <h2 className={styles.bannerTitle}>
+                <Zap size={16} />
+                <span>JS Runtime & Event Loop Visualizer</span>
+              </h2>
+              <p className={styles.bannerSubtitle}>
+                Step through Call Stack, Memory Heap, Web APIs & Microtask Queues
+              </p>
+            </Link>
           </section>
 
           {/* ── 3. Topic Tag Chips with Real Problem Counts ── */}
@@ -319,7 +352,8 @@ export default function Dashboard() {
                 className={styles.expandTagsBtn}
                 onClick={() => setTagsExpanded(!tagsExpanded)}
               >
-                {tagsExpanded ? "Collapse ▴" : "Expand ▾"}
+                <span>{tagsExpanded ? "Collapse" : "Expand"}</span>
+                {tagsExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
               </button>
             </div>
           </section>
@@ -345,7 +379,9 @@ export default function Dashboard() {
           {/* ── 5. Search & Filters Toolbar ── */}
           <div className={styles.filterToolbar}>
             <div className={styles.searchWrapper}>
-              <span className={styles.searchIcon}>🔍</span>
+              <span className={styles.searchIcon}>
+                <Search size={14} />
+              </span>
               <input
                 type="search"
                 className={styles.searchInput}
@@ -360,7 +396,7 @@ export default function Dashboard() {
                   onClick={() => setSearch("")}
                   aria-label="Clear search"
                 >
-                  ✕
+                  <X size={12} />
                 </button>
               )}
             </div>
@@ -409,7 +445,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* ── 6. LeetCode Clean Problem List (Infinite Scroll Stream) ── */}
+          {/* ── 6. Problem Stream List (Infinite Scroll) ── */}
           <section
             className={styles.problemStreamSection}
             aria-label="Problem List"
@@ -545,7 +581,7 @@ export default function Dashboard() {
                           }
                           aria-label="Bookmark"
                         >
-                          {isStarred ? "⭐" : "☆"}
+                          <Star size={14} fill={isStarred ? "currentColor" : "none"} />
                         </button>
                       </div>
                     );
@@ -567,14 +603,21 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* ── 3. LeetCode Right Sidebar Widgets (Desktop) ── */}
+      {/* ── 3. Daily & Activity Widgets (Desktop) ── */}
       <aside className={styles.rightWidgets}>
         {/* Calendar Widget */}
         <div className={styles.calendarWidget}>
           <div className={styles.calendarTop}>
             <div className={styles.calendarDayHeader}>
               <span className={styles.dayText}>
-                Day {currentDay} • 🔥 {dailyStreak || 1}d
+                Day {currentDay} •{" "}
+                <Flame
+                  size={13}
+                  className={
+                    dailyStreak > 0 ? styles.streakFlame : styles.streakFlameBroken
+                  }
+                />{" "}
+                {dailyStreak}d
               </span>
               <span className={styles.timeLeft}>Daily Challenge</span>
             </div>
@@ -613,7 +656,8 @@ export default function Dashboard() {
 
           {/* Quick Start Daily */}
           <Link to="/daily" className={styles.redeemBtn}>
-            <span>⚡ Start Today's Challenge</span>
+            <Zap size={14} />
+            <span>Start Today's Challenge</span>
           </Link>
         </div>
       </aside>

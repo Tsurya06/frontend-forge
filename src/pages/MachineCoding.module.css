@@ -36,14 +36,14 @@
 }
 
 .title {
-  font-size: var(--text-3xl);
+  font-size: var(--text-fluid-h1, var(--text-2xl));
   font-weight: var(--font-bold);
   color: var(--text-primary);
   margin: 0;
 }
 
 .subtitle {
-  font-size: var(--text-base);
+  font-size: var(--text-fluid-base, var(--text-sm));
   color: var(--text-secondary);
   margin: var(--space-1) 0 0;
 }
@@ -72,11 +72,15 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: var(--space-4);
+  align-items: stretch;
 }
 
 .problemLink {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   text-decoration: none;
   color: inherit;
   transition: transform var(--transition-fast);
@@ -86,15 +90,22 @@
   transform: translateY(-2px);
 }
 
+.cardContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .problemCard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  height: 100%;
+  gap: var(--space-3);
 }
 
 .problemHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-2);
 }
@@ -104,6 +115,7 @@
   font-weight: var(--font-semibold);
   color: var(--text-primary);
   margin: 0;
+  line-height: var(--leading-snug);
 }
 
 .checkmark {
@@ -123,7 +135,31 @@
   font-size: var(--text-sm);
   color: var(--text-secondary);
   margin: 0;
-  line-height: var(--leading-relaxed);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 4.65em;
+  flex: 1;
+}
+
+.problemFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-color);
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
 }
 
 @media (max-width: 768px) {

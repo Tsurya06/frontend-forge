@@ -123,9 +123,18 @@ export default function Search() {
 
       {results.total > 0 && (
         <div className={styles.results}>
-          <p className={styles.resultCount}>
-            {results.total} result{results.total !== 1 ? "s" : ""} found
-          </p>
+          <div className={styles.resultCountRow}>
+            <p className={styles.resultCount}>
+              {results.total} result{results.total !== 1 ? "s" : ""} found
+            </p>
+            <button
+              type="button"
+              className={styles.clearBtn}
+              onClick={() => setSearchParams({})}
+            >
+              ✕ Clear search
+            </button>
+          </div>
           {sections.map((section) => (
             <section key={section.type} className={styles.resultSection}>
               <h2 className={styles.sectionTitle}>

@@ -1,4 +1,4 @@
-/* ── LeetCode Mobile-First Header ── */
+/* ── FrontendForge Mobile-First Header ── */
 .header {
   display: flex;
   align-items: center;
@@ -18,6 +18,7 @@
   align-items: center;
   gap: var(--space-3);
   min-width: 0;
+  flex: 1;
 }
 
 .menuButton {
@@ -70,6 +71,9 @@
   align-items: center;
   gap: 2px;
   margin-left: var(--space-3);
+  overflow: hidden;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .navLink {
@@ -128,13 +132,20 @@
 .searchInput {
   width: 100%;
   height: 30px;
-  padding: 0 var(--space-3) 0 var(--space-7);
+  padding: 0 26px 0 var(--space-7);
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
   font-size: var(--text-xs);
   color: var(--text-primary);
   transition: all var(--transition-fast);
+}
+
+.searchInput::-webkit-search-cancel-button,
+.searchInput::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
 }
 
 .searchInput::placeholder {
@@ -174,14 +185,42 @@
   line-height: 1;
 }
 
+.searchClearBtn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-hover);
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: all var(--transition-fast);
+  z-index: 2;
+}
+
+.searchClearBtn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
 /* ── Streak Pill ── */
 .streakPill {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   padding: 3px 8px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
   border-radius: var(--radius-full);
   text-decoration: none;
   color: var(--text-primary);
@@ -191,17 +230,32 @@
 }
 
 .streakPill:hover {
-  border-color: var(--accent);
+  border-color: #ef4444;
   text-decoration: none;
 }
 
+.streakPillZero {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  opacity: 0.75;
+}
+
+.streakPillZero:hover {
+  border-color: var(--text-muted);
+}
+
 .streakFlame {
-  font-size: 0.85rem;
+  color: #f97316;
+}
+
+.streakFlameZero {
+  color: var(--text-muted);
 }
 
 .streakCount {
-  color: var(--accent);
+  color: var(--text-primary);
   font-family: var(--font-mono);
+  font-weight: var(--font-bold);
 }
 
 .iconBtn,
@@ -228,8 +282,47 @@
   text-decoration: none;
 }
 
-/* ── Desktop View (min-width: 900px) ── */
-@media (min-width: 900px) {
+/* ── Mobile Narrow View (max-width: 480px) ── */
+@media (max-width: 480px) {
+  .header {
+    padding: 0 var(--space-2);
+    gap: var(--space-1);
+  }
+
+  .leftGroup {
+    gap: var(--space-1);
+  }
+
+  .brandText {
+    display: none;
+  }
+
+  .search {
+    width: 85px;
+  }
+
+  .searchExpanded {
+    width: 130px;
+  }
+
+  .searchInput {
+    padding-left: var(--space-6);
+  }
+
+  .rightGroup {
+    gap: 2px;
+  }
+
+  .iconBtn,
+  .themeToggle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ── Desktop View (min-width: 1200px) ── */
+@media (min-width: 1200px) {
   .header {
     padding: 0 var(--space-6);
   }

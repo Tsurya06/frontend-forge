@@ -1,4 +1,11 @@
 import { useState } from "react";
+import {
+  Bookmark,
+  CheckCircle2,
+  Circle,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { useBookmarkContext } from "@/context/BookmarkContext";
 import { useProgressContext } from "@/context/ProgressContext";
 import { Badge } from "../common/Badge";
@@ -21,7 +28,7 @@ interface QuestionCardProps {
   id: string;
   question: string;
   difficulty: Difficulty;
-  tags?: string[];
+  tags: string[];
   shortAnswer?: string;
   explanation?: string;
   code?: string;
@@ -35,7 +42,7 @@ export function QuestionCard({
   id,
   question,
   difficulty,
-  tags = [],
+  tags,
   shortAnswer,
   explanation,
   code,
@@ -54,10 +61,14 @@ export function QuestionCard({
   return (
     <article className={styles.card}>
       <div className={styles.header}>
-        <div className={styles.headerLeft}>
+        <div className={styles.headerContent}>
           <h3 className={styles.question}>{question}</h3>
           <div className={styles.meta}>
-            <Badge variant={difficultyVariant[difficulty]} size="small">
+            <Badge
+              variant={difficultyVariant[difficulty]}
+              size="small"
+              className={styles.difficultyBadge}
+            >
               {difficulty}
             </Badge>
             {tags.map((tag) => (
@@ -73,17 +84,19 @@ export function QuestionCard({
             className={`${styles.iconButton} ${bookmarked ? styles.bookmarked : ""}`}
             onClick={() => toggleBookmark(id)}
             aria-label={bookmarked ? "Remove bookmark" : "Add bookmark"}
+            title={bookmarked ? "Remove bookmark" : "Add bookmark"}
           >
-            {bookmarked ? "\u{1F516}" : "\u{1F517}"}
+            <Bookmark size={15} fill={bookmarked ? "currentColor" : "none"} />
           </button>
           <button
             type="button"
             className={`${styles.iconButton} ${completed ? styles.completed : ""}`}
             onClick={() => markComplete(id, "question")}
             aria-label={completed ? "Completed" : "Mark as complete"}
+            title={completed ? "Completed" : "Mark as complete"}
             disabled={completed}
           >
-            {completed ? "\u2713" : "\u25CB"}
+            {completed ? <CheckCircle2 size={15} /> : <Circle size={15} />}
           </button>
         </div>
       </div>
@@ -95,7 +108,8 @@ export function QuestionCard({
           onClick={() => setExpanded((prev) => !prev)}
           aria-expanded={expanded}
         >
-          {expanded ? "Hide Answer" : "Reveal Answer"}
+          <span>{expanded ? "Hide Answer" : "Reveal Answer"}</span>
+          {expanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
         </button>
       </div>
 

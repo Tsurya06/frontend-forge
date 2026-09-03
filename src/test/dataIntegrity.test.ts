@@ -111,4 +111,32 @@ describe("Data Integrity & Coverage Verification", () => {
       mcIds.add(m.id);
     });
   });
+
+  it("should have zero references to 'leetcode' across all coding problems and data (Copyright Protection)", () => {
+    allCodingProblems.forEach((c) => {
+      expect(c.title.toLowerCase()).not.toContain("leetcode");
+      expect(c.problem.toLowerCase()).not.toContain("leetcode");
+      expect(c.optimalApproach.toLowerCase()).not.toContain("leetcode");
+      expect(c.implementation.toLowerCase()).not.toContain("leetcode");
+    });
+  });
+
+  it("should successfully transpile React TSX / JSX code using Sucrase", async () => {
+    const { transform } = await import("sucrase");
+    const sampleTsx = `
+      import React, { useState } from 'react';
+      interface Props { initial: number }
+      export default function Counter({ initial }: Props) {
+        const [c, setC] = useState<number>(initial);
+        return <button onClick={() => setC(c + 1)}>Count: {c}</button>;
+      }
+    `;
+    const res = transform(sampleTsx, {
+      transforms: ["typescript", "jsx"],
+      production: false,
+    });
+    expect(res.code).toContain("React.createElement");
+    expect(res.code).toContain("function Counter");
+    expect(res.code).not.toContain("interface Props");
+  });
 });

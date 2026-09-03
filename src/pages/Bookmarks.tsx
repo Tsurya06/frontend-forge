@@ -5,6 +5,7 @@ import { useNotesContext } from "@/context/NotesContext";
 import { SearchInput } from "@/components/common/SearchInput";
 import { Card } from "@/components/common/Card";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Bookmark } from "lucide-react";
 import {
   getTopicById,
   getQuestionById,
@@ -91,7 +92,7 @@ export default function Bookmarks() {
       <div className={styles.scrollableContent}>
         {filtered.length === 0 ? (
           <EmptyState
-            icon="🔖"
+            icon={<Bookmark size={36} />}
             title={
               bookmarks.length === 0
                 ? "No bookmarks yet"

@@ -1,7 +1,19 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  Zap,
+  Component,
+  Layers,
+  BookOpen,
+  Atom,
+  Award,
+  Activity,
+  Mic,
+  CreditCard,
+  Gauge,
+  ShieldCheck,
+} from "lucide-react";
 import { useProgressContext } from "@/context/ProgressContext";
-import { LeftQuickNav } from "@/components/layout/LeftQuickNav";
 import {
   allCodingProblems,
   allMachineCodingProblems,
@@ -26,78 +38,130 @@ export default function Roadmap() {
   const codingTotal = allCodingProblems.length;
   const codingPercent = Math.round((codingDone / codingTotal) * 100);
 
+  const mcDone = completedMachineCoding.length;
+  const mcTotal = allMachineCodingProblems.length;
+  const mcPercent = Math.round((mcDone / mcTotal) * 100);
+
   return (
     <div className={styles.pageLayout}>
-      {/* ── Left Quick-Nav Sidebar (Desktop) ── */}
-      <LeftQuickNav />
+      {/* ── Fixed Main Header Bar (Always pinned at the top) ── */}
+      <header className={styles.fixedHeaderBar}>
+        <div className={styles.fixedHeaderInner}>
+          <div>
+            <h1 className={styles.pageTitle}>
+              {activeTab === "studyplan" ? "Study Plan" : "8-Week Roadmap"}
+            </h1>
+            <p className={styles.pageSubtitle}>
+              {activeTab === "studyplan"
+                ? "Curated study tracks and company sprint preparation for frontend engineers."
+                : "Structured weekly path from JavaScript fundamentals to Staff-level Frontend System Design."}
+            </p>
+          </div>
+          <div className={styles.tabToggle}>
+            <button
+              type="button"
+              className={`${styles.tabBtn} ${activeTab === "studyplan" ? styles.tabBtnActive : ""}`}
+              onClick={() => setActiveTab("studyplan")}
+            >
+              Study Plans
+            </button>
+            <button
+              type="button"
+              className={`${styles.tabBtn} ${activeTab === "curriculum" ? styles.tabBtnActive : ""}`}
+              onClick={() => setActiveTab("curriculum")}
+            >
+              8-Week Roadmap
+            </button>
+          </div>
+        </div>
+      </header>
 
       {/* ── Main Study Plan Content Area (Independently Scrollable) ── */}
       <main className={styles.scrollArea}>
         <div className={styles.studyPlanContent}>
-          {/* Header */}
-          <div className={styles.headerRow}>
-            <div>
-              <h1 className={styles.pageTitle}>Study Plan</h1>
-              <p className={styles.pageSubtitle}>
-                Curated study tracks and company sprint preparation for frontend
-                engineers.
-              </p>
-            </div>
-            <div className={styles.tabToggle}>
-              <button
-                type="button"
-                className={`${styles.tabBtn} ${activeTab === "studyplan" ? styles.tabBtnActive : ""}`}
-                onClick={() => setActiveTab("studyplan")}
-              >
-                Study Plans
-              </button>
-              <button
-                type="button"
-                className={`${styles.tabBtn} ${activeTab === "curriculum" ? styles.tabBtnActive : ""}`}
-                onClick={() => setActiveTab("curriculum")}
-              >
-                8-Week Roadmap
-              </button>
-            </div>
-          </div>
-
           {activeTab === "studyplan" ? (
             <>
               {/* ── 1. Ongoing Section ── */}
               <section className={styles.sectionBlock}>
-                <h2 className={styles.sectionTitle}>Ongoing</h2>
+                <h2 className={styles.sectionTitle}>Ongoing Practice</h2>
                 <div className={styles.ongoingGrid}>
                   <Link to="/coding" className={styles.ongoingCard}>
                     <div className={styles.ongoingIconBox}>
-                      <span className={styles.ongoingIconText}>TOP</span>
+                      <span className={styles.ongoingIconText}>JS</span>
                     </div>
                     <div className={styles.ongoingDetails}>
                       <div className={styles.ongoingHeader}>
                         <h3 className={styles.ongoingName}>
-                          The Essential 28 JavaScript Polyfills
+                          28 Core JavaScript Polyfills
                         </h3>
-                        <span className={styles.ongoingBadge}>In Progress</span>
+                        <span className={styles.ongoingBadge}>
+                          {codingDone === codingTotal ? "Completed" : "In Progress"}
+                        </span>
                       </div>
                       <div className={styles.progressTrack}>
                         <div
                           className={styles.progressBar}
-                          style={{ width: `${Math.max(8, codingPercent)}%` }}
+                          style={{ width: `${Math.max(codingDone > 0 ? 8 : 0, codingPercent)}%` }}
                         />
                       </div>
                       <div className={styles.progressMeta}>
-                        <span>Total Progress</span>
+                        <span>Algorithm & Polyfill Mastery</span>
                         <span>
-                          {codingDone} / {codingTotal} Solved
+                          {codingDone} / {codingTotal} Solved ({codingPercent}%)
                         </span>
                       </div>
                     </div>
                   </Link>
+
+                  {mcDone > 0 && (
+                    <Link to="/machine-coding" className={styles.ongoingCard}>
+                      <div
+                        className={styles.ongoingIconBox}
+                        style={{
+                          borderColor: "rgba(0, 184, 163, 0.3)",
+                          background: "rgba(0, 184, 163, 0.12)",
+                        }}
+                      >
+                        <span className={styles.ongoingIconText} style={{ color: "#00b8a3" }}>
+                          UI
+                        </span>
+                      </div>
+                      <div className={styles.ongoingDetails}>
+                        <div className={styles.ongoingHeader}>
+                          <h3 className={styles.ongoingName}>
+                            Machine Coding Components
+                          </h3>
+                          <span
+                            className={styles.ongoingBadge}
+                            style={{ color: "#00b8a3", background: "rgba(0, 184, 163, 0.15)" }}
+                          >
+                            In Progress
+                          </span>
+                        </div>
+                        <div className={styles.progressTrack}>
+                          <div
+                            className={styles.progressBar}
+                            style={{
+                              width: `${Math.max(8, mcPercent)}%`,
+                              background: "linear-gradient(90deg, #00b8a3 0%, #3b82f6 100%)",
+                            }}
+                          />
+                        </div>
+                        <div className={styles.progressMeta}>
+                          <span>Component Hierarchy & State</span>
+                          <span>
+                            {mcDone} / {mcTotal} Solved ({mcPercent}%)
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  )}
                 </div>
               </section>
 
               {/* ── 2. Featured Section (4 Real Curriculum Pillars) ── */}
               <section className={styles.sectionBlock}>
-                <h2 className={styles.sectionTitle}>Featured Tracks</h2>
+                <h2 className={styles.sectionTitle}>Core Curriculum Pillars</h2>
                 <div className={styles.featuredGrid}>
                   {/* Card 1: 28 Polyfills */}
                   <Link
@@ -114,7 +178,9 @@ export default function Roadmap() {
                       </p>
                     </div>
                     <div className={styles.cardGraphic}>
-                      <span className={styles.bigGraphicIcon}>⚡</span>
+                      <span className={styles.bigGraphicIcon}>
+                        <Zap size={32} />
+                      </span>
                     </div>
                   </Link>
 
@@ -134,7 +200,9 @@ export default function Roadmap() {
                       </p>
                     </div>
                     <div className={styles.cardGraphic}>
-                      <span className={styles.bigGraphicIcon}>🏗️</span>
+                      <span className={styles.bigGraphicIcon}>
+                        <Component size={32} />
+                      </span>
                     </div>
                   </Link>
 
@@ -154,7 +222,9 @@ export default function Roadmap() {
                       </p>
                     </div>
                     <div className={styles.cardGraphic}>
-                      <span className={styles.bigGraphicIcon}>📐</span>
+                      <span className={styles.bigGraphicIcon}>
+                        <Layers size={32} />
+                      </span>
                     </div>
                   </Link>
 
@@ -173,97 +243,42 @@ export default function Roadmap() {
                       </p>
                     </div>
                     <div className={styles.cardGraphic}>
-                      <span className={styles.bigGraphicIcon}>📚</span>
+                      <span className={styles.bigGraphicIcon}>
+                        <BookOpen size={32} />
+                      </span>
                     </div>
                   </Link>
                 </div>
               </section>
 
-              {/* ── 3. 30 Days Challenge ── */}
-              <section className={styles.sectionBlock}>
-                <h2 className={styles.sectionTitle}>30 Days Challenge</h2>
-                <div className={styles.thirtyDaysGrid}>
-                  <Link to="/coding" className={styles.thirtyCard}>
-                    <div className={styles.thirtyIconBox}>
-                      <span className={styles.thirtyIcon}>⚡</span>
-                    </div>
-                    <div className={styles.thirtyContent}>
-                      <h3 className={styles.thirtyTitle}>
-                        30 Days of JavaScript
-                      </h3>
-                      <p className={styles.thirtyDesc}>
-                        Closures, Promises, Event Loop & Object Prototypes
-                      </p>
-                    </div>
-                  </Link>
-
-                  <Link
-                    to="/topics/react-components"
-                    className={styles.thirtyCard}
-                  >
-                    <div className={styles.thirtyIconBox}>
-                      <span className={styles.thirtyIcon}>⚛️</span>
-                    </div>
-                    <div className={styles.thirtyContent}>
-                      <h3 className={styles.thirtyTitle}>
-                        30 Days of React 19
-                      </h3>
-                      <p className={styles.thirtyDesc}>
-                        Hooks, Actions, Compiler & Concurrent Rendering
-                      </p>
-                    </div>
-                  </Link>
-                </div>
-              </section>
-
-              {/* ── 4. Cracking Coding Interview Tracks ── */}
+              {/* ── 3. Specialized Deep Dives & Assessment Tools ── */}
               <section className={styles.sectionBlock}>
                 <h2 className={styles.sectionTitle}>
-                  Interview Preparation Tracks
+                  Specialized Tools & Deep Dives
                 </h2>
                 <div className={styles.crackingGrid}>
-                  <Link to="/coding" className={styles.crackCard}>
+                  <Link to="/visualizer" className={styles.crackCard}>
                     <div className={styles.crackTop}>
-                      <span className={styles.crackTag}>ONGOING</span>
-                      <span className={styles.crackIcon}>⚡</span>
+                      <span className={styles.crackTagSim}>SIMULATOR</span>
+                      <span className={styles.crackIcon}>
+                        <Activity size={16} />
+                      </span>
                     </div>
                     <h3 className={styles.crackTitle}>
-                      Essential 28 Polyfills
+                      Event Loop Visualizer
                     </h3>
                     <p className={styles.crackDesc}>
-                      Promise.all, debounce, deepEqual, custom setInterval &
-                      currying
-                    </p>
-                  </Link>
-
-                  <Link to="/machine-coding" className={styles.crackCard}>
-                    <div className={styles.crackTop}>
-                      <span className={styles.crackTagUI}>UI / UX</span>
-                      <span className={styles.crackIcon}>🏗️</span>
-                    </div>
-                    <h3 className={styles.crackTitle}>Machine Coding 35</h3>
-                    <p className={styles.crackDesc}>
-                      Autocomplete, virtual lists, carousel, modals & sortable
-                      table
-                    </p>
-                  </Link>
-
-                  <Link to="/system-design" className={styles.crackCard}>
-                    <div className={styles.crackTop}>
-                      <span className={styles.crackTagArch}>ARCHITECT</span>
-                      <span className={styles.crackIcon}>📐</span>
-                    </div>
-                    <h3 className={styles.crackTitle}>System Design 9</h3>
-                    <p className={styles.crackDesc}>
-                      Realtime feeds, video streaming, collaborative docs &
-                      caching
+                      Frame-by-frame V8 Call Stack, Memory Heap, Microtask &
+                      Macrotask queues simulation
                     </p>
                   </Link>
 
                   <Link to="/senior" className={styles.crackCard}>
                     <div className={styles.crackTop}>
                       <span className={styles.crackTagStaff}>STAFF / LEAD</span>
-                      <span className={styles.crackIcon}>👔</span>
+                      <span className={styles.crackIcon}>
+                        <Award size={16} />
+                      </span>
                     </div>
                     <h3 className={styles.crackTitle}>
                       Staff Engineering Guide
@@ -273,22 +288,126 @@ export default function Roadmap() {
                       mentoring
                     </p>
                   </Link>
+
+                  <Link to="/interview" className={styles.crackCard}>
+                    <div className={styles.crackTop}>
+                      <span className={styles.crackTagMock}>TIMED MOCK</span>
+                      <span className={styles.crackIcon}>
+                        <Mic size={16} />
+                      </span>
+                    </div>
+                    <h3 className={styles.crackTitle}>
+                      Mock Technical Interview
+                    </h3>
+                    <p className={styles.crackDesc}>
+                      Realistic 45-minute timed interview with randomized
+                      questions & scoring
+                    </p>
+                  </Link>
+
+                  <Link to="/flashcards" className={styles.crackCard}>
+                    <div className={styles.crackTop}>
+                      <span className={styles.crackTagRecall}>ACTIVE RECALL</span>
+                      <span className={styles.crackIcon}>
+                        <CreditCard size={16} />
+                      </span>
+                    </div>
+                    <h3 className={styles.crackTitle}>
+                      Interactive Flashcards
+                    </h3>
+                    <p className={styles.crackDesc}>
+                      Rapid-fire 3D card flips covering core frontend interview
+                      concepts & APIs
+                    </p>
+                  </Link>
+                </div>
+              </section>
+
+              {/* ── 4. 30-Day Sprint Plans ── */}
+              <section className={styles.sectionBlock}>
+                <h2 className={styles.sectionTitle}>30-Day Topic Sprints</h2>
+                <div className={styles.thirtyDaysGrid}>
+                  <Link
+                    to="/topics/javascript-engine"
+                    className={styles.thirtyCard}
+                  >
+                    <div className={styles.thirtyIconBox}>
+                      <span className={styles.thirtyIcon}>
+                        <Zap size={20} />
+                      </span>
+                    </div>
+                    <div className={styles.thirtyContent}>
+                      <h3 className={styles.thirtyTitle}>
+                        JavaScript Engine Mastery
+                      </h3>
+                      <p className={styles.thirtyDesc}>
+                        Closures, Promises, Prototypes & V8 Execution
+                      </p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    to="/topics/react-components"
+                    className={styles.thirtyCard}
+                  >
+                    <div className={styles.thirtyIconBox}>
+                      <span className={styles.thirtyIcon}>
+                        <Atom size={20} />
+                      </span>
+                    </div>
+                    <div className={styles.thirtyContent}>
+                      <h3 className={styles.thirtyTitle}>
+                        React 19 & Architecture
+                      </h3>
+                      <p className={styles.thirtyDesc}>
+                        Hooks, Server Components, Actions & Concurrent Mode
+                      </p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    to="/topics/performance-metrics"
+                    className={styles.thirtyCard}
+                  >
+                    <div className={styles.thirtyIconBox}>
+                      <span className={styles.thirtyIcon}>
+                        <Gauge size={20} />
+                      </span>
+                    </div>
+                    <div className={styles.thirtyContent}>
+                      <h3 className={styles.thirtyTitle}>
+                        Web Performance & Vitals
+                      </h3>
+                      <p className={styles.thirtyDesc}>
+                        INP, LCP, CLS, Bundle Optimization & Profiling
+                      </p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    to="/topics/security-defenses"
+                    className={styles.thirtyCard}
+                  >
+                    <div className={styles.thirtyIconBox}>
+                      <span className={styles.thirtyIcon}>
+                        <ShieldCheck size={20} />
+                      </span>
+                    </div>
+                    <div className={styles.thirtyContent}>
+                      <h3 className={styles.thirtyTitle}>
+                        Web Security & Defenses
+                      </h3>
+                      <p className={styles.thirtyDesc}>
+                        XSS Prevention, CSRF Defense, CSP & CORS
+                      </p>
+                    </div>
+                  </Link>
                 </div>
               </section>
             </>
           ) : (
             /* ── 8-Week Structured Curriculum Breakdown ── */
             <div className={styles.curriculumSection}>
-              <div className={styles.curriculumHeader}>
-                <h2 className={styles.curriculumTitle}>
-                  8-Week Frontend Mastery Curriculum
-                </h2>
-                <p className={styles.curriculumDesc}>
-                  Structured weekly path from JavaScript fundamentals to
-                  Staff-level Frontend System Design.
-                </p>
-              </div>
-
               <div className={styles.weekList}>
                 {[
                   {
@@ -355,7 +474,7 @@ export default function Roadmap() {
                   >
                     <div className={styles.weekBadge}>Week {item.week}</div>
                     <div className={styles.weekInfo}>
-                      <h3 className={styles.weekName}>{item.title}</h3>
+                      <h3 className={styles.weekTitle}>{item.title}</h3>
                       <p className={styles.weekTopics}>{item.topics}</p>
                     </div>
                     <span className={styles.weekArrow}>→</span>

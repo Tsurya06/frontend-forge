@@ -1,4 +1,4 @@
-/* ── LeetCode Exact Problem Workspace (Mobile-First & Desktop Split-Pane) ── */
+/* ── FrontendForge Problem Workspace (Mobile-First & Desktop Split-Pane) ── */
 .workspaceContainer {
   display: flex;
   flex-direction: column;
@@ -130,6 +130,11 @@
 
 .submitBtn:hover {
   opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.submitBtn:active {
+  transform: scale(0.97) translateY(0);
 }
 
 .submitBtnDone {
@@ -209,26 +214,13 @@
   overflow: hidden;
 }
 
-/* ── Horizontal Drag Handle (Left ↔ Right) ── */
+/* ── Horizontal Drag Handle (Left ↔ Right on desktop, Top ↕ Bottom on tablet/mobile) ── */
 .hDragHandle {
-  display: none;
-  width: 6px;
-  cursor: col-resize;
-  background: var(--border-color);
-  flex-shrink: 0;
-  position: relative;
-  z-index: 10;
-  transition: background var(--transition-fast);
-}
-
-.hDragHandle:hover,
-.hDragHandle:active {
-  background: var(--accent);
-}
-
-/* ── Vertical Drag Handle (Editor ↕ Test Panel) ── */
-.vDragHandle {
-  height: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 8px;
+  width: 100%;
   cursor: row-resize;
   background: var(--border-color);
   flex-shrink: 0;
@@ -237,9 +229,61 @@
   transition: background var(--transition-fast);
 }
 
+.hDragHandle::after {
+  content: "";
+  height: 2px;
+  width: 36px;
+  background: var(--text-muted);
+  border-radius: 1px;
+  transition: all var(--transition-fast);
+}
+
+.hDragHandle:hover,
+.hDragHandle:active {
+  background: var(--accent);
+}
+
+.hDragHandle:hover::after,
+.hDragHandle:active::after {
+  background: #fff;
+  height: 3px;
+  width: 48px;
+}
+
+/* ── Vertical Drag Handle (Editor ↕ Test Panel) ── */
+.vDragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 8px;
+  width: 100%;
+  cursor: row-resize;
+  background: var(--border-color);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: background var(--transition-fast);
+}
+
+.vDragHandle::after {
+  content: "";
+  height: 2px;
+  width: 36px;
+  background: var(--text-muted);
+  border-radius: 1px;
+  transition: all var(--transition-fast);
+}
+
 .vDragHandle:hover,
 .vDragHandle:active {
   background: var(--accent);
+}
+
+.vDragHandle:hover::after,
+.vDragHandle:active::after {
+  background: #fff;
+  height: 3px;
+  width: 48px;
 }
 
 .paneTabs {
@@ -255,6 +299,9 @@
 }
 
 .paneTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 8px 12px;
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
@@ -285,6 +332,7 @@
   height: 2px;
   background: var(--accent);
   border-radius: var(--radius-full);
+  animation: indicatorSlideIn 200ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
 }
 
 .leftPaneBody {
@@ -300,6 +348,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  animation: paneFadeIn var(--transition-panel) cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .problemHeaderRow {
@@ -717,6 +766,38 @@
   gap: var(--space-2);
 }
 
+.themeSelectorGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  height: 24px;
+}
+
+.themeIcon {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.themeSelect {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.7rem;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.themeSelect option {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
 .savedStatus {
   font-size: 0.68rem;
   color: var(--text-muted);
@@ -764,6 +845,9 @@
 }
 
 .testPanelTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 4px 10px;
   font-size: 0.72rem;
   font-weight: var(--font-semibold);
@@ -772,11 +856,32 @@
   color: var(--text-secondary);
   cursor: pointer;
   border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
 }
 
 .testPanelTabActive {
   background: var(--bg-secondary);
   color: var(--text-primary);
+}
+
+.statusDotGreen {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+  display: inline-block;
+  margin-left: 2px;
+}
+
+.statusDotRed {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+  display: inline-block;
+  margin-left: 2px;
 }
 
 .testPanelBody {
@@ -1040,6 +1145,53 @@
   }
 
   .hDragHandle {
-    display: block;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+  }
+
+  .hDragHandle::after {
+    width: 2px;
+    height: 36px;
+  }
+
+  .hDragHandle:hover::after,
+  .hDragHandle:active::after {
+    width: 3px;
+    height: 48px;
+  }
+}
+
+/* ── Animation Keyframes ── */
+@keyframes paneFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes indicatorSlideIn {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpResult {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

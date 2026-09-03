@@ -140,7 +140,7 @@ export default function MachineCoding() {
                     to={`/machine-coding/${problem.id}`}
                     className={styles.problemLink}
                   >
-                    <Card>
+                    <Card className={styles.cardContainer}>
                       <div className={styles.problemCard}>
                         <div className={styles.problemHeader}>
                           <h3 className={styles.problemTitle}>

@@ -1,4 +1,4 @@
-/* ── LeetCode Authentic Problemset Page (Mobile-First) ── */
+/* ── FrontendForge Problemset Page (Mobile-First) ── */
 .pageLayout {
   display: flex;
   width: 100%;
@@ -24,7 +24,7 @@
 
 .centerContent {
   width: 100%;
-  max-width: 900px;
+  max-width: clamp(900px, 75vw, 1200px);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -32,16 +32,16 @@
   padding-bottom: var(--space-8);
 }
 
-/* ── 1. Top 3 Feature Banner Cards ── */
+/* ── 1. Top Feature Banner Cards ── */
 .bannerRow {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-3);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 520px) {
   .bannerRow {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
 
@@ -54,14 +54,16 @@
   text-decoration: none;
   min-height: 110px;
   transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast);
+    transform var(--transition-card),
+    box-shadow var(--transition-card);
+  animation: popIn 0.35s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  animation-delay: calc(var(--card-index, 0) * 60ms);
 }
 
 .bannerCard:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   text-decoration: none;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
 .bannerGold {
@@ -75,8 +77,13 @@
 }
 
 .bannerPurple {
-  background: linear-gradient(135deg, #2b173e 0%, #191024 100%);
+  background: linear-gradient(135deg, #2b173e 0%, #101924 100%);
   border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.bannerEmerald {
+  background: linear-gradient(135deg, #133328 0%, #0d211a 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 :global([data-theme="light"]) .bannerGold {
@@ -92,6 +99,11 @@
 :global([data-theme="light"]) .bannerPurple {
   background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
   border: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+:global([data-theme="light"]) .bannerEmerald {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid rgba(16, 185, 129, 0.4);
 }
 
 .bannerBadge {
@@ -332,7 +344,7 @@
   border-color: var(--accent);
 }
 
-/* ── 5. Clean LeetCode Problem Stream Table ── */
+/* ── 5. Clean Problem Stream Table ── */
 .problemStreamSection {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -666,6 +678,17 @@
   font-size: 0.95rem;
   font-weight: var(--font-bold);
   color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.streakFlame {
+  color: #f97316;
+}
+
+.streakFlameBroken {
+  color: var(--text-muted);
 }
 
 .timeLeft {
@@ -756,4 +779,16 @@
   background: var(--bg-hover);
   border-color: var(--accent);
   text-decoration: none;
+}
+
+/* ── Animation Keyframes ── */
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(0.9) translateY(6px); }
+  70%  { opacity: 1; transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes tableRowIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
 }

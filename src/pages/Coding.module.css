@@ -1,4 +1,4 @@
-/* ── LeetCode Problemset Page (Independent Scroll & Mobile-First) ── */
+/* ── FrontendForge Problemset Page (Independent Scroll & Mobile-First) ── */
 .page {
   display: flex;
   flex-direction: column;
@@ -145,6 +145,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 

@@ -322,6 +322,7 @@ export const engineTopics: Topic[] = [
         ],
         interviewTips: [
           "Use concrete examples — describe what lives on the stack (primitives, references, return addresses) vs the heap (objects, arrays, closures) to demonstrate precise understanding.",
+          "Interactive Learning: Open the FrontendForge JS Visualizer (/visualizer) to watch stack frames push/pop and heap addresses link dynamically.",
         ],
       },
       {

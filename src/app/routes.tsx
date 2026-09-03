@@ -26,6 +26,7 @@ const Senior = lazy(() => import("@/pages/Senior"));
 const Quiz = lazy(() => import("@/pages/Quiz"));
 const Flashcards = lazy(() => import("@/pages/Flashcards"));
 const Interview = lazy(() => import("@/pages/Interview"));
+const Visualizer = lazy(() => import("@/pages/Visualizer"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 // Background prefetch during browser idle time
@@ -93,6 +94,22 @@ export function AppRoutes() {
         <Route path="progress" element={<Progress />} />
         <Route path="search" element={<Search />} />
         <Route path="settings" element={<Settings />} />
+        <Route
+          path="visualizer"
+          element={
+            <Suspense fallback={<PageSkeleton variant="problem" />}>
+              <Visualizer />
+            </Suspense>
+          }
+        />
+        <Route
+          path="runtime"
+          element={
+            <Suspense fallback={<PageSkeleton variant="problem" />}>
+              <Visualizer />
+            </Suspense>
+          }
+        />
 
         {/* Lazy Sub-routes with Realistic Skeleton Loaders */}
         <Route

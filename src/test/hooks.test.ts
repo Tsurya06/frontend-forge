@@ -54,4 +54,60 @@ describe("Custom Hooks Test Suite", () => {
     expect(results.skipped).toBe(1);
     expect(results.correct).toBe(1);
   });
+
+  it("useProgress should manage streak: start at 0, extend on consecutive days, and break if missed", async () => {
+    const { useProgress } = await import("../hooks/useProgress");
+    localStorage.clear();
+
+    const { result, unmount } = renderHook(() => useProgress());
+
+    // Fresh user: streak is 0
+    expect(result.current.dailyStreak).toBe(0);
+
+    // Record activity today -> streak becomes 1
+    act(() => {
+      result.current.recordStreakActivity();
+    });
+    expect(result.current.dailyStreak).toBe(1);
+
+    // Duplicate activity today should not increment streak
+    act(() => {
+      result.current.recordStreakActivity();
+    });
+    expect(result.current.dailyStreak).toBe(1);
+    unmount();
+
+    // Simulate activity yesterday (consecutive day)
+    const yesterday = new Date(Date.now() - 86400000);
+    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
+    localStorage.setItem("feeq-last-active-date", JSON.stringify(yStr));
+    localStorage.setItem("feeq-daily-streak", JSON.stringify(3));
+
+    const { result: r2, unmount: unmount2 } = renderHook(() => useProgress());
+    // Streak is maintained pending today's activity
+    expect(r2.current.dailyStreak).toBe(3);
+
+    // Complete activity today -> streak increments to 4!
+    act(() => {
+      r2.current.recordStreakActivity();
+    });
+    expect(r2.current.dailyStreak).toBe(4);
+    unmount2();
+
+    // Simulate missed days (last active 3 days ago) -> STREAK BREAKS!
+    const threeDaysAgo = new Date(Date.now() - 3 * 86400000);
+    const oldStr = `${threeDaysAgo.getFullYear()}-${String(threeDaysAgo.getMonth() + 1).padStart(2, "0")}-${String(threeDaysAgo.getDate()).padStart(2, "0")}`;
+    localStorage.setItem("feeq-last-active-date", JSON.stringify(oldStr));
+    localStorage.setItem("feeq-daily-streak", JSON.stringify(5));
+
+    const { result: r3 } = renderHook(() => useProgress());
+    // Streak has broken and resets to 0
+    expect(r3.current.dailyStreak).toBe(0);
+
+    // Completing an activity restarts the streak at 1
+    act(() => {
+      r3.current.recordStreakActivity();
+    });
+    expect(r3.current.dailyStreak).toBe(1);
+  });
 });

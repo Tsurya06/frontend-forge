@@ -1,7 +1,7 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 
-type Theme = "light" | "dark" | "system";
+export type Theme = "light" | "dark" | "system";
 
 function getSystemTheme(): "light" | "dark" {
   if (typeof window === "undefined") return "light";
@@ -10,13 +10,43 @@ function getSystemTheme(): "light" | "dark" {
     : "light";
 }
 
-function applyTheme(theme: Theme) {
+function getInitialTheme(): Theme {
+  if (typeof window === "undefined") return "system";
+  const storedFeeq = localStorage.getItem("feeq-theme");
+  if (storedFeeq) {
+    try {
+      const parsed = JSON.parse(storedFeeq);
+      if (parsed === "light" || parsed === "dark" || parsed === "system") return parsed;
+    } catch {
+      if (storedFeeq === "light" || storedFeeq === "dark" || storedFeeq === "system") {
+        return storedFeeq as Theme;
+      }
+    }
+  }
+  const storedLegacy = localStorage.getItem("theme");
+  if (storedLegacy === "light" || storedLegacy === "dark") {
+    return storedLegacy as Theme;
+  }
+  return "system";
+}
+
+function applyTheme(theme: Theme): "light" | "dark" {
   const resolved = theme === "system" ? getSystemTheme() : theme;
-  document.documentElement.setAttribute("data-theme", resolved);
+  if (typeof document !== "undefined") {
+    document.documentElement.setAttribute("data-theme", resolved);
+  }
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem("theme", resolved);
+  }
+  return resolved;
 }
 
 export function useTheme() {
-  const [theme, setThemeValue] = useLocalStorage<Theme>("feeq-theme", "system");
+  const [theme, setThemeValue] = useLocalStorage<Theme>("feeq-theme", getInitialTheme());
+
+  const resolvedTheme: "light" | "dark" = useMemo(() => {
+    return theme === "system" ? getSystemTheme() : theme;
+  }, [theme]);
 
   const setTheme = useCallback(
     (next: Theme) => {
@@ -28,8 +58,8 @@ export function useTheme() {
 
   const toggleTheme = useCallback(() => {
     setThemeValue((prev) => {
-      const resolved = prev === "system" ? getSystemTheme() : prev;
-      const next = resolved === "dark" ? "light" : "dark";
+      const current = prev === "system" ? getSystemTheme() : prev;
+      const next: Theme = current === "dark" ? "light" : "dark";
       applyTheme(next);
       return next;
     });
@@ -47,5 +77,5 @@ export function useTheme() {
     return () => mq.removeEventListener("change", handler);
   }, [theme]);
 
-  return { theme, setTheme, toggleTheme };
+  return { theme, resolvedTheme, setTheme, toggleTheme };
 }

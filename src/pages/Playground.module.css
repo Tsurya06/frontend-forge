@@ -384,17 +384,17 @@
   gap: var(--space-2);
   padding: 3px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-  animation: fadeIn 0.15s ease;
+  animation: consoleLineIn 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes fadeIn {
+@keyframes consoleLineIn {
   from {
     opacity: 0;
-    transform: translateY(2px);
+    transform: translateX(-8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
@@ -635,12 +635,12 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  animation: fadeIn 0.15s ease-out;
+  animation: overlayFadeIn 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes fadeIn {
+@keyframes overlayFadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 .modalContent {
@@ -654,12 +654,12 @@
   flex-direction: column;
   box-shadow: var(--shadow-xl);
   overflow: hidden;
-  animation: scaleIn 0.15s ease-out;
+  animation: contentScaleIn 300ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
 }
 
-@keyframes scaleIn {
-  from { transform: scale(0.96); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+@keyframes contentScaleIn {
+  from { transform: scale(0.93) translateY(12px); opacity: 0; }
+  to   { transform: scale(1)    translateY(0);     opacity: 1; }
 }
 
 .modalHeader {

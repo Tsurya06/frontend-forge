@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
@@ -8,14 +8,27 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
+const CLOSE_ANIMATION_MS = 200;
+
 export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /** Trigger the exit animation then call onClose after it completes. */
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    closeTimerRef.current = setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, CLOSE_ANIMATION_MS);
+  }, [onClose]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose();
+        handleClose();
         return;
       }
       if (e.key === "Tab" && modalRef.current) {
@@ -35,7 +48,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
         }
       }
     },
-    [onClose],
+    [handleClose],
   );
 
   useEffect(() => {
@@ -51,22 +64,25 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
       previousFocusRef.current?.focus();
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
     };
   }, [isOpen, handleKeyDown]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isClosing) return null;
 
   return (
     <div
-      className={styles.overlay}
+      className={`${styles.overlay} ${isClosing ? styles.overlayOut : ""}`}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) handleClose();
       }}
       role="presentation"
     >
       <div
         ref={modalRef}
-        className={styles.modal}
+        className={`${styles.modal} ${isClosing ? styles.modalOut : ""}`}
         role="dialog"
         aria-modal="true"
         aria-label={title}
@@ -76,10 +92,10 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
           <button
             type="button"
             className={styles.closeButton}
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close dialog"
           >
-            {"\u2715"}
+            {"✕"}
           </button>
         </div>
         <div className={styles.body}>{children}</div>

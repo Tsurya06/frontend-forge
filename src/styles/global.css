@@ -68,7 +68,7 @@ code {
   font-family: var(--font-mono);
 }
 
-/* ── Custom Slim LeetCode Scrollbars ── */
+/* ── Custom Slim FrontendForge Scrollbars ── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -91,3 +91,150 @@ code {
   scrollbar-width: thin;
   scrollbar-color: #3e3e3e transparent;
 }
+
+/* ── Universal Micro-Interactions & Soft Animations ── */
+button {
+  transition: all var(--transition-fast);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* ── Fluid Keyframe Animations ── */
+
+/* Page / content entrance */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+/* Modal / popover */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes scaleOut {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to   { opacity: 0; transform: scale(0.95) translateY(6px); }
+}
+
+/* Bounce / pop */
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(0.88); }
+  70%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Directional slides */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideOutUp {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-16px); }
+}
+
+@keyframes slideOutLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-16px); }
+}
+
+/* Shimmer loading */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Pulse ring */
+@keyframes pulseSoft {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  50%       { box-shadow: 0 0 0 5px rgba(245, 158, 11, 0); }
+}
+
+/* Spinner */
+@keyframes spinSmooth {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Streak / flame pulse */
+@keyframes flamePulse {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(255, 161, 22, 0.6)); transform: scale(1); }
+  50%       { filter: drop-shadow(0 0 8px rgba(255, 161, 22, 0.9)); transform: scale(1.08); }
+}
+
+/* Width grow (progress bars) */
+@keyframes growWidth {
+  from { width: 0; }
+}
+
+/* ── Utility Animation Classes ── */
+.animateFadeIn    { animation: fadeIn      0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animateSlideUp   { animation: slideUpFade 0.30s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animateScaleIn   { animation: scaleIn     0.28s cubic-bezier(0.34, 1.4, 0.64, 1) both; }
+.animatePopIn     { animation: popIn       0.32s cubic-bezier(0.34, 1.4, 0.64, 1) both; }
+.animateSlideInRight { animation: slideInRight 0.22s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animateSlideInLeft  { animation: slideInLeft  0.22s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* ── Page Transition ── */
+.pageEnter {
+  animation: fadeSlideIn var(--transition-page, 280ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Universal Input Transitions ── */
+input,
+select,
+textarea {
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+

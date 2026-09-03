@@ -91,7 +91,7 @@ console.log(mergeSortedBeginner([1, 3, 5], [2, 4, 6]));
 // ============================================
 
 /**
- * Intermediate: In-place merge (LeetCode 88)
+ * Intermediate: In-place two-pointer merge
  * Merge from the end to avoid overwriting
  */
 function mergeSortedInPlace(nums1, m, nums2, n) {

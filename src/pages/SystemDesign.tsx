@@ -105,7 +105,7 @@ export default function SystemDesign() {
                   to={`/system-design/${problem.id}`}
                   className={styles.problemLink}
                 >
-                  <Card>
+                  <Card className={styles.cardContainer}>
                     <div className={styles.problemCard}>
                       <h3 className={styles.problemTitle}>{problem.title}</h3>
                       <div className={styles.problemMeta}>

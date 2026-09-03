@@ -20,7 +20,7 @@
   font-weight: var(--font-semibold);
 }
 
-/* LeetCode Difficulty & Category Variants */
+/* Challenge Difficulty & Category Variants */
 .beginner {
   background-color: rgba(0, 184, 163, 0.15);
   color: #00b8a3;

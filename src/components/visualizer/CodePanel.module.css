@@ -1,0 +1,471 @@
+.codeContainer {
+  background: var(--code-bg, #1e1e1e);
+  color: var(--token-plain, #e4e4e7);
+  border: 1px solid var(--code-border, #27272a);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  flex: 1.3;
+  min-height: 0;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ── Code Themes ── */
+
+/* 1. One Dark Pro */
+.codeContainer[data-code-theme="onedark"] {
+  --code-bg: #21252b;
+  --gutter-bg: #1b1d23;
+  --code-border: #2c313c;
+  --token-plain: #abb2bf;
+  --token-keyword: #c678dd;
+  --token-function: #61afef;
+  --token-string: #98c379;
+  --token-number: #d19a66;
+  --token-comment: #5c6370;
+  --token-operator: #56b6c2;
+  --token-class: #e5c07b;
+  --token-property: #e06c75;
+  --code-caret: #528bff;
+  --active-line-bg: rgba(97, 175, 239, 0.12);
+  --active-line-border: #61afef;
+  --active-gutter-bg: rgba(97, 175, 239, 0.2);
+  --code-selection: rgba(62, 68, 81, 0.8);
+}
+
+/* 2. VS Code Dark+ */
+.codeContainer[data-code-theme="vsdark"] {
+  --code-bg: #1e1e1e;
+  --gutter-bg: #181818;
+  --code-border: #333333;
+  --token-plain: #d4d4d4;
+  --token-keyword: #569cd6;
+  --token-function: #dcdcaa;
+  --token-string: #ce9178;
+  --token-number: #b5cea8;
+  --token-comment: #6a9955;
+  --token-operator: #d4d4d4;
+  --token-class: #4ec9b0;
+  --token-property: #9cdcfe;
+  --code-caret: #f59e0b;
+  --active-line-bg: rgba(245, 158, 11, 0.12);
+  --active-line-border: #f59e0b;
+  --active-gutter-bg: rgba(245, 158, 11, 0.2);
+  --code-selection: rgba(38, 79, 120, 0.6);
+}
+
+/* 3. GitHub Dark */
+.codeContainer[data-code-theme="github-dark"] {
+  --code-bg: #0d1117;
+  --gutter-bg: #010409;
+  --code-border: #30363d;
+  --token-plain: #c9d1d9;
+  --token-keyword: #ff7b72;
+  --token-function: #d2a8ff;
+  --token-string: #a5d6ff;
+  --token-number: #79c0ff;
+  --token-comment: #8b949e;
+  --token-operator: #ff7b72;
+  --token-class: #ffa657;
+  --token-property: #79c0ff;
+  --code-caret: #58a6ff;
+  --active-line-bg: rgba(56, 139, 253, 0.15);
+  --active-line-border: #58a6ff;
+  --active-gutter-bg: rgba(56, 139, 253, 0.2);
+  --code-selection: rgba(56, 139, 253, 0.35);
+}
+
+/* 4. Monokai */
+.codeContainer[data-code-theme="monokai"] {
+  --code-bg: #272822;
+  --gutter-bg: #1e1f1c;
+  --code-border: #3e3d32;
+  --token-plain: #f8f8f2;
+  --token-keyword: #f92672;
+  --token-function: #a6e22e;
+  --token-string: #e6db74;
+  --token-number: #ae81ff;
+  --token-comment: #75715e;
+  --token-operator: #f92672;
+  --token-class: #66d9ef;
+  --token-property: #fd971f;
+  --code-caret: #f8f8f0;
+  --active-line-bg: rgba(249, 38, 114, 0.15);
+  --active-line-border: #f92672;
+  --active-gutter-bg: rgba(249, 38, 114, 0.25);
+  --code-selection: rgba(73, 72, 62, 0.8);
+}
+
+/* 5. Dracula */
+.codeContainer[data-code-theme="dracula"] {
+  --code-bg: #282a36;
+  --gutter-bg: #21222c;
+  --code-border: #44475a;
+  --token-plain: #f8f8f2;
+  --token-keyword: #ff79c6;
+  --token-function: #50fa7b;
+  --token-string: #f1fa8c;
+  --token-number: #bd93f9;
+  --token-comment: #6272a4;
+  --token-operator: #ff79c6;
+  --token-class: #8be9fd;
+  --token-property: #ffb86c;
+  --code-caret: #f8f8f2;
+  --active-line-bg: rgba(189, 147, 249, 0.15);
+  --active-line-border: #bd93f9;
+  --active-gutter-bg: rgba(189, 147, 249, 0.25);
+  --code-selection: rgba(68, 71, 90, 0.7);
+}
+
+/* 6. GitHub Light */
+.codeContainer[data-code-theme="github-light"] {
+  --code-bg: #ffffff;
+  --gutter-bg: #f6f8fa;
+  --code-border: #d0d7de;
+  --token-plain: #24292f;
+  --token-keyword: #cf222e;
+  --token-function: #8250df;
+  --token-string: #0a3069;
+  --token-number: #0550ae;
+  --token-comment: #6e7781;
+  --token-operator: #cf222e;
+  --token-class: #953800;
+  --token-property: #116329;
+  --code-caret: #0969da;
+  --active-line-bg: rgba(9, 105, 218, 0.1);
+  --active-line-border: #0969da;
+  --active-gutter-bg: rgba(9, 105, 218, 0.15);
+  --code-selection: rgba(182, 218, 255, 0.6);
+}
+
+.codeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: var(--gutter-bg, #09090b);
+  border-bottom: 1px solid var(--code-border, #27272a);
+  flex-shrink: 0;
+  gap: 8px;
+  min-width: 0;
+}
+
+.codeHeaderTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  flex: 1;
+}
+
+.jsIcon {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: var(--font-bold);
+  background: #f59e0b;
+  color: #000;
+  padding: 1px 4px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.codeTitleText {
+  font-size: 0.78rem;
+  font-weight: var(--font-semibold);
+  color: var(--token-plain, #d4d4d8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.liveBadge {
+  font-size: 0.62rem;
+  font-weight: var(--font-semibold);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(16, 163, 127, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(16, 163, 127, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badgeSparkle {
+  color: var(--accent);
+  animation: pulseSoft 2.5s infinite ease-in-out;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Theme selector in Code Header */
+.themeSelectorWrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--code-border, #3f3f46);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  color: var(--token-plain, #a1a1aa);
+}
+
+.themeIcon {
+  color: var(--accent, #ffa116);
+  flex-shrink: 0;
+}
+
+.themeSelect {
+  background: transparent;
+  border: none;
+  color: var(--token-plain, #e4e4e7);
+  font-size: 0.68rem;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.themeSelect option {
+  background: #1e1e1e;
+  color: #f4f4f5;
+}
+
+.hintText {
+  font-size: 0.65rem;
+  color: #71717a;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+@media (max-width: 1200px) {
+  .hintText {
+    display: none;
+  }
+}
+
+.copyBtn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--code-border, #3f3f46);
+  color: var(--token-plain, #a1a1aa);
+  font-size: 0.68rem;
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.copyBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f4f4f5;
+}
+
+/* ── Unified Editor Layout ── */
+.editorWrapper {
+  display: flex;
+  background: var(--code-bg, #121214);
+  flex: 1;
+  min-height: 160px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Gutter with line numbers & moving ▶ arrow ── */
+.gutter {
+  width: 58px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  background: var(--gutter-bg, #0d0d0f);
+  border-right: 1px solid var(--code-border, #27272a);
+  user-select: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.gutterRow {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding-right: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 24px;
+  box-sizing: border-box;
+  transition: background 0.15s ease;
+}
+
+.activeGutterRow {
+  background: var(--active-gutter-bg, rgba(245, 158, 11, 0.2));
+}
+
+.activeGutterRow .lineNum {
+  color: var(--active-line-border, #f59e0b);
+  font-weight: var(--font-bold);
+}
+
+.lineNum {
+  color: #6e7681;
+  min-width: 18px;
+  text-align: right;
+}
+
+.execArrow {
+  color: var(--active-line-border, #f59e0b);
+  font-size: 11px;
+  line-height: 1;
+  display: inline-block;
+  animation: bounceArrow 0.8s infinite alternate ease-in-out;
+}
+
+.execArrowPlaceholder {
+  width: 11px;
+  display: inline-block;
+}
+
+@keyframes bounceArrow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(3px);
+  }
+}
+
+/* ── Code Area & Synchronized Textarea ── */
+.codeArea {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--code-bg, #121214);
+}
+
+.activeLineStrip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: var(--active-line-bg, rgba(245, 158, 11, 0.15));
+  border-left: 3px solid var(--active-line-border, #f59e0b);
+  pointer-events: none;
+  z-index: 1;
+  transition: top 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.highlightPre,
+.codeTextarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 10px 14px;
+  font-family: var(--font-mono, "JetBrains Mono", Consolas, "Courier New", monospace);
+  font-size: 13.5px;
+  line-height: 24px;
+  letter-spacing: normal;
+  tab-size: 2;
+  box-sizing: border-box;
+  white-space: pre;
+  word-wrap: normal;
+  word-break: normal;
+  border: none;
+  border-radius: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.highlightPre {
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  background: transparent;
+  color: var(--token-plain, #d4d4d8);
+}
+
+.highlightPre code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  background: transparent;
+  padding: 0;
+  border: 0;
+  white-space: pre;
+}
+
+.codeTextarea {
+  z-index: 2;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--code-caret, #f59e0b);
+  outline: none;
+  overflow: auto;
+  resize: none;
+}
+
+.codeTextarea::selection {
+  background: var(--code-selection, rgba(56, 139, 253, 0.35));
+  color: transparent;
+}
+
+.codeTextarea::placeholder {
+  color: #52525b;
+}
+
+/* ── Prism Token Colors Driven by Selected Theme ── */
+.highlightPre :global(.token.keyword),
+.highlightPre :global(.token.boolean) {
+  color: var(--token-keyword, #c678dd);
+  font-weight: 600;
+}
+
+.highlightPre :global(.token.function),
+.highlightPre :global(.token.function-name) {
+  color: var(--token-function, #61afef);
+}
+
+.highlightPre :global(.token.string),
+.highlightPre :global(.token.char) {
+  color: var(--token-string, #98c379);
+}
+
+.highlightPre :global(.token.number) {
+  color: var(--token-number, #d19a66);
+}
+
+.highlightPre :global(.token.comment) {
+  color: var(--token-comment, #5c6370);
+  font-style: italic;
+}
+
+.highlightPre :global(.token.operator) {
+  color: var(--token-operator, #56b6c2);
+}
+
+.highlightPre :global(.token.punctuation) {
+  color: var(--token-plain, #abb2bf);
+}
+
+.highlightPre :global(.token.class-name) {
+  color: var(--token-class, #e5c07b);
+}
+
+.highlightPre :global(.token.property) {
+  color: var(--token-property, #e06c75);
+}

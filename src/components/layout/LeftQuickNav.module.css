@@ -1,11 +1,76 @@
 .leftNav {
   display: none;
   flex-direction: column;
-  width: 210px;
+  width: var(--sidebar-width, 210px);
   flex-shrink: 0;
-  padding: var(--space-3) var(--space-2);
+  padding: var(--space-3) 10px;
   gap: var(--space-3);
   user-select: none;
+  transition: width var(--transition-base) cubic-bezier(0.16, 1, 0.3, 1);
+  border-right: 1px solid var(--border-color);
+  background: var(--surface);
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.leftNavCollapsed {
+  width: var(--sidebar-collapsed-width, 56px);
+  padding: var(--space-3) 6px;
+  align-items: center;
+}
+
+.topControlRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 6px;
+  min-width: 0;
+}
+
+.leftNavCollapsed .topControlRow {
+  justify-content: center;
+  padding: 0 0 6px;
+}
+
+.navHeaderTitle {
+  font-size: 0.7rem;
+  font-weight: var(--font-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 2px;
+}
+
+.collapseBtn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.collapseBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.leftNavCollapsed .navItem,
+.leftNavCollapsed .listItem {
+  justify-content: center;
+  padding: 8px 0;
+  width: 100%;
 }
 
 .primaryNav {
@@ -184,7 +249,13 @@
   text-decoration: underline;
 }
 
-@media (min-width: 1200px) {
+@media (max-width: 767px) {
+  .leftNav {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
   .leftNav {
     display: flex;
   }

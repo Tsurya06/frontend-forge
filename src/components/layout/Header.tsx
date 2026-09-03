@@ -1,18 +1,21 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate, Link, NavLink } from "react-router-dom";
+import { useNavigate, useLocation, Link, NavLink } from "react-router-dom";
 import { useProgressContext } from "@/context/ProgressContext";
+import { useThemeContext } from "@/context/ThemeContext";
+import {
+  Menu,
+  Search,
+  Flame,
+  Bookmark,
+  TrendingUp,
+  Settings,
+  Moon,
+  Sun,
+} from "lucide-react";
 import styles from "./Header.module.css";
 
 interface HeaderProps {
   onMenuToggle: () => void;
-}
-
-function getInitialTheme(): "light" | "dark" {
-  const stored = localStorage.getItem("theme");
-  if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
 }
 
 const navItems = [
@@ -26,21 +29,21 @@ const navItems = [
 ];
 
 export function Header({ onMenuToggle }: HeaderProps) {
-  const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
+  const { resolvedTheme, toggleTheme } = useThemeContext();
   const [query, setQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { dailyStreak } = useProgressContext();
 
+  // Sync header search query with URL if on /search page
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = useCallback(() => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  }, []);
+    if (location.pathname === "/search") {
+      const urlQuery = new URLSearchParams(location.search).get("q") || "";
+      setQuery(urlQuery);
+    }
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -58,6 +61,14 @@ export function Header({ onMenuToggle }: HeaderProps) {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  const handleClear = useCallback(() => {
+    setQuery("");
+    if (location.pathname === "/search") {
+      navigate("/search");
+    }
+    inputRef.current?.focus();
+  }, [location.pathname, navigate]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -77,7 +88,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
           aria-label="Toggle navigation menu"
           type="button"
         >
-          {"\u2630"}
+          <Menu size={18} />
         </button>
 
         <Link to="/" className={styles.headerBrand}>
@@ -89,7 +100,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
           <span className={styles.brandText}>FrontendForge</span>
         </Link>
 
-        {/* LeetCode Horizontal Nav Links (Desktop) */}
+        {/* FrontendForge Horizontal Nav Links (Desktop) */}
         <nav className={styles.desktopNav} aria-label="Main Navigation">
           {navItems.map((item) => (
             <NavLink
@@ -108,12 +119,12 @@ export function Header({ onMenuToggle }: HeaderProps) {
       <div className={styles.rightGroup}>
         {/* Search Bar */}
         <form
-          className={`${styles.search} ${isSearchOpen ? styles.searchExpanded : ""}`}
+          className={`${styles.search} ${isSearchOpen || query ? styles.searchExpanded : ""}`}
           onSubmit={handleSubmit}
           role="search"
         >
           <span className={styles.searchIcon} aria-hidden="true">
-            {"\u{1F50D}"}
+            <Search size={14} />
           </span>
           <input
             ref={inputRef}
@@ -122,7 +133,13 @@ export function Header({ onMenuToggle }: HeaderProps) {
             className={styles.searchInput}
             placeholder="Search problems, topics..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setQuery(val);
+              if (!val && location.pathname === "/search") {
+                navigate("/search");
+              }
+            }}
             onFocus={() => setIsSearchOpen(true)}
             onBlur={() => setIsSearchOpen(false)}
             onKeyDown={(e) => {
@@ -133,15 +150,39 @@ export function Header({ onMenuToggle }: HeaderProps) {
             }}
             aria-label="Search problems"
           />
-          <span className={styles.shortcutHint} aria-hidden="true">
-            /
-          </span>
+          {query ? (
+            <button
+              type="button"
+              className={styles.searchClearBtn}
+              onClick={handleClear}
+              onMouseDown={(e) => e.preventDefault()}
+              aria-label="Clear search"
+              title="Clear search"
+            >
+              ✕
+            </button>
+          ) : (
+            <span className={styles.shortcutHint} aria-hidden="true">
+              /
+            </span>
+          )}
         </form>
 
         {/* Daily Streak Pill */}
-        <Link to="/daily" className={styles.streakPill} title="Current Streak">
-          <span className={styles.streakFlame}>🔥</span>
-          <span className={styles.streakCount}>{dailyStreak || 1}</span>
+        <Link
+          to="/daily"
+          className={`${styles.streakPill} ${dailyStreak === 0 ? styles.streakPillZero : ""}`}
+          title={
+            dailyStreak > 0
+              ? `Current Streak: ${dailyStreak} day${dailyStreak > 1 ? "s" : ""}`
+              : "Streak broken (0 days) — Solve a daily challenge to ignite your streak!"
+          }
+        >
+          <Flame
+            size={14}
+            className={dailyStreak > 0 ? styles.streakFlame : styles.streakFlameZero}
+          />
+          <span className={styles.streakCount}>{dailyStreak}</span>
         </Link>
 
         {/* Bookmarks */}
@@ -151,7 +192,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
           title="Saved Bookmarks"
           aria-label="Bookmarks"
         >
-          ⭐
+          <Bookmark size={16} />
         </Link>
 
         {/* Analytics Profile */}
@@ -161,8 +202,18 @@ export function Header({ onMenuToggle }: HeaderProps) {
           title="My Progress & Analytics"
           aria-label="Progress & Analytics"
         >
-          📊
+          <TrendingUp size={16} />
         </Link>
+
+        {/* Theme Toggle */}
+        <button
+          className={styles.themeToggle}
+          onClick={toggleTheme}
+          aria-label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} theme`}
+          type="button"
+        >
+          {resolvedTheme === "light" ? <Moon size={16} /> : <Sun size={16} />}
+        </button>
 
         {/* Settings */}
         <Link
@@ -171,18 +222,8 @@ export function Header({ onMenuToggle }: HeaderProps) {
           title="Settings & Data Management"
           aria-label="Settings"
         >
-          ⚙️
+          <Settings size={16} />
         </Link>
-
-        {/* Theme Toggle */}
-        <button
-          className={styles.themeToggle}
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
-          type="button"
-        >
-          {theme === "light" ? "\u{1F319}" : "\u2600\uFE0F"}
-        </button>
       </div>
     </header>
   );

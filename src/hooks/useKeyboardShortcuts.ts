@@ -58,6 +58,9 @@ export function useKeyboardShortcuts(callbacks: ShortcutCallbacks = {}) {
         case "g b":
           target = "/bookmarks";
           break;
+        case "g v":
+          target = "/visualizer";
+          break;
       }
 
       if (target) {

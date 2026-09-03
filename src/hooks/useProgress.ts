@@ -16,6 +16,13 @@ export type CompletionType =
 
 const MAX_RECENTLY_VIEWED = 20;
 
+const formatLocalYMD = (d: Date): string => {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 export function useProgress() {
   const [completedQuestions, setCompletedQuestions] = useLocalStorage<string[]>(
     KEYS.questions,
@@ -37,28 +44,60 @@ export function useProgress() {
   );
   const [dailyStreak, setDailyStreak] = useLocalStorage<number>(
     KEYS.dailyStreak,
-    1,
+    0,
   );
   const [lastActiveDate, setLastActiveDate] = useLocalStorage<string>(
     KEYS.lastActiveDate,
-    new Date().toISOString().slice(0, 10),
+    "",
   );
 
-  // Update daily streak
+  // Check if streak has broken due to missed day(s)
   useEffect(() => {
-    const today = new Date().toISOString().slice(0, 10);
-    if (lastActiveDate !== today) {
-      const yesterday = new Date(Date.now() - 86400000)
-        .toISOString()
-        .slice(0, 10);
-      if (lastActiveDate === yesterday) {
-        setDailyStreak((prev) => (prev || 0) + 1);
-      } else {
-        setDailyStreak(1);
+    const today = formatLocalYMD(new Date());
+    const yesterday = formatLocalYMD(new Date(Date.now() - 86400000));
+
+    if (!lastActiveDate) {
+      if (dailyStreak > 0) {
+        setDailyStreak(0);
       }
-      setLastActiveDate(today);
+      return;
     }
-  }, [lastActiveDate, setDailyStreak, setLastActiveDate]);
+
+    // Active today or yesterday means streak is alive
+    if (lastActiveDate === today || lastActiveDate === yesterday) {
+      return;
+    }
+
+    // More than 1 calendar day without activity: STREAK BREAKS!
+    if (dailyStreak > 0) {
+      setDailyStreak(0);
+    }
+  }, [lastActiveDate, dailyStreak, setDailyStreak]);
+
+  // Record an active learning interaction today to preserve/extend streak
+  const recordStreakActivity = useCallback(() => {
+    const today = formatLocalYMD(new Date());
+    const yesterday = formatLocalYMD(new Date(Date.now() - 86400000));
+
+    setLastActiveDate((prevDate) => {
+      if (prevDate === today) {
+        // Already recorded activity today
+        return today;
+      }
+
+      setDailyStreak((prevStreak) => {
+        if (prevDate === yesterday) {
+          // Consecutive day streak extension!
+          return (prevStreak || 0) + 1;
+        } else {
+          // Streak was 0 / broken or starting anew
+          return 1;
+        }
+      });
+
+      return today;
+    });
+  }, [setLastActiveDate, setDailyStreak]);
 
   const getSetterForType = useCallback(
     (type: CompletionType) => {
@@ -106,8 +145,9 @@ export function useProgress() {
     (id: string, type: CompletionType) => {
       const setter = getSetterForType(type);
       setter((prev) => (prev.includes(id) ? prev : [...prev, id]));
+      recordStreakActivity();
     },
-    [getSetterForType],
+    [getSetterForType, recordStreakActivity],
   );
 
   const isComplete = useCallback(
@@ -144,6 +184,8 @@ export function useProgress() {
     completedSystemDesign,
     recentlyViewed,
     dailyStreak,
+    lastActiveDate,
+    recordStreakActivity,
     markComplete,
     isComplete,
     getCompletionPercentage,

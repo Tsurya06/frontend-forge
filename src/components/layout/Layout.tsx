@@ -1,8 +1,10 @@
 import { useState, useCallback } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
+import { LeftQuickNav } from "./LeftQuickNav";
 import { Modal } from "@/components/common/Modal";
+import { PageTransition } from "@/components/common/PageTransition";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import styles from "./Layout.module.css";
 
@@ -19,6 +21,7 @@ const SHORTCUT_SECTIONS = [
       { keys: "g c", desc: "Go to Coding Challenges" },
       { keys: "g m", desc: "Go to Machine Coding" },
       { keys: "g b", desc: "Go to Bookmarks" },
+      { keys: "g v", desc: "Go to JS Visualizer" },
     ],
   },
   {
@@ -35,6 +38,8 @@ const SHORTCUT_SECTIONS = [
 ];
 
 export function Layout({ children }: LayoutProps) {
+  const location = useLocation();
+  const isSandbox = location.pathname === "/playground";
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [shortcutsModalOpen, setShortcutsModalOpen] = useState(false);
 
@@ -80,8 +85,15 @@ export function Layout({ children }: LayoutProps) {
         <Sidebar onNavigate={closeDrawer} />
       </aside>
 
-      {/* Main Content Area */}
-      <main className={styles.content}>{children || <Outlet />}</main>
+      {/* Main Content Area with Collapsible Sidebar on all pages except Sandbox */}
+      <div className={styles.bodyWrapper}>
+        {!isSandbox && <LeftQuickNav />}
+        <main className={styles.content}>
+          <PageTransition>
+            {children || <Outlet />}
+          </PageTransition>
+        </main>
+      </div>
 
       {/* Keyboard Shortcuts Modal */}
       <Modal

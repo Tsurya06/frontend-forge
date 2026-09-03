@@ -1,6 +1,6 @@
-/* ── LeetCode Study Plan & Roadmap Page ── */
 .pageLayout {
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: calc(100vh - 50px);
   max-height: calc(100vh - 50px);
@@ -9,9 +9,34 @@
   overflow: hidden;
 }
 
+.fixedHeaderBar {
+  flex-shrink: 0;
+  width: 100%;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--space-3) var(--space-4);
+  z-index: 20;
+}
+
+.fixedHeaderInner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  justify-content: space-between;
+}
+
+@media (min-width: 640px) {
+  .fixedHeaderInner {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
 .scrollArea {
   flex: 1;
-  height: 100%;
+  min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: var(--space-4) var(--space-4) var(--space-8);
@@ -477,6 +502,36 @@
   letter-spacing: 0.04em;
 }
 
+.crackTagSim {
+  font-size: 0.65rem;
+  font-weight: var(--font-bold);
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.15);
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+}
+
+.crackTagMock {
+  font-size: 0.65rem;
+  font-weight: var(--font-bold);
+  color: #ec4899;
+  background: rgba(236, 72, 153, 0.15);
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+}
+
+.crackTagRecall {
+  font-size: 0.65rem;
+  font-weight: var(--font-bold);
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+}
+
 .crackIcon {
   font-size: 1.2rem;
 }
@@ -537,52 +592,94 @@
   padding: var(--space-4) var(--space-5);
   text-decoration: none;
   color: inherit;
-  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  transition:
+    transform var(--transition-card),
+    border-color var(--transition-card),
+    box-shadow var(--transition-card);
+  animation: weekCardIn 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--week-index, 0) * 50ms);
 }
 
 .weekCard:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   border-color: var(--accent);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   text-decoration: none;
 }
 
 .weekBadge {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-lg);
+  min-width: 78px;
+  height: 40px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
   background: rgba(255, 161, 22, 0.12);
   border: 1px solid rgba(255, 161, 22, 0.3);
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: var(--font-bold);
   color: var(--accent);
   font-family: var(--font-mono);
+  white-space: nowrap;
   flex-shrink: 0;
+  letter-spacing: 0.02em;
 }
 
 .weekInfo {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
 }
 
-.weekTitle {
-  font-size: 0.9rem;
+.weekTitle,
+.weekName {
+  font-size: 0.95rem;
   font-weight: var(--font-bold);
   color: var(--text-primary);
   margin: 0;
+  line-height: 1.35;
+  text-align: left;
 }
 
 .weekTopics {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   margin: 0;
+  line-height: 1.45;
+  text-align: left;
 }
 
 .weekArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
   font-size: 1rem;
   color: var(--text-muted);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.weekCard:hover .weekArrow {
+  background: var(--accent);
+  color: #1a1a1a;
+  transform: translateX(3px);
+}
+
+@keyframes weekCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

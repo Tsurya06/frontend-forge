@@ -4,6 +4,19 @@ import Editor, { type OnMount } from "@monaco-editor/react";
 import type * as Monaco from "monaco-editor";
 import { useProgressContext } from "@/context/ProgressContext";
 import { useBookmarkContext } from "@/context/BookmarkContext";
+import {
+  FileText,
+  BookOpen,
+  Lightbulb,
+  History,
+  Eye,
+  CheckCircle2,
+  Terminal,
+  Star,
+  Play,
+  UploadCloud,
+  Palette,
+} from "lucide-react";
 import { Badge } from "@/components/common/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PageSkeleton } from "@/components/common/PageSkeleton";
@@ -136,6 +149,9 @@ export default function CodingDetail() {
   const [selectedLang, setSelectedLang] = useState<
     "javascript" | "typescript" | "html"
   >("javascript");
+  const [editorTheme, setEditorTheme] = useState<string>(() => {
+    return localStorage.getItem("feeq-editor-theme") || "vs-dark";
+  });
 
   const tabParam = searchParams.get("tab") as LeftTab;
   const [leftTab, setLeftTab] = useState<LeftTab>(
@@ -218,8 +234,55 @@ export default function CodingDetail() {
     }
   };
 
-  const handleEditorMount: OnMount = (editor) => {
+  const handleEditorMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
+
+    monaco.editor.defineTheme("dracula", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "comment", foreground: "6272a4", fontStyle: "italic" },
+        { token: "keyword", foreground: "ff79c6", fontStyle: "bold" },
+        { token: "string", foreground: "f1fa8c" },
+        { token: "number", foreground: "bd93f9" },
+        { token: "type", foreground: "8be9fd" },
+      ],
+      colors: {
+        "editor.background": "#282a36",
+        "editor.foreground": "#f8f8f2",
+        "editorLineNumber.foreground": "#6272a4",
+      },
+    });
+
+    monaco.editor.defineTheme("one-dark", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "comment", foreground: "5c6370", fontStyle: "italic" },
+        { token: "keyword", foreground: "c678dd" },
+        { token: "string", foreground: "98c379" },
+        { token: "number", foreground: "d19a66" },
+      ],
+      colors: {
+        "editor.background": "#21252b",
+        "editor.foreground": "#abb2bf",
+      },
+    });
+
+    monaco.editor.defineTheme("github-dark", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "comment", foreground: "8b949e", fontStyle: "italic" },
+        { token: "keyword", foreground: "ff7b72" },
+        { token: "string", foreground: "a5d6ff" },
+        { token: "number", foreground: "79c0ff" },
+      ],
+      colors: {
+        "editor.background": "#0d1117",
+        "editor.foreground": "#c9d1d9",
+      },
+    });
   };
 
   const handleResetCode = () => {
@@ -317,52 +380,160 @@ export default function CodingDetail() {
   const passCount = submissions.filter((s) => s.status === "accepted").length;
   const failCount = submissions.filter((s) => s.status !== "accepted").length;
 
-  // ── Draggable Horizontal Splitter (Left ↔ Right) ──
+  // ── Draggable Splitter 1 (Left ↔ Right on desktop, Top ↕ Bottom on tablet/mobile) ──
   const onHDragStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     isDraggingH.current = true;
-    document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
 
-    const onMove = (ev: MouseEvent) => {
+    const isRow = window.innerWidth >= 900;
+    document.body.style.cursor = isRow ? "col-resize" : "row-resize";
+
+    const onMove = (x: number, y: number) => {
       if (!isDraggingH.current || !splitContainerRef.current) return;
       const rect = splitContainerRef.current.getBoundingClientRect();
-      const pct = ((ev.clientX - rect.left) / rect.width) * 100;
-      setHorizontalSplit(Math.max(20, Math.min(80, pct)));
+      const currentIsRow = window.innerWidth >= 900;
+      if (currentIsRow) {
+        const pct = ((x - rect.left) / rect.width) * 100;
+        setHorizontalSplit(Math.max(15, Math.min(85, pct)));
+      } else {
+        const pct = ((y - rect.top) / rect.height) * 100;
+        setHorizontalSplit(Math.max(15, Math.min(85, pct)));
+      }
     };
+
+    const handleMouseMove = (ev: MouseEvent) => {
+      ev.preventDefault();
+      onMove(ev.clientX, ev.clientY);
+    };
+
+    const handleTouchMove = (ev: TouchEvent) => {
+      const touch = ev.touches[0];
+      if (touch) {
+        onMove(touch.clientX, touch.clientY);
+      }
+    };
+
     const onUp = () => {
       isDraggingH.current = false;
       document.body.style.cursor = "";
       document.body.style.userSelect = "";
-      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", onUp);
     };
-    window.addEventListener("mousemove", onMove);
+
+    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("touchend", onUp);
   }, []);
 
-  // ── Draggable Vertical Splitter (Editor ↕ Test Panel) ──
+  const onHTouchStart = useCallback(() => {
+    isDraggingH.current = true;
+    document.body.style.userSelect = "none";
+
+    const onMove = (x: number, y: number) => {
+      if (!isDraggingH.current || !splitContainerRef.current) return;
+      const rect = splitContainerRef.current.getBoundingClientRect();
+      const currentIsRow = window.innerWidth >= 900;
+      if (currentIsRow) {
+        const pct = ((x - rect.left) / rect.width) * 100;
+        setHorizontalSplit(Math.max(15, Math.min(85, pct)));
+      } else {
+        const pct = ((y - rect.top) / rect.height) * 100;
+        setHorizontalSplit(Math.max(15, Math.min(85, pct)));
+      }
+    };
+
+    const handleTouchMove = (ev: TouchEvent) => {
+      const touch = ev.touches[0];
+      if (touch) {
+        onMove(touch.clientX, touch.clientY);
+      }
+    };
+
+    const onUp = () => {
+      isDraggingH.current = false;
+      document.body.style.userSelect = "";
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", onUp);
+    };
+
+    window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("touchend", onUp);
+  }, []);
+
+  // ── Draggable Splitter 2 (Editor ↕ Test Panel) ──
   const onVDragStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     isDraggingV.current = true;
     document.body.style.cursor = "row-resize";
     document.body.style.userSelect = "none";
 
-    const onMove = (ev: MouseEvent) => {
+    const onMove = (y: number) => {
       if (!isDraggingV.current || !rightPaneRef.current) return;
       const rect = rightPaneRef.current.getBoundingClientRect();
-      const pct = ((ev.clientY - rect.top) / rect.height) * 100;
-      setVerticalSplit(Math.max(20, Math.min(85, pct)));
+      const pct = ((y - rect.top) / rect.height) * 100;
+      setVerticalSplit(Math.max(15, Math.min(85, pct)));
     };
+
+    const handleMouseMove = (ev: MouseEvent) => {
+      ev.preventDefault();
+      onMove(ev.clientY);
+    };
+
+    const handleTouchMove = (ev: TouchEvent) => {
+      const touch = ev.touches[0];
+      if (touch) {
+        onMove(touch.clientY);
+      }
+    };
+
     const onUp = () => {
       isDraggingV.current = false;
       document.body.style.cursor = "";
       document.body.style.userSelect = "";
-      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", onUp);
     };
-    window.addEventListener("mousemove", onMove);
+
+    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("touchend", onUp);
+  }, []);
+
+  const onVTouchStart = useCallback(() => {
+    isDraggingV.current = true;
+    document.body.style.userSelect = "none";
+
+    const onMove = (y: number) => {
+      if (!isDraggingV.current || !rightPaneRef.current) return;
+      const rect = rightPaneRef.current.getBoundingClientRect();
+      const pct = ((y - rect.top) / rect.height) * 100;
+      setVerticalSplit(Math.max(15, Math.min(85, pct)));
+    };
+
+    const handleTouchMove = (ev: TouchEvent) => {
+      const touch = ev.touches[0];
+      if (touch) {
+        onMove(touch.clientY);
+      }
+    };
+
+    const onUp = () => {
+      isDraggingV.current = false;
+      document.body.style.userSelect = "";
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", onUp);
+    };
+
+    window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("touchend", onUp);
   }, []);
 
   const pickRandom = () => {
@@ -416,7 +587,7 @@ export default function CodingDetail() {
 
   return (
     <div className={styles.workspaceContainer}>
-      {/* ── 1. Top LeetCode Workspace Navigation Bar ── */}
+      {/* ── 1. Top Coding Workspace Navigation Bar ── */}
       <header className={styles.topToolbar}>
         <div className={styles.toolbarLeft}>
           <Link
@@ -481,7 +652,9 @@ export default function CodingDetail() {
                 : "Run Code against Testcases"
             }
           >
-            <span className={styles.runIcon}>{isHtmlCss ? "👁️" : "▶"}</span>
+            <span className={styles.runIcon}>
+              {isHtmlCss ? <Eye size={13} /> : <Play size={12} fill="currentColor" />}
+            </span>
             <span>
               {isRunning ? "Running..." : isHtmlCss ? "Preview" : "Run"}
             </span>
@@ -498,7 +671,7 @@ export default function CodingDetail() {
                 : "Submit Solution & Validate All Testcases"
             }
           >
-            <span className={styles.submitIcon}>☁️</span>
+            <UploadCloud size={14} className={styles.submitIcon} />
             <span>Submit{completed ? " ✓" : ""}</span>
             {submissions.length > 0 && (
               <span className={styles.submitStats}>
@@ -518,7 +691,7 @@ export default function CodingDetail() {
             title={bookmarked ? "Remove Bookmark" : "Bookmark Problem"}
             aria-label="Bookmark"
           >
-            {bookmarked ? "⭐" : "☆"}
+            <Star size={16} fill={bookmarked ? "currentColor" : "none"} />
           </button>
         </div>
       </header>
@@ -530,35 +703,39 @@ export default function CodingDetail() {
           className={styles.leftPane}
           style={{ flex: `0 0 ${horizontalSplit}%` }}
         >
-          {/* LeetCode Tabs Header */}
+          {/* Problem Tabs Header */}
           <div className={styles.paneTabs}>
             <button
               type="button"
               className={`${styles.paneTab} ${leftTab === "description" ? styles.paneTabActive : ""}`}
               onClick={() => setLeftTab("description")}
             >
-              📄 Description
+              <FileText size={13} />
+              <span>Description</span>
             </button>
             <button
               type="button"
               className={`${styles.paneTab} ${leftTab === "editorial" ? styles.paneTabActive : ""}`}
               onClick={() => setLeftTab("editorial")}
             >
-              📰 Editorial
+              <BookOpen size={13} />
+              <span>Editorial</span>
             </button>
             <button
               type="button"
               className={`${styles.paneTab} ${leftTab === "solutions" ? styles.paneTabActive : ""}`}
               onClick={() => setLeftTab("solutions")}
             >
-              💡 Solutions
+              <Lightbulb size={13} />
+              <span>Solutions</span>
             </button>
             <button
               type="button"
               className={`${styles.paneTab} ${leftTab === "submissions" ? styles.paneTabActive : ""}`}
               onClick={() => setLeftTab("submissions")}
             >
-              🕒 Submissions ({submissions.length})
+              <History size={13} />
+              <span>Submissions ({submissions.length})</span>
             </button>
           </div>
 
@@ -830,11 +1007,13 @@ export default function CodingDetail() {
           </div>
         </div>
 
-        {/* ── HORIZONTAL DRAG HANDLE ── */}
+        {/* ── DRAGGABLE SPLITTER 1 (Left ↔ Right on desktop, Top ↕ Bottom on tablet/mobile) ── */}
         <div
           className={styles.hDragHandle}
           onMouseDown={onHDragStart}
+          onTouchStart={onHTouchStart}
           title="Drag to resize panes"
+          role="separator"
         />
 
         {/* ── RIGHT PANE: Live Interactive Monaco Code Editor & Testbed ── */}
@@ -873,6 +1052,26 @@ export default function CodingDetail() {
               </div>
 
               <div className={styles.editorActionsGroup}>
+                <div className={styles.themeSelectorGroup}>
+                  <Palette size={12} className={styles.themeIcon} />
+                  <select
+                    className={styles.themeSelect}
+                    value={editorTheme}
+                    onChange={(e) => {
+                      setEditorTheme(e.target.value);
+                      localStorage.setItem("feeq-editor-theme", e.target.value);
+                    }}
+                    title="Choose Editor Theme"
+                    aria-label="Editor Theme"
+                  >
+                    <option value="vs-dark">VS Dark</option>
+                    <option value="one-dark">One Dark</option>
+                    <option value="github-dark">GitHub Dark</option>
+                    <option value="dracula">Dracula</option>
+                    <option value="light">Light</option>
+                    <option value="hc-black">High Contrast</option>
+                  </select>
+                </div>
                 <span className={styles.savedStatus}>Auto-saved</span>
                 <button
                   type="button"
@@ -890,7 +1089,7 @@ export default function CodingDetail() {
               <Editor
                 height="100%"
                 language={selectedLang}
-                theme="vs-dark"
+                theme={editorTheme}
                 value={userCode}
                 loading={<PageSkeleton variant="editor" />}
                 onChange={handleEditorChange}
@@ -910,11 +1109,13 @@ export default function CodingDetail() {
             </div>
           </div>
 
-          {/* ── VERTICAL DRAG HANDLE ── */}
+          {/* ── VERTICAL DRAG HANDLE (Editor ↕ Test Panel) ── */}
           <div
             className={styles.vDragHandle}
             onMouseDown={onVDragStart}
+            onTouchStart={onVTouchStart}
             title="Drag to resize editor and test panel"
+            role="separator"
           />
 
           {/* 2. Testcase & Real Test Result / Preview Bottom Panel */}
@@ -930,14 +1131,16 @@ export default function CodingDetail() {
                     className={`${styles.testPanelTab} ${rightTab === "preview" ? styles.testPanelTabActive : ""}`}
                     onClick={() => setRightTab("preview")}
                   >
-                    👁️ Live Preview
+                    <Eye size={13} />
+                    <span>Live Preview</span>
                   </button>
                   <button
                     type="button"
                     className={`${styles.testPanelTab} ${rightTab === "testcase" ? styles.testPanelTabActive : ""}`}
                     onClick={() => setRightTab("testcase")}
                   >
-                    ✓ Requirements
+                    <CheckCircle2 size={13} />
+                    <span>Requirements</span>
                   </button>
                 </>
               ) : (
@@ -947,19 +1150,25 @@ export default function CodingDetail() {
                     className={`${styles.testPanelTab} ${rightTab === "testcase" ? styles.testPanelTabActive : ""}`}
                     onClick={() => setRightTab("testcase")}
                   >
-                    ✓ Testcase
+                    <CheckCircle2 size={13} />
+                    <span>Testcase</span>
                   </button>
                   <button
                     type="button"
                     className={`${styles.testPanelTab} ${rightTab === "result" ? styles.testPanelTabActive : ""}`}
                     onClick={() => setRightTab("result")}
                   >
-                    &gt;_ Test Result{" "}
-                    {evaluationResult
-                      ? evaluationResult.status === "accepted"
-                        ? "🟢"
-                        : "🔴"
-                      : ""}
+                    <Terminal size={13} />
+                    <span>Test Result</span>
+                    {evaluationResult && (
+                      <span
+                        className={
+                          evaluationResult.status === "accepted"
+                            ? styles.statusDotGreen
+                            : styles.statusDotRed
+                        }
+                      />
+                    )}
                   </button>
                 </>
               )}

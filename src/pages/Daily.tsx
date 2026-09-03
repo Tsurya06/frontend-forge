@@ -1,7 +1,18 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  Flame,
+  Code2,
+  BookOpen,
+  Terminal,
+  CheckCircle2,
+  Circle,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  Play,
+} from "lucide-react";
 import { useProgressContext } from "@/context/ProgressContext";
-import { LeftQuickNav } from "@/components/layout/LeftQuickNav";
 import { Badge } from "@/components/common/Badge";
 import {
   allQuestions,
@@ -85,9 +96,6 @@ export default function Daily() {
 
   return (
     <div className={styles.pageLayout}>
-      {/* ── Left Quick-Nav Sidebar (Desktop) ── */}
-      <LeftQuickNav />
-
       {/* ── Main Daily Challenge Scroll Area ── */}
       <main className={styles.scrollArea}>
         <div className={styles.dailyContent}>
@@ -107,18 +115,31 @@ export default function Daily() {
               </div>
             </div>
 
-            <div className={styles.streakCard}>
-              <span className={styles.streakFlame}>🔥</span>
+            <div
+              className={`${styles.streakCard} ${
+                dailyStreak === 0 ? styles.streakCardBroken : ""
+              }`}
+            >
+              <Flame
+                size={26}
+                className={
+                  dailyStreak > 0 ? styles.streakFlame : styles.streakFlameBroken
+                }
+              />
               <div className={styles.streakInfo}>
                 <span className={styles.streakNumber}>
-                  {dailyStreak || 1} Days
+                  {dailyStreak} Day{dailyStreak === 1 ? "" : "s"}
                 </span>
-                <span className={styles.streakSub}>Active Streak</span>
+                <span className={styles.streakSub}>
+                  {dailyStreak > 0
+                    ? "Active Streak"
+                    : "Streak Broken • Solve 1 today!"}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* ── LeetCode Calendar Day Selector ── */}
+          {/* ── Daily Calendar Day Selector ── */}
           <div className={styles.calendarStrip}>
             <div className={styles.stripHeader}>
               <span className={styles.stripTitle}>
@@ -163,7 +184,10 @@ export default function Daily() {
           {dailyCoding && (
             <div className={styles.challengeCard}>
               <div className={styles.cardTop}>
-                <div className={styles.typeBadge}>💻 ALGORITHM / POLYFILL</div>
+                <div className={styles.typeBadge}>
+                  <Code2 size={13} />
+                  <span>ALGORITHM / POLYFILL</span>
+                </div>
                 <Badge
                   variant={difficultyVariant[dailyCoding.difficulty]}
                   size="small"
@@ -192,7 +216,9 @@ export default function Daily() {
                   to={`/coding/${dailyCoding.id}`}
                   className={styles.primaryBtn}
                 >
-                  ▶ Solve in LeetCode Workspace →
+                  <Play size={12} fill="currentColor" />
+                  <span>Solve in Coding Workspace</span>
+                  <ArrowRight size={13} />
                 </Link>
 
                 <button
@@ -200,7 +226,12 @@ export default function Daily() {
                   className={`${styles.completeBtn} ${isCodingDone ? styles.completed : ""}`}
                   onClick={() => markComplete(dailyCoding.id, "coding")}
                 >
-                  {isCodingDone ? "✓ Solved" : "○ Mark Solved"}
+                  {isCodingDone ? (
+                    <CheckCircle2 size={13} />
+                  ) : (
+                    <Circle size={13} />
+                  )}
+                  <span>{isCodingDone ? "Solved" : "Mark Solved"}</span>
                 </button>
               </div>
             </div>
@@ -211,7 +242,8 @@ export default function Daily() {
             <div className={styles.challengeCard}>
               <div className={styles.cardTop}>
                 <div className={`${styles.typeBadge} ${styles.theoryBadge}`}>
-                  📖 THEORY & INTERNALS
+                  <BookOpen size={13} />
+                  <span>THEORY &amp; INTERNALS</span>
                 </div>
                 <Badge
                   variant={difficultyVariant[dailyTheory.difficulty]}
@@ -247,7 +279,8 @@ export default function Daily() {
                     className={styles.toggleAnswerBtn}
                     onClick={() => setShowAnswer(false)}
                   >
-                    Hide Answer ▴
+                    <span>Hide Answer</span>
+                    <ChevronUp size={13} />
                   </button>
                 </div>
               ) : (
@@ -256,7 +289,8 @@ export default function Daily() {
                   className={styles.toggleAnswerBtn}
                   onClick={() => setShowAnswer(true)}
                 >
-                  Reveal Solution & Deep Dive ▾
+                  <span>Reveal Solution &amp; Deep Dive</span>
+                  <ChevronDown size={13} />
                 </button>
               )}
 
@@ -265,7 +299,8 @@ export default function Daily() {
                   to={`/topics/${dailyTheory.topicId}`}
                   className={styles.secondaryBtn}
                 >
-                  View Full Topic →
+                  <span>View Full Topic</span>
+                  <ArrowRight size={13} />
                 </Link>
 
                 <button
@@ -273,7 +308,12 @@ export default function Daily() {
                   className={`${styles.completeBtn} ${isTheoryDone ? styles.completed : ""}`}
                   onClick={() => markComplete(dailyTheory.id, "question")}
                 >
-                  {isTheoryDone ? "✓ Solved" : "○ Mark Solved"}
+                  {isTheoryDone ? (
+                    <CheckCircle2 size={13} />
+                  ) : (
+                    <Circle size={13} />
+                  )}
+                  <span>{isTheoryDone ? "Solved" : "Mark Solved"}</span>
                 </button>
               </div>
             </div>
@@ -284,7 +324,8 @@ export default function Daily() {
             <div className={styles.challengeCard}>
               <div className={styles.cardTop}>
                 <div className={`${styles.typeBadge} ${styles.machineBadge}`}>
-                  🏗️ MACHINE CODING TASK
+                  <Terminal size={13} />
+                  <span>MACHINE CODING TASK</span>
                 </div>
                 <Badge
                   variant={difficultyVariant[dailyMachine.difficulty]}
@@ -308,7 +349,8 @@ export default function Daily() {
                   to={`/machine-coding/${dailyMachine.id}`}
                   className={styles.primaryBtn}
                 >
-                  Open Interactive Component Builder →
+                  <span>Open Interactive Component Builder</span>
+                  <ArrowRight size={13} />
                 </Link>
 
                 <button
@@ -316,7 +358,12 @@ export default function Daily() {
                   className={`${styles.completeBtn} ${isMachineDone ? styles.completed : ""}`}
                   onClick={() => markComplete(dailyMachine.id, "machineCoding")}
                 >
-                  {isMachineDone ? "✓ Solved" : "○ Mark Solved"}
+                  {isMachineDone ? (
+                    <CheckCircle2 size={13} />
+                  ) : (
+                    <Circle size={13} />
+                  )}
+                  <span>{isMachineDone ? "Solved" : "Mark Solved"}</span>
                 </button>
               </div>
             </div>

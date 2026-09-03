@@ -100,6 +100,7 @@ export default function Settings() {
     { keys: "g c", description: "Go to Coding" },
     { keys: "g m", description: "Go to Machine Coding" },
     { keys: "g b", description: "Go to Bookmarks" },
+    { keys: "g v", description: "Go to JS Visualizer" },
   ];
 
   return (
