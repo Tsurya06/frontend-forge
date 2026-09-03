@@ -1,51 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/frontend-forge/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/frontend-forge/favicon-192.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/frontend-forge/apple-touch-icon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <title>FrontendForge — Frontend Engineering Excellence Platform</title>
-    <meta
-      name="description"
-      content="FrontendForge is a comprehensive engineering reference, interactive component laboratory, and system design handbook for modern web architecture, JavaScript internals, and React 19."
-    />
-    <meta
-      name="keywords"
-      content="frontend architecture, frontend system design, javascript internals, react 19, web vitals, machine coding, css grid, web performance, software engineering handbook"
-    />
-    <meta name="theme-color" content="#10a37f" />
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="FrontendForge — Frontend Engineering Excellence Platform" />
-    <meta
-      property="og:description"
-      content="Comprehensive engineering reference and interactive component laboratory for modern frontend architecture and web standards."
-    />
-    <meta property="og:image" content="/frontend-forge/logo.png" />
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="FrontendForge — Frontend Engineering Excellence Platform" />
-    <meta
-      name="twitter:description"
-      content="Comprehensive engineering reference and interactive component laboratory for modern frontend architecture and web standards."
-    />
-    <meta name="twitter:image" content="/frontend-forge/logo.png" />
-    <script type="module" crossorigin src="/frontend-forge/assets/index-kpAQPynO.js"></script>
-    <link rel="modulepreload" crossorigin href="/frontend-forge/assets/rolldown-runtime-CbXtAM7H.js">
-    <link rel="modulepreload" crossorigin href="/frontend-forge/assets/monaco-vendor-BgAia2ap.js">
-    <link rel="modulepreload" crossorigin href="/frontend-forge/assets/react-vendor-B8VQu9QQ.js">
-    <link rel="modulepreload" crossorigin href="/frontend-forge/assets/prism-vendor-DfaG54Sv.js">
-    <link rel="modulepreload" crossorigin href="/frontend-forge/assets/data-core-topics-BiPQxMCu.js">
-    <link rel="modulepreload" crossorigin href="/frontend-forge/assets/data-coding-sMPJo94r.js">
-    <link rel="modulepreload" crossorigin href="/frontend-forge/assets/data-machine-coding-D-pYM82t.js">
-    <link rel="modulepreload" crossorigin href="/frontend-forge/assets/data-system-design-mxbKl4wM.js">
-    <link rel="modulepreload" crossorigin href="/frontend-forge/assets/data-web-topics-Bxrk86GN.js">
-    <link rel="stylesheet" crossorigin href="/frontend-forge/assets/prism-vendor-C6uyB5YP.css">
-    <link rel="stylesheet" crossorigin href="/frontend-forge/assets/index-Dpg31gdj.css">
+    <meta charset="utf-8" />
+    <title>FrontendForge</title>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // MIT License
+      // https://github.com/rafgraph/spa-github-pages
+      // This script takes the current url and converts the path and query
+      // string into just a query string, and then redirects the browser
+      // to the new url with only a query string and hash fragment,
+      // e.g. https://tsurya06.github.io/frontend-forge/machine-coding/mc-popover becomes
+      // https://tsurya06.github.io/frontend-forge/?/machine-coding/mc-popover
+      var pathSegmentsToKeep = 1;
+
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          "//" +
+          l.hostname +
+          (l.port ? ":" + l.port : "") +
+          l.pathname
+            .split("/")
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join("/") +
+          "/?/" +
+          l.pathname
+            .slice(1)
+            .split("/")
+            .slice(pathSegmentsToKeep)
+            .join("/")
+            .replace(/&/g, "~and~") +
+          (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+          l.hash
+      );
+    </script>
   </head>
-  <body>
-    <div id="root"></div>
-  </body>
+  <body></body>
 </html>
