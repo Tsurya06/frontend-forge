@@ -78,19 +78,76 @@ export function buildReactIframeSrc(rawSource: string): { html: string; error?: 
           useDeferredValue,
           Fragment
         } = React;
+        const { createPortal } = ReactDOM;
 
         try {
           ${cleanedCode}
 
           const __Comp = window.__defaultComponent ||
             (typeof App !== 'undefined' ? App :
+            (typeof Modal !== 'undefined' ? Modal :
             (typeof TicTacToe !== 'undefined' ? TicTacToe :
             (typeof CounterApp !== 'undefined' ? CounterApp :
             (typeof Component !== 'undefined' ? Component : null))));
 
           if (__Comp) {
+            function ComponentHarness() {
+              const [isOpen, setIsOpen] = useState(true);
+              const compStr = String(__Comp);
+              const needsModalProps = compStr.includes('isOpen') || compStr.includes('onClose');
+
+              if (needsModalProps) {
+                return React.createElement(
+                  'div',
+                  { style: { padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', fontFamily: 'system-ui, sans-serif' } },
+                  React.createElement(
+                    'button',
+                    {
+                      onClick: () => setIsOpen(true),
+                      style: {
+                        padding: '10px 20px',
+                        background: '#6366f1',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        fontSize: '14px',
+                        boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)'
+                      }
+                    },
+                    '✨ Open ' + (__Comp.name || 'Modal')
+                  ),
+                  React.createElement(__Comp, {
+                    isOpen: isOpen,
+                    onClose: () => setIsOpen(false),
+                    title: 'Live Interactive Modal',
+                    children: React.createElement(
+                      'div',
+                      null,
+                      React.createElement('p', { style: { margin: '0 0 12px', color: '#334155' } }, 'This is a live interactive test of the modal component. Try pressing Escape or clicking outside!'),
+                      React.createElement('input', {
+                        placeholder: 'Type here to test focus trapping...',
+                        style: { padding: '8px 12px', width: '100%', borderRadius: '6px', border: '1px solid #cbd5e1', marginBottom: '8px' }
+                      })
+                    ),
+                    footer: React.createElement(
+                      'button',
+                      {
+                        onClick: () => setIsOpen(false),
+                        style: { padding: '8px 16px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 500 }
+                      },
+                      'Close Modal'
+                    )
+                  })
+                );
+              }
+
+              return React.createElement(__Comp);
+            }
+
             const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(React.createElement(__Comp));
+            root.render(React.createElement(ComponentHarness));
           } else {
             console.warn("No default component found to mount. Export a component with 'export default function App() { ... }'");
           }

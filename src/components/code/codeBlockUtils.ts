@@ -49,22 +49,40 @@ export function detectCodeTypes(code: string, language: string) {
   const isTree = isTreeOrDiagram(code);
   const isNonCode = NON_PLAYGROUND_LANGUAGES.has(langLower) || isTree;
 
+  const isReact =
+    !isNonCode &&
+    (["react", "jsx", "tsx"].includes(langLower) ||
+      code.includes("import React") ||
+      code.includes("from 'react'") ||
+      code.includes('from "react"') ||
+      code.includes("from 'react-dom'") ||
+      code.includes('from "react-dom"') ||
+      code.includes("export default function") ||
+      code.includes("export default class"));
+
   const isHtmlCss =
     !isNonCode &&
+    !isReact &&
     (["html", "markup", "css", "web"].includes(langLower) ||
       code.trim().startsWith("<!--") ||
       code.trim().startsWith("<!DOCTYPE") ||
       code.trim().startsWith("<div") ||
       code.trim().startsWith("<style"));
 
+  const isPreviewable = isHtmlCss || isReact;
+
+  const hasEsModules =
+    code.includes("import ") ||
+    code.includes("export ") ||
+    isReact;
+
   const isRunnableJS =
     !isNonCode &&
-    ["javascript", "typescript", "js", "ts", "jsx", "tsx"].includes(
-      langLower,
-    ) &&
-    !isHtmlCss;
+    !isPreviewable &&
+    !hasEsModules &&
+    ["javascript", "typescript", "js", "ts"].includes(langLower);
 
-  return { isNonCode, isHtmlCss, isRunnableJS };
+  return { isNonCode, isHtmlCss, isReact, isPreviewable, isRunnableJS };
 }
 
 export async function copyToClipboard(text: string): Promise<void> {

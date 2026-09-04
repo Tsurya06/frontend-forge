@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   generateStarterCode,
   isHtmlCssProblem,
@@ -98,6 +98,15 @@ describe("Coding Detail Utilities & Submission Engine", () => {
       expect(retrieved[0]?.status).toBe("accepted");
       expect(retrieved[0]?.passedCases).toBe(2);
     });
+
+    it("handles storage write failures gracefully without throwing", () => {
+      const setItemSpy = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+        throw new Error("QuotaExceededError");
+      });
+      expect(() => saveStorageCode("test-id", "code")).not.toThrow();
+      expect(() => saveStorageSubmissions("test-id", [])).not.toThrow();
+      setItemSpy.mockRestore();
+    });
   });
 
   describe("evaluateProblem Execution Engine", () => {
@@ -174,6 +183,18 @@ describe("Coding Detail Utilities & Submission Engine", () => {
       const result = evaluateProblem(code, [twoSumExamples[0]!]);
       expect(result.logs.some((l) => l.includes("Checking nums") && l.includes("4"))).toBe(true);
       expect(result.logs.some((l) => l.includes("[WARN]") && l.includes("Looking for target"))).toBe(true);
+    });
+
+    it("safely aborts infinite loops and returns 'runtime_error' without freezing", () => {
+      const code = `
+        function twoSum(nums, target) {
+          while (true) {}
+          return [0, 1];
+        }
+      `;
+      const result = evaluateProblem(code, twoSumExamples);
+      expect(result.status).toBe("runtime_error");
+      expect(result.errorMessage).toMatch(/Time Limit Exceeded/i);
     });
   });
 });

@@ -6,7 +6,6 @@
   padding: var(--space-3) 10px;
   gap: var(--space-3);
   user-select: none;
-  transition: width var(--transition-base) cubic-bezier(0.16, 1, 0.3, 1);
   border-right: 1px solid var(--border-color);
   background: var(--surface);
   box-sizing: border-box;

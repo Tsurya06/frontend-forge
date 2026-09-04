@@ -515,14 +515,20 @@ export default function Playground() {
   // Listen to messages from live iframe
   useEffect(() => {
     const handleIframeMessage = (event: MessageEvent) => {
-      if (event.data && event.data.type === "feeq-log") {
+      if (event.data && typeof event.data === "object" && event.data.type === "feeq-log") {
         const { logType, args } = event.data;
-        const text = args.map((a: unknown) => formatValue(a)).join(" ");
+        const safeArgs = Array.isArray(args) ? args : [args];
+        const text = safeArgs.map((a: unknown) => formatValue(a)).join(" ");
+        const validTypes = ["log", "warn", "error", "info", "result"] as const;
+        const resolvedType =
+          typeof logType === "string" && (validTypes as readonly string[]).includes(logType)
+            ? (logType as (typeof validTypes)[number])
+            : "log";
         setOutput((prev) => [
-          ...prev,
+          ...prev.slice(-199),
           {
             id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-            type: logType,
+            type: resolvedType,
             text,
             timestamp: Date.now(),
           },

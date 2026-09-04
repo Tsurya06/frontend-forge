@@ -120,25 +120,37 @@ export function registerMonacoThemes(monaco: typeof Monaco): void {
 }
 
 export function getStorageCode(problemId: string, defaultCode: string): string {
-  const key = STORAGE_KEYS.problemCode(problemId);
-  const savedCode = localStorage.getItem(key);
-  const isCorrupted =
-    savedCode &&
-    (savedCode.includes("cache = new WeakMap() {") ||
-      savedCode.includes("new WeakMap() {"));
-  if (isCorrupted) {
-    localStorage.removeItem(key);
+  try {
+    const key = STORAGE_KEYS.problemCode(problemId);
+    const savedCode = localStorage.getItem(key);
+    const isCorrupted =
+      savedCode &&
+      (savedCode.includes("cache = new WeakMap() {") ||
+        savedCode.includes("new WeakMap() {"));
+    if (isCorrupted) {
+      localStorage.removeItem(key);
+      return defaultCode;
+    }
+    return savedCode || defaultCode;
+  } catch {
     return defaultCode;
   }
-  return savedCode || defaultCode;
 }
 
 export function saveStorageCode(problemId: string, code: string): void {
-  localStorage.setItem(STORAGE_KEYS.problemCode(problemId), code);
+  try {
+    localStorage.setItem(STORAGE_KEYS.problemCode(problemId), code);
+  } catch (e) {
+    console.warn("Failed to save code to localStorage:", e);
+  }
 }
 
 export function removeStorageCode(problemId: string): void {
-  localStorage.removeItem(STORAGE_KEYS.problemCode(problemId));
+  try {
+    localStorage.removeItem(STORAGE_KEYS.problemCode(problemId));
+  } catch (e) {
+    console.warn("Failed to remove code from localStorage:", e);
+  }
 }
 
 export function getStorageSubmissions(problemId: string): UserSubmission[] {
@@ -156,8 +168,12 @@ export function saveStorageSubmissions(
   problemId: string,
   submissions: readonly UserSubmission[],
 ): void {
-  localStorage.setItem(
-    STORAGE_KEYS.problemSubmissions(problemId),
-    JSON.stringify(submissions),
-  );
+  try {
+    localStorage.setItem(
+      STORAGE_KEYS.problemSubmissions(problemId),
+      JSON.stringify(submissions),
+    );
+  } catch (e) {
+    console.warn("Failed to save submissions to localStorage:", e);
+  }
 }

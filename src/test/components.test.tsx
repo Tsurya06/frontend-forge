@@ -181,5 +181,21 @@ describe("Core UI Components Interaction & Layout", () => {
       expect(screen.queryByTitle("Live Component Preview")).not.toBeInTheDocument();
       expect(screen.getByRole("button", { name: /Live HTML\/CSS Preview/i })).toHaveTextContent("👁️ Live Preview");
     });
+
+    it("renders Live Component Preview for React TSX components instead of broken run button", () => {
+      const tsxCode = `import React from 'react';\nexport default function Modal() { return <div>Modal</div>; }`;
+      render(
+        <MemoryRouter>
+          <CodeBlock code={tsxCode} language="tsx" />
+        </MemoryRouter>,
+      );
+
+      expect(screen.queryByRole("button", { name: /Run code in place/i })).not.toBeInTheDocument();
+      const previewBtn = screen.getByRole("button", { name: /Live Component Preview/i });
+      expect(previewBtn).toHaveTextContent("👁️ Live Preview");
+
+      fireEvent.click(previewBtn);
+      expect(screen.getByTitle("Live Component Preview")).toBeInTheDocument();
+    });
   });
 });

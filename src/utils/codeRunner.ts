@@ -211,6 +211,138 @@ function isValueMatch(
   return false;
 }
 
+function skipString(code: string, start: number): number {
+  const quote = code[start];
+  let i = start + 1;
+  while (i < code.length) {
+    if (code[i] === "\\" && i + 1 < code.length) {
+      i += 2;
+      continue;
+    }
+    if (code[i] === quote) return i + 1;
+    i++;
+  }
+  return i;
+}
+
+function skipComment(code: string, start: number): number {
+  if (code[start + 1] === "/") {
+    const nextLine = code.indexOf("\n", start);
+    return nextLine === -1 ? code.length : nextLine;
+  }
+  if (code[start + 1] === "*") {
+    const end = code.indexOf("*/", start + 2);
+    return end === -1 ? code.length : end + 2;
+  }
+  return start + 1;
+}
+
+function findMatchingParen(code: string, openIndex: number): number {
+  let depth = 1;
+  let i = openIndex + 1;
+  while (i < code.length && depth > 0) {
+    const ch = code[i];
+    if (ch === '"' || ch === "'" || ch === "`") {
+      i = skipString(code, i);
+      continue;
+    }
+    if (ch === "(") depth++;
+    else if (ch === ")") depth--;
+    i++;
+  }
+  return depth === 0 ? i : -1;
+}
+
+function skipWhitespace(code: string, start: number): number {
+  let i = start;
+  while (i < code.length && /\s/.test(code[i] ?? "")) {
+    i++;
+  }
+  return i;
+}
+
+function tryHandleLoop(
+  code: string,
+  i: number,
+): { output: string; nextIndex: number } | null {
+  const isDo = code.startsWith("do", i) && !/[a-zA-Z0-9_$]/.test(code[i + 2] ?? "");
+  if (isDo) {
+    const afterDo = skipWhitespace(code, i + 2);
+    if (code[afterDo] === "{") {
+      return {
+        output: code.slice(i, afterDo + 1) + " __checkTimeout(); ",
+        nextIndex: afterDo + 1,
+      };
+    }
+    return null;
+  }
+
+  const isFor = code.startsWith("for", i) && !/[a-zA-Z0-9_$]/.test(code[i + 3] ?? "");
+  const isWhile = code.startsWith("while", i) && !/[a-zA-Z0-9_$]/.test(code[i + 5] ?? "");
+
+  if (isFor || isWhile) {
+    const keywordLen = isFor ? 3 : 5;
+    const openParen = code.indexOf("(", i + keywordLen);
+    if (openParen === -1) return null;
+
+    const closeParen = findMatchingParen(code, openParen);
+    if (closeParen === -1) return null;
+
+    const afterParen = skipWhitespace(code, closeParen);
+    if (code[afterParen] === "{") {
+      return {
+        output: code.slice(i, afterParen + 1) + " __checkTimeout(); ",
+        nextIndex: afterParen + 1,
+      };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Injects a loop timeout guard into loop bodies to prevent synchronous UI freezes from infinite loops.
+ */
+export function protectInfiniteLoops(code: string): string {
+  let result = "";
+  let i = 0;
+
+  while (i < code.length) {
+    const ch = code[i] ?? "";
+
+    if (ch === '"' || ch === "'" || ch === "`") {
+      const next = skipString(code, i);
+      result += code.slice(i, next);
+      i = next;
+      continue;
+    }
+
+    if (ch === "/" && (code[i + 1] === "/" || code[i + 1] === "*")) {
+      const next = skipComment(code, i);
+      result += code.slice(i, next);
+      i = next;
+      continue;
+    }
+
+    const prevChar = i > 0 ? (code[i - 1] ?? " ") : " ";
+    const isBoundary = !/[a-zA-Z0-9_$]/.test(prevChar);
+
+    if (isBoundary) {
+      const loopMatch = tryHandleLoop(code, i);
+      if (loopMatch) {
+        result += loopMatch.output;
+        i = loopMatch.nextIndex;
+        continue;
+      }
+    }
+
+    result += ch;
+    i++;
+  }
+
+  return result;
+}
+
 /**
  * Real test runner that evaluates user code against actual problem examples.
  */
@@ -235,6 +367,7 @@ export function evaluateProblem(
   }
 
   const transpiled = transpileToJS(userCode);
+  const guardedCode = protectInfiniteLoops(transpiled);
 
   for (let i = 0; i < examples.length; i++) {
     const example = examples[i];
@@ -266,8 +399,21 @@ export function evaluateProblem(
     let runError: string | undefined = undefined;
 
     try {
-      // Construct executable sandbox
+      // Construct executable sandbox with iteration timeout protection
       const testSnippet = example.input.trim();
+      const timeoutPreamble = `
+        const __startTime = performance.now();
+        let __iterCount = 0;
+        function __checkTimeout() {
+          if (++__iterCount % 5000 === 0 && performance.now() - __startTime > 1500) {
+            throw new Error("Time Limit Exceeded: Execution took longer than 1500ms");
+          }
+          if (__iterCount > 2000000) {
+            throw new Error("Time Limit Exceeded: Loop iteration limit exceeded (2,000,000 iterations)");
+          }
+        }
+      `;
+
       let runnerBody = "";
 
       if (
@@ -278,7 +424,8 @@ export function evaluateProblem(
       ) {
         // Multi-line statement
         runnerBody = `
-          ${transpiled}
+          ${timeoutPreamble}
+          ${guardedCode}
           
           let __result;
           try {
@@ -291,7 +438,8 @@ export function evaluateProblem(
       } else {
         // Single expression
         runnerBody = `
-          ${transpiled}
+          ${timeoutPreamble}
+          ${guardedCode}
           return (${testSnippet});
         `;
       }

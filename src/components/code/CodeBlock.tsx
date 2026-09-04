@@ -12,6 +12,7 @@ import {
   buildSmartPreview,
   escapeHtml,
 } from "./codeBlockUtils";
+import { buildReactIframeSrc } from "@/components/playground/playgroundRunner";
 import { CodeBlockPreview } from "./CodeBlockPreview";
 import { CodeBlockConsole } from "./CodeBlockConsole";
 
@@ -29,10 +30,8 @@ export function CodeBlock({
   const [consoleOutput, setConsoleOutput] = useState<ConsoleOutputLine[]>([]);
   const [executionTime, setExecutionTime] = useState<number | null>(null);
 
-  const { isNonCode, isHtmlCss, isRunnableJS } = useMemo(
-    () => detectCodeTypes(code, language),
-    [code, language],
-  );
+  const { isNonCode, isHtmlCss, isReact, isPreviewable, isRunnableJS } =
+    useMemo(() => detectCodeTypes(code, language), [code, language]);
 
   const isPlaygroundEligible =
     !disablePlayground && !isNonCode && code.trim().length > 0;
@@ -45,7 +44,7 @@ export function CodeBlock({
 
   // In-place JavaScript / TypeScript execution runner
   const handleRunCode = useCallback(() => {
-    if (isHtmlCss) {
+    if (isPreviewable) {
       setShowHtmlPreview((prev) => !prev);
       return;
     }
@@ -74,7 +73,7 @@ export function CodeBlock({
       setExecutionTime(elapsed);
       setIsRunning(false);
     });
-  }, [code, isHtmlCss]);
+  }, [code, isPreviewable]);
 
   const grammarLang = language === "html" ? "markup" : language;
   const grammar = Prism.languages[grammarLang];
@@ -90,11 +89,14 @@ export function CodeBlock({
     });
   }, [code, grammar, grammarLang]);
 
-  // Live HTML & CSS smart preview document generator
+  // Live HTML/CSS & React smart preview document generator
   const previewDoc = useMemo(() => {
-    if (!isHtmlCss) return "";
+    if (!isPreviewable) return "";
+    if (isReact) {
+      return buildReactIframeSrc(code).html;
+    }
     return buildSmartPreview(code, language);
-  }, [code, isHtmlCss, language]);
+  }, [code, isPreviewable, isReact, language]);
 
   const displayTitle = title && title.length <= 28 ? title : null;
 
@@ -127,14 +129,20 @@ export function CodeBlock({
             </button>
           )}
 
-          {isHtmlCss && (
+          {isPreviewable && (
             <button
               type="button"
               className={
                 showHtmlPreview ? styles.previewBtnActive : styles.runBtn
               }
               onClick={() => setShowHtmlPreview((prev) => !prev)}
-              aria-label={showHtmlPreview ? "Show Code" : "Live HTML/CSS Preview"}
+              aria-label={
+                showHtmlPreview
+                  ? "Show Code"
+                  : isReact
+                    ? "Live Component Preview"
+                    : "Live HTML/CSS Preview"
+              }
               title={
                 showHtmlPreview
                   ? "Switch back to Code view"
@@ -150,7 +158,9 @@ export function CodeBlock({
               to={ROUTES.PLAYGROUND}
               onClick={() => {
                 sessionStorage.setItem(SESSION_KEYS.PLAYGROUND_SNIPPET, code);
-                if (isHtmlCss) {
+                if (isReact) {
+                  sessionStorage.setItem(SESSION_KEYS.PLAYGROUND_MODE, "react");
+                } else if (isHtmlCss) {
                   sessionStorage.setItem(SESSION_KEYS.PLAYGROUND_MODE, "web");
                 }
               }}

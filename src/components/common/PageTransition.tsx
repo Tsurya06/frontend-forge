@@ -13,6 +13,11 @@ interface PageTransitionProps {
  */
 export function PageTransition({ children }: Readonly<PageTransitionProps>) {
   const location = useLocation();
+  const isDaily = location.pathname === "/daily" || location.pathname.startsWith("/daily");
+
+  if (isDaily) {
+    return <>{children}</>;
+  }
 
   return (
     <div key={location.key} className={styles.pageTransition}>
