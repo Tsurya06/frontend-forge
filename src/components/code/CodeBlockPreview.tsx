@@ -4,21 +4,18 @@ import type { CodeBlockPreviewProps } from "./types";
 export function CodeBlockPreview({
   showHtmlPreview,
   previewDoc,
-  onClose,
 }: Readonly<CodeBlockPreviewProps>) {
   if (!showHtmlPreview) return null;
 
   return (
     <div className={styles.htmlPreviewContainer}>
       <div className={styles.previewBar}>
-        <span>🌐 Live Interactive Component Preview</span>
-        <button
-          type="button"
-          className={styles.closeConsoleBtn}
-          onClick={onClose}
-        >
-          ✕
-        </button>
+        <div className={styles.previewBarLeft}>
+          <span className={styles.previewLiveDot} />
+          <span className={styles.previewBarTitle}>
+            Live Interactive Preview
+          </span>
+        </div>
       </div>
       <iframe
         title="Live Component Preview"

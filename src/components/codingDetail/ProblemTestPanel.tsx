@@ -1,5 +1,6 @@
 import { Eye, CheckCircle2, Terminal } from "lucide-react";
 import styles from "@/pages/coding/CodingDetail.module.css";
+import { buildSmartPreview } from "@/components/code/codeBlockUtils";
 import type { ProblemTestPanelProps, ProblemTestPanelContentProps } from "./types";
 
 export function ProblemTestPanel({
@@ -73,13 +74,18 @@ export function ProblemTestPanelContent({
   onSelectTestCase,
 }: Readonly<ProblemTestPanelContentProps>) {
   if (rightTab === "preview" && isHtmlCss) {
+    const previewDoc = buildSmartPreview(
+      userCode || "<!-- Write your HTML/CSS code above -->",
+      "html",
+    );
+
     return (
       <div className={styles.previewContent}>
         <iframe
           title="HTML/CSS Live Preview"
           className={styles.previewIframe}
           sandbox="allow-scripts"
-          srcDoc={userCode || "<!-- Write your HTML/CSS code above -->"}
+          srcDoc={previewDoc}
         />
       </div>
     );

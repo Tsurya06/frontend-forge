@@ -134,10 +134,14 @@ export function CodeBlock({
                 showHtmlPreview ? styles.previewBtnActive : styles.runBtn
               }
               onClick={() => setShowHtmlPreview((prev) => !prev)}
-              aria-label="Live HTML/CSS Preview"
-              title="Toggle Live Visual Preview"
+              aria-label={showHtmlPreview ? "Show Code" : "Live HTML/CSS Preview"}
+              title={
+                showHtmlPreview
+                  ? "Switch back to Code view"
+                  : "Toggle Live Visual Preview"
+              }
             >
-              {showHtmlPreview ? "✕ Hide Preview" : "👁️ Live Preview"}
+              {showHtmlPreview ? "💻 Show Code" : "👁️ Live Preview"}
             </button>
           )}
 
@@ -168,26 +172,28 @@ export function CodeBlock({
         </div>
       </div>
 
-      <pre
-        className={`${styles.pre} ${showLineNumbers ? styles.withLineNumbers : ""}`}
-      >
-        <code className={`language-${grammarLang}`}>
-          {highlightedLines.map((htmlLine, i) => (
-            <div
-              key={i}
-              className={styles.codeLine}
-              dangerouslySetInnerHTML={{ __html: htmlLine }}
-            />
-          ))}
-        </code>
-      </pre>
-
-      {/* Live HTML/CSS Component Preview Frame */}
-      <CodeBlockPreview
-        showHtmlPreview={showHtmlPreview}
-        previewDoc={previewDoc}
-        onClose={() => setShowHtmlPreview(false)}
-      />
+      {/* In-place toggle between Live Component Preview and Source Code */}
+      {showHtmlPreview ? (
+        <CodeBlockPreview
+          showHtmlPreview={showHtmlPreview}
+          previewDoc={previewDoc}
+          onClose={() => setShowHtmlPreview(false)}
+        />
+      ) : (
+        <pre
+          className={`${styles.pre} ${showLineNumbers ? styles.withLineNumbers : ""}`}
+        >
+          <code className={`language-${grammarLang}`}>
+            {highlightedLines.map((htmlLine, i) => (
+              <div
+                key={i}
+                className={styles.codeLine}
+                dangerouslySetInnerHTML={{ __html: htmlLine }}
+              />
+            ))}
+          </code>
+        </pre>
+      )}
 
       {/* Interactive In-Place Execution Console for JS */}
       <CodeBlockConsole

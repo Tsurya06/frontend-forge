@@ -264,14 +264,20 @@ export function buildSmartPreview(source: string, lang: string): string {
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       *, *::before, *::after { box-sizing: border-box; }
       body {
-        font-family: system-ui, -apple-system, sans-serif;
-        padding: 20px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        padding: 32px 20px;
         margin: 0;
-        background: #ffffff;
-        color: #2d2d2d;
+        background: #f8fafc;
+        color: #0f172a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
       }
     </style>
   </head>

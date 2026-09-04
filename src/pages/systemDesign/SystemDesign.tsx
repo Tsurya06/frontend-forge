@@ -64,8 +64,7 @@ export default function SystemDesign() {
         <header className={styles.header}>
           <h1 className={styles.title}>Frontend System Design</h1>
           <p className={styles.subtitle}>
-            Architecture & design patterns for large-scale production
-            applications
+            {"Architecture & design patterns for large-scale production applications"}
           </p>
         </header>
 

@@ -15,7 +15,7 @@ export interface ConsoleOutputLine {
 export interface CodeBlockPreviewProps {
   readonly showHtmlPreview: boolean;
   readonly previewDoc: string;
-  readonly onClose: () => void;
+  readonly onClose?: () => void;
 }
 
 export interface CodeBlockConsoleProps {
