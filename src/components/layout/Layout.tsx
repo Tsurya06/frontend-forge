@@ -9,7 +9,7 @@ import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import styles from "./Layout.module.css";
 
 interface LayoutProps {
-  children?: React.ReactNode;
+  readonly children?: React.ReactNode;
 }
 
 const SHORTCUT_SECTIONS = [
@@ -37,7 +37,7 @@ const SHORTCUT_SECTIONS = [
   },
 ];
 
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children }: Readonly<LayoutProps>) {
   const location = useLocation();
   const isSandbox = location.pathname === "/playground";
   const [drawerOpen, setDrawerOpen] = useState(false);

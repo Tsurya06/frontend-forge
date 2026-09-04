@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
+import { STORAGE_KEYS } from "@/constants/storage";
 import { useLocalStorage } from "./useLocalStorage";
 
 export type Theme = "light" | "dark" | "system";
@@ -12,7 +13,7 @@ function getSystemTheme(): "light" | "dark" {
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "system";
-  const storedFeeq = localStorage.getItem("feeq-theme");
+  const storedFeeq = localStorage.getItem(STORAGE_KEYS.THEME);
   if (storedFeeq) {
     try {
       const parsed = JSON.parse(storedFeeq);
@@ -23,7 +24,7 @@ function getInitialTheme(): Theme {
       }
     }
   }
-  const storedLegacy = localStorage.getItem("theme");
+  const storedLegacy = localStorage.getItem(STORAGE_KEYS.LEGACY_THEME);
   if (storedLegacy === "light" || storedLegacy === "dark") {
     return storedLegacy as Theme;
   }
@@ -36,13 +37,16 @@ function applyTheme(theme: Theme): "light" | "dark" {
     document.documentElement.setAttribute("data-theme", resolved);
   }
   if (typeof localStorage !== "undefined") {
-    localStorage.setItem("theme", resolved);
+    localStorage.setItem(STORAGE_KEYS.LEGACY_THEME, resolved);
   }
   return resolved;
 }
 
 export function useTheme() {
-  const [theme, setThemeValue] = useLocalStorage<Theme>("feeq-theme", getInitialTheme());
+  const [theme, setThemeValue] = useLocalStorage<Theme>(
+    STORAGE_KEYS.THEME,
+    getInitialTheme(),
+  );
 
   const resolvedTheme: "light" | "dark" = useMemo(() => {
     return theme === "system" ? getSystemTheme() : theme;

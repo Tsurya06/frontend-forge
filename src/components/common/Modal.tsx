@@ -2,15 +2,20 @@ import { useEffect, useRef, useCallback, useState } from "react";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly title: string;
+  readonly children: React.ReactNode;
 }
 
 const CLOSE_ANIMATION_MS = 200;
 
-export function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export function Modal({
+  isOpen,
+  onClose,
+  title,
+  children,
+}: Readonly<ModalProps>) {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const [isClosing, setIsClosing] = useState(false);

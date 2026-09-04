@@ -3,16 +3,16 @@ import type { CallFrame } from "@/utils/runtimeVisualizerEngine";
 import styles from "./VisualizerComponents.module.css";
 
 interface CallStackViewProps {
-  stack: CallFrame[];
-  onSelectHeapRef?: (ref: string) => void;
-  onInfoClick?: () => void;
+  readonly stack: readonly CallFrame[] | CallFrame[];
+  readonly onSelectHeapRef?: (ref: string) => void;
+  readonly onInfoClick?: () => void;
 }
 
 export function CallStackView({
   stack,
   onSelectHeapRef,
   onInfoClick,
-}: CallStackViewProps) {
+}: Readonly<CallStackViewProps>) {
   return (
     <div className={styles.panelCard}>
       <div className={styles.panelHeader}>

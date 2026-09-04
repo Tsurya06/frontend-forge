@@ -6,7 +6,9 @@ type BookmarkContextValue = ReturnType<typeof useBookmarks>;
 
 const BookmarkContext = createContext<BookmarkContextValue | null>(null);
 
-export function BookmarkProvider({ children }: { children: ReactNode }) {
+export function BookmarkProvider({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const bookmarks = useBookmarks();
   return (
     <BookmarkContext.Provider value={bookmarks}>

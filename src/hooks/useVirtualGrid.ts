@@ -7,16 +7,17 @@ interface UseVirtualGridOptions {
 
 export function useVirtualGrid<T>(
   items: T[],
-  options: UseVirtualGridOptions = {},
+  { initialCount = 16, batchSize = 12 }: UseVirtualGridOptions = {},
 ) {
-  const { initialCount = 16, batchSize = 12 } = options;
+  const [prevItems, setPrevItems] = useState(items);
   const [visibleCount, setVisibleCount] = useState(initialCount);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  // Reset visible count whenever the source item list or filter changes
-  useEffect(() => {
+  // Reset visible count whenever the source item list changes (adjust state during render)
+  if (items !== prevItems) {
+    setPrevItems(items);
     setVisibleCount(initialCount);
-  }, [items, initialCount]);
+  }
 
   const loadMore = useCallback(() => {
     setVisibleCount((prev) => Math.min(prev + batchSize, items.length));

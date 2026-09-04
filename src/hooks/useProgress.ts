@@ -1,14 +1,15 @@
 import { useCallback, useEffect } from "react";
+import { STORAGE_KEYS } from "@/constants/storage";
 import { useLocalStorage } from "./useLocalStorage";
 
 const KEYS = {
-  questions: "feeq-completed-questions",
-  coding: "feeq-completed-coding",
-  machineCoding: "feeq-completed-machine-coding",
-  systemDesign: "feeq-completed-system-design",
-  recentlyViewed: "feeq-recently-viewed",
-  dailyStreak: "feeq-daily-streak",
-  lastActiveDate: "feeq-last-active-date",
+  questions: STORAGE_KEYS.COMPLETED_QUESTIONS,
+  coding: STORAGE_KEYS.COMPLETED_CODING,
+  machineCoding: STORAGE_KEYS.COMPLETED_MACHINE_CODING,
+  systemDesign: STORAGE_KEYS.COMPLETED_SYSTEM_DESIGN,
+  recentlyViewed: STORAGE_KEYS.RECENTLY_VIEWED,
+  dailyStreak: STORAGE_KEYS.DAILY_STREAK,
+  lastActiveDate: STORAGE_KEYS.LAST_ACTIVE_DATE,
 } as const;
 
 export type CompletionType =

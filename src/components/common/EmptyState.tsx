@@ -2,11 +2,11 @@ import type { ReactNode } from "react";
 import styles from "./EmptyState.module.css";
 
 interface EmptyStateProps {
-  icon?: ReactNode;
-  title: string;
-  description?: string;
-  actionLabel?: string;
-  onAction?: () => void;
+  readonly icon?: ReactNode;
+  readonly title: string;
+  readonly description?: string;
+  readonly actionLabel?: string;
+  readonly onAction?: () => void;
 }
 
 export function EmptyState({
@@ -15,7 +15,7 @@ export function EmptyState({
   description,
   actionLabel,
   onAction,
-}: EmptyStateProps) {
+}: Readonly<EmptyStateProps>) {
   return (
     <div className={styles.emptyState}>
       {icon && (

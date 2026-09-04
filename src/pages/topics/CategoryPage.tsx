@@ -21,10 +21,12 @@ const difficultyVariant: Record<
 };
 
 interface CategoryPageProps {
-  category: string;
+  readonly category: string;
 }
 
-export default function CategoryPage({ category }: CategoryPageProps) {
+export default function CategoryPage({
+  category,
+}: Readonly<CategoryPageProps>) {
   const { completedQuestions } = useProgressContext();
   const [search, setSearch] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState("all");

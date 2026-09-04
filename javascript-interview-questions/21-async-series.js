@@ -292,7 +292,7 @@ runConcurrent(concurrentTasks, 3).then(results => {
 });
 
 // Iterator usage
-async function useIterator() {
+async function runDemoIterator() {
   const tasks = [
     () => Promise.resolve('a'),
     () => Promise.resolve('b'),
@@ -304,7 +304,7 @@ async function useIterator() {
   }
 }
 
-useIterator();
+runDemoIterator();
 
 
 // ============================================

@@ -1,64 +1,19 @@
 import { useState, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Prism from "@/lib/prism";
-import { transpileToJS, formatValue } from "@/utils/codeRunner";
+import { formatValue } from "@/utils/codeRunner";
+import { ROUTES, SESSION_KEYS } from "@/constants";
 import styles from "./CodeBlock.module.css";
-
-interface CodeBlockProps {
-  code: string;
-  language: string;
-  title?: string;
-  showLineNumbers?: boolean;
-  disablePlayground?: boolean;
-}
-
-const NON_PLAYGROUND_LANGUAGES = new Set([
-  "text",
-  "txt",
-  "plain",
-  "plaintext",
-  "ascii",
-  "tree",
-  "bash",
-  "sh",
-  "shell",
-  "terminal",
-  "markdown",
-  "md",
-  "output",
-  "log",
-  "pseudo",
-  "pseudocode",
-  "dir",
-  "directory",
-]);
-
-function isTreeOrDiagram(text: string): boolean {
-  const trimmed = text.trim();
-  if (
-    trimmed.includes("├──") ||
-    trimmed.includes("└──") ||
-    trimmed.includes("│  ") ||
-    trimmed.includes("├───") ||
-    trimmed.includes("|--")
-  ) {
-    return true;
-  }
-  const lines = trimmed.split("\n");
-  const treeLikeLines = lines.filter((l) =>
-    /^[├└│|\s\-]+[a-zA-Z0-9_\-./]+/.test(l.trim()),
-  );
-  if (treeLikeLines.length >= 2 && treeLikeLines.length >= lines.length * 0.4) {
-    return true;
-  }
-  return false;
-}
-
-interface ConsoleOutputLine {
-  id: string;
-  type: "log" | "warn" | "error" | "info" | "result";
-  text: string;
-}
+import type { CodeBlockProps, ConsoleOutputLine } from "./types";
+import {
+  detectCodeTypes,
+  copyToClipboard,
+  runSandboxCode,
+  buildSmartPreview,
+  escapeHtml,
+} from "./codeBlockUtils";
+import { CodeBlockPreview } from "./CodeBlockPreview";
+import { CodeBlockConsole } from "./CodeBlockConsole";
 
 export function CodeBlock({
   code,
@@ -66,7 +21,7 @@ export function CodeBlock({
   title,
   showLineNumbers = false,
   disablePlayground = false,
-}: CodeBlockProps) {
+}: Readonly<CodeBlockProps>) {
   const [copied, setCopied] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [showConsole, setShowConsole] = useState(false);
@@ -74,46 +29,21 @@ export function CodeBlock({
   const [consoleOutput, setConsoleOutput] = useState<ConsoleOutputLine[]>([]);
   const [executionTime, setExecutionTime] = useState<number | null>(null);
 
-  const langLower = (language || "").toLowerCase().trim();
-  const isTree = isTreeOrDiagram(code);
-  const isNonCode = NON_PLAYGROUND_LANGUAGES.has(langLower) || isTree;
-
-  const isHtmlCss =
-    !isNonCode &&
-    (["html", "markup", "css", "web"].includes(langLower) ||
-      code.trim().startsWith("<!--") ||
-      code.trim().startsWith("<!DOCTYPE") ||
-      code.trim().startsWith("<div") ||
-      code.trim().startsWith("<style"));
-
-  const isRunnableJS =
-    !isNonCode &&
-    ["javascript", "typescript", "js", "ts", "jsx", "tsx"].includes(
-      langLower,
-    ) &&
-    !isHtmlCss;
+  const { isNonCode, isHtmlCss, isRunnableJS } = useMemo(
+    () => detectCodeTypes(code, language),
+    [code, language],
+  );
 
   const isPlaygroundEligible =
     !disablePlayground && !isNonCode && code.trim().length > 0;
 
   const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      const textarea = document.createElement("textarea");
-      textarea.value = code;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+    await copyToClipboard(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }, [code]);
 
-  // Robust in-place JavaScript / TypeScript runner
+  // In-place JavaScript / TypeScript execution runner
   const handleRunCode = useCallback(() => {
     if (isHtmlCss) {
       setShowHtmlPreview((prev) => !prev);
@@ -124,8 +54,6 @@ export function CodeBlock({
     setIsRunning(true);
     setConsoleOutput([]);
     setExecutionTime(null);
-
-    const startTime = performance.now();
 
     const appendLine = (
       type: ConsoleOutputLine["type"],
@@ -142,68 +70,10 @@ export function CodeBlock({
       ]);
     };
 
-    const sandboxConsole = {
-      log: (...args: unknown[]) => appendLine("log", ...args),
-      warn: (...args: unknown[]) => appendLine("warn", ...args),
-      error: (...args: unknown[]) => appendLine("error", ...args),
-      info: (...args: unknown[]) => appendLine("info", ...args),
-      clear: () => setConsoleOutput([]),
-      table: (...args: unknown[]) => appendLine("log", ...args),
-    };
-
-    const jsCode = transpileToJS(code);
-
-    try {
-      const runner = new Function(
-        "console",
-        "setTimeout",
-        "setInterval",
-        "clearTimeout",
-        "clearInterval",
-        "Promise",
-        `
-        return (async () => {
-          ${jsCode}
-        })();
-        `,
-      );
-
-      const res = runner(
-        sandboxConsole,
-        window.setTimeout.bind(window),
-        window.setInterval.bind(window),
-        window.clearTimeout.bind(window),
-        window.clearInterval.bind(window),
-        Promise,
-      );
-
-      if (res && typeof res.then === "function") {
-        res
-          .then((val: unknown) => {
-            const elapsed = performance.now() - startTime;
-            setExecutionTime(elapsed);
-            setIsRunning(false);
-            if (val !== undefined) {
-              appendLine("result", `← ${formatValue(val)}`);
-            }
-          })
-          .catch((err: unknown) => {
-            const msg = err instanceof Error ? err.message : String(err);
-            appendLine("error", `Runtime Error: ${msg}`);
-            setExecutionTime(performance.now() - startTime);
-            setIsRunning(false);
-          });
-      } else {
-        const elapsed = performance.now() - startTime;
-        setExecutionTime(elapsed);
-        setIsRunning(false);
-      }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      appendLine("error", `Execution Error: ${msg}`);
-      setExecutionTime(performance.now() - startTime);
+    runSandboxCode(code, appendLine, (elapsed) => {
+      setExecutionTime(elapsed);
       setIsRunning(false);
-    }
+    });
   }, [code, isHtmlCss]);
 
   const grammarLang = language === "html" ? "markup" : language;
@@ -220,13 +90,12 @@ export function CodeBlock({
     });
   }, [code, grammar, grammarLang]);
 
-  // Smart HTML & CSS live preview document generation
+  // Live HTML & CSS smart preview document generator
   const previewDoc = useMemo(() => {
     if (!isHtmlCss) return "";
     return buildSmartPreview(code, language);
   }, [code, isHtmlCss, language]);
 
-  // Clean compact title for top bar (preventing long question text from crowding)
   const displayTitle = title && title.length <= 28 ? title : null;
 
   return (
@@ -274,11 +143,11 @@ export function CodeBlock({
 
           {isPlaygroundEligible && (
             <Link
-              to={`/playground`}
+              to={ROUTES.PLAYGROUND}
               onClick={() => {
-                sessionStorage.setItem("feeq-playground-snippet", code);
+                sessionStorage.setItem(SESSION_KEYS.PLAYGROUND_SNIPPET, code);
                 if (isHtmlCss) {
-                  sessionStorage.setItem("feeq-playground-mode", "web");
+                  sessionStorage.setItem(SESSION_KEYS.PLAYGROUND_MODE, "web");
                 }
               }}
               className={styles.playgroundBtn}
@@ -314,202 +183,23 @@ export function CodeBlock({
       </pre>
 
       {/* Live HTML/CSS Component Preview Frame */}
-      {showHtmlPreview && (
-        <div className={styles.htmlPreviewContainer}>
-          <div className={styles.previewBar}>
-            <span>🌐 Live Interactive Component Preview</span>
-            <button
-              type="button"
-              className={styles.closeConsoleBtn}
-              onClick={() => setShowHtmlPreview(false)}
-            >
-              ✕
-            </button>
-          </div>
-          <iframe
-            title="Live Component Preview"
-            className={styles.previewIframe}
-            srcDoc={previewDoc}
-            sandbox="allow-scripts allow-modals allow-forms allow-popups"
-          />
-        </div>
-      )}
+      <CodeBlockPreview
+        showHtmlPreview={showHtmlPreview}
+        previewDoc={previewDoc}
+        onClose={() => setShowHtmlPreview(false)}
+      />
 
       {/* Interactive In-Place Execution Console for JS */}
-      {showConsole && (
-        <div className={styles.inlineConsole}>
-          <div className={styles.consoleHeader}>
-            <div className={styles.consoleTitle}>
-              <span>📟 Console Output</span>
-              {executionTime !== null && (
-                <span className={styles.execTime}>
-                  ⏱ {executionTime.toFixed(1)}ms
-                </span>
-              )}
-            </div>
-            <div className={styles.consoleActions}>
-              <button
-                type="button"
-                className={styles.clearConsoleBtn}
-                onClick={() => setConsoleOutput([])}
-              >
-                Clear
-              </button>
-              <button
-                type="button"
-                className={styles.closeConsoleBtn}
-                onClick={() => setShowConsole(false)}
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-          <div className={styles.consoleBody}>
-            {consoleOutput.length === 0 ? (
-              <span className={styles.emptyLog}>
-                {isRunning
-                  ? "Executing code..."
-                  : "No console output recorded."}
-              </span>
-            ) : (
-              consoleOutput.map((l) => (
-                <div
-                  key={l.id}
-                  className={`${styles.consoleLine} ${
-                    l.type === "error"
-                      ? styles.consoleError
-                      : l.type === "warn"
-                        ? styles.consoleWarn
-                        : l.type === "result"
-                          ? styles.consoleResult
-                          : styles.consoleLog
-                  }`}
-                >
-                  <span className={styles.consolePrefix}>
-                    {l.type === "error"
-                      ? "✗"
-                      : l.type === "warn"
-                        ? "⚠"
-                        : l.type === "result"
-                          ? "→"
-                          : "›"}
-                  </span>
-                  <span className={styles.consoleText}>{l.text}</span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
+      <CodeBlockConsole
+        showConsole={showConsole}
+        isRunning={isRunning}
+        executionTime={executionTime}
+        consoleOutput={consoleOutput}
+        onClear={() => setConsoleOutput([])}
+        onClose={() => setShowConsole(false)}
+      />
     </div>
   );
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-function buildSmartPreview(source: string, lang: string): string {
-  const isPureCSS =
-    lang.toLowerCase() === "css" ||
-    (!source.includes("<") && !source.includes("</"));
-
-  if (isPureCSS) {
-    // Extract selector class names from CSS (e.g., .card, .box-content, .box-border, etc.)
-    const classMatches = Array.from(source.matchAll(/\.([a-zA-Z0-9_-]+)/g))
-      .map((m) => m[1])
-      .filter((c): c is string => Boolean(c));
-    const uniqueClasses = Array.from(new Set(classMatches)).filter(
-      (c) =>
-        ![
-          "hover",
-          "focus",
-          "active",
-          "before",
-          "after",
-          "disabled",
-          "checked",
-        ].includes(c),
-    );
-
-    return `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <style>
-      *, *::before, *::after { box-sizing: border-box; }
-      body {
-        font-family: system-ui, -apple-system, sans-serif;
-        padding: 20px;
-        margin: 0;
-        background: #f7f7f8;
-        color: #2d2d2d;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-      }
-      .demo-canvas {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        align-items: center;
-        width: 100%;
-        max-width: 480px;
-      }
-      .demo-card-fallback {
-        background: #ffffff;
-        border: 1px solid #e5e5e5;
-        border-radius: 12px;
-        padding: 20px;
-        width: 100%;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        text-align: center;
-      }
-      /* Injected CSS */
-      ${source}
-    </style>
-  </head>
-  <body>
-    <div class="demo-canvas">
-      ${
-        uniqueClasses.length > 0
-          ? uniqueClasses
-              .map(
-                (cls) =>
-                  `<div class="${cls} demo-card-fallback"><strong>.${cls}</strong><p style="margin:4px 0 0;font-size:12px;color:#6b6b6b">CSS styles & animations active</p></div>`,
-              )
-              .join("")
-          : `<div class="card demo-card-fallback"><strong>CSS Animation / Style Demo</strong><p style="margin:4px 0 0;font-size:12px;color:#6b6b6b">Live render testbed</p></div>`
-      }
-    </div>
-  </body>
-</html>`;
-  }
-
-  if (source.includes("<html") || source.includes("<body")) {
-    return source;
-  }
-
-  return `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <style>
-      *, *::before, *::after { box-sizing: border-box; }
-      body {
-        font-family: system-ui, -apple-system, sans-serif;
-        padding: 20px;
-        margin: 0;
-        background: #ffffff;
-        color: #2d2d2d;
-      }
-    </style>
-  </head>
-  <body>${source}</body>
-</html>`;
-}
+export default CodeBlock;

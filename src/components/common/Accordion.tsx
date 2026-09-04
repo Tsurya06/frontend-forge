@@ -2,22 +2,22 @@ import { useState, useCallback } from "react";
 import styles from "./Accordion.module.css";
 
 interface AccordionItem {
-  id: string;
-  title: string;
-  content: React.ReactNode;
+  readonly id: string;
+  readonly title: string;
+  readonly content: React.ReactNode;
 }
 
 interface AccordionProps {
-  items: AccordionItem[];
-  multiple?: boolean;
-  className?: string;
+  readonly items: readonly AccordionItem[] | AccordionItem[];
+  readonly multiple?: boolean;
+  readonly className?: string;
 }
 
 export function Accordion({
   items,
   multiple = false,
   className,
-}: AccordionProps) {
+}: Readonly<AccordionProps>) {
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
   const toggle = useCallback(

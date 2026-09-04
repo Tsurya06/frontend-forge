@@ -15,7 +15,7 @@ import {
 import styles from "./Header.module.css";
 
 interface HeaderProps {
-  onMenuToggle: () => void;
+  readonly onMenuToggle: () => void;
 }
 
 const navItems = [
@@ -28,22 +28,29 @@ const navItems = [
   { label: "Sandbox", path: "/playground" },
 ];
 
-export function Header({ onMenuToggle }: HeaderProps) {
+export function Header({ onMenuToggle }: Readonly<HeaderProps>) {
   const { resolvedTheme, toggleTheme } = useThemeContext();
-  const [query, setQuery] = useState("");
+  const [internalQuery, setInternalQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { dailyStreak } = useProgressContext();
 
-  // Sync header search query with URL if on /search page
-  useEffect(() => {
-    if (location.pathname === "/search") {
-      const urlQuery = new URLSearchParams(location.search).get("q") || "";
-      setQuery(urlQuery);
-    }
-  }, [location.pathname, location.search]);
+  const isOnSearch = location.pathname === "/search";
+  const urlQuery = isOnSearch ? new URLSearchParams(location.search).get("q") || "" : "";
+  const query = isOnSearch ? urlQuery : internalQuery;
+
+  const setQuery = useCallback(
+    (val: string) => {
+      if (isOnSearch) {
+        navigate(val ? `/search?q=${encodeURIComponent(val)}` : "/search", { replace: true });
+      } else {
+        setInternalQuery(val);
+      }
+    },
+    [isOnSearch, navigate],
+  );
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -63,12 +70,13 @@ export function Header({ onMenuToggle }: HeaderProps) {
   }, []);
 
   const handleClear = useCallback(() => {
-    setQuery("");
-    if (location.pathname === "/search") {
-      navigate("/search");
+    if (isOnSearch) {
+      navigate("/search", { replace: true });
+    } else {
+      setInternalQuery("");
     }
     inputRef.current?.focus();
-  }, [location.pathname, navigate]);
+  }, [isOnSearch, navigate]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

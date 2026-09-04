@@ -2,18 +2,18 @@ import { useState, useRef, useCallback } from "react";
 import styles from "./Tabs.module.css";
 
 interface TabItem {
-  id: string;
-  label: string;
-  content: React.ReactNode;
+  readonly id: string;
+  readonly label: string;
+  readonly content: React.ReactNode;
 }
 
 interface TabsProps {
-  tabs: TabItem[];
-  defaultTab?: string;
-  className?: string;
+  readonly tabs: readonly TabItem[] | TabItem[];
+  readonly defaultTab?: string;
+  readonly className?: string;
 }
 
-export function Tabs({ tabs, defaultTab, className }: TabsProps) {
+export function Tabs({ tabs, defaultTab, className }: Readonly<TabsProps>) {
   const [activeTab, setActiveTab] = useState(defaultTab ?? tabs[0]?.id ?? "");
   const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 

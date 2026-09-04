@@ -27,7 +27,7 @@ import {
 import styles from "./Sidebar.module.css";
 
 interface SidebarProps {
-  onNavigate?: () => void;
+  readonly onNavigate?: () => void;
 }
 
 interface NavItem {
@@ -177,7 +177,7 @@ const sections: NavSection[] = [
   },
 ];
 
-export function Sidebar({ onNavigate }: SidebarProps) {
+export function Sidebar({ onNavigate }: Readonly<SidebarProps>) {
   return (
     <nav className={styles.sidebar} aria-label="Curriculum Navigation">
       <div className={styles.nav}>

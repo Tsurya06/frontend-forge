@@ -2,11 +2,11 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./SearchInput.module.css";
 
 interface SearchInputProps {
-  value?: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  debounceMs?: number;
-  className?: string;
+  readonly value?: string;
+  readonly onChange: (value: string) => void;
+  readonly placeholder?: string;
+  readonly debounceMs?: number;
+  readonly className?: string;
 }
 
 export function SearchInput({
@@ -15,7 +15,7 @@ export function SearchInput({
   placeholder = "Search...",
   debounceMs = 300,
   className,
-}: SearchInputProps) {
+}: Readonly<SearchInputProps>) {
   const [prevControlled, setPrevControlled] = useState(controlledValue);
   const [internalValue, setInternalValue] = useState(controlledValue ?? "");
   const inputRef = useRef<HTMLInputElement>(null);

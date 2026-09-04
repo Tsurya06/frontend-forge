@@ -1,11 +1,14 @@
 import styles from "./VisualizerComponents.module.css";
 
 interface ConsoleOutputViewProps {
-  logs: string[];
-  hideHeader?: boolean;
+  readonly logs: readonly string[] | string[];
+  readonly hideHeader?: boolean;
 }
 
-export function ConsoleOutputView({ logs, hideHeader = false }: ConsoleOutputViewProps) {
+export function ConsoleOutputView({
+  logs,
+  hideHeader = false,
+}: Readonly<ConsoleOutputViewProps>) {
   return (
     <div className={styles.consoleCard}>
       {!hideHeader && (

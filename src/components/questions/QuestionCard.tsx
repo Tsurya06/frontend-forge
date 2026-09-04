@@ -25,17 +25,17 @@ const difficultyVariant: Record<
 };
 
 interface QuestionCardProps {
-  id: string;
-  question: string;
-  difficulty: Difficulty;
-  tags: string[];
-  shortAnswer?: string;
-  explanation?: string;
-  code?: string;
-  codeLanguage?: string;
-  commonMistakes?: string[];
-  followUps?: string[];
-  interviewTips?: string[];
+  readonly id: string;
+  readonly question: string;
+  readonly difficulty: Difficulty;
+  readonly tags: readonly string[] | string[];
+  readonly shortAnswer?: string;
+  readonly explanation?: string;
+  readonly code?: string;
+  readonly codeLanguage?: string;
+  readonly commonMistakes?: readonly string[] | string[];
+  readonly followUps?: readonly string[] | string[];
+  readonly interviewTips?: readonly string[] | string[];
 }
 
 export function QuestionCard({
@@ -50,7 +50,7 @@ export function QuestionCard({
   commonMistakes,
   followUps,
   interviewTips,
-}: QuestionCardProps) {
+}: Readonly<QuestionCardProps>) {
   const [expanded, setExpanded] = useState(false);
   const { isBookmarked, toggleBookmark } = useBookmarkContext();
   const { isComplete, markComplete } = useProgressContext();

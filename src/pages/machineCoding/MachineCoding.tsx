@@ -5,8 +5,10 @@ import { SearchInput } from "@/components/common/SearchInput";
 import { Card } from "@/components/common/Card";
 import { Badge } from "@/components/common/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
+import { PageSkeleton } from "@/components/common/PageSkeleton";
 import { useVirtualGrid } from "@/hooks/useVirtualGrid";
-import { allMachineCodingProblems } from "@/data";
+import { machineCodingApi } from "@/services/api";
+import { useApiQuery } from "@/services/api/hooks/useApi";
 import type { Difficulty, MachineCodingProblem } from "@/types";
 import styles from "./MachineCoding.module.css";
 
@@ -29,8 +31,13 @@ export default function MachineCoding() {
   const [completionFilter, setCompletionFilter] =
     useState<CompletionFilter>("all");
 
+  const { data: problemsData, loading } = useApiQuery<MachineCodingProblem[]>(() =>
+    machineCodingApi.getAll()
+  );
+  const allProblems: MachineCodingProblem[] = useMemo(() => problemsData ?? [], [problemsData]);
+
   const filtered = useMemo<MachineCodingProblem[]>(() => {
-    let problems = [...allMachineCodingProblems];
+    let problems = [...allProblems];
 
     if (search) {
       const q = search.toLowerCase();
@@ -54,7 +61,7 @@ export default function MachineCoding() {
     }
 
     return problems;
-  }, [search, difficultyFilter, completionFilter, completedMachineCoding]);
+  }, [allProblems, search, difficultyFilter, completionFilter, completedMachineCoding]);
 
   const {
     visibleItems: renderedProblems,
@@ -68,7 +75,7 @@ export default function MachineCoding() {
   });
 
   const totalDone = completedMachineCoding.length;
-  const total = allMachineCodingProblems.length;
+  const total = allProblems.length;
 
   return (
     <div className={styles.page}>
@@ -117,7 +124,9 @@ export default function MachineCoding() {
       </div>
 
       <div className={styles.scrollableContent}>
-        {filtered.length === 0 ? (
+        {loading ? (
+          <PageSkeleton variant="grid" />
+        ) : filtered.length === 0 ? (
           <EmptyState
             icon="🏗️"
             title="No machine coding problems found"

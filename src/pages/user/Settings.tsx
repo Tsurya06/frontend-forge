@@ -2,18 +2,8 @@ import { useState, useCallback, useRef } from "react";
 import { useThemeContext } from "@/context/ThemeContext";
 import { Card } from "@/components/common/Card";
 import { Modal } from "@/components/common/Modal";
+import { EXPORTABLE_STORAGE_KEYS } from "@/constants";
 import styles from "./Settings.module.css";
-
-const STORAGE_KEYS = [
-  "feeq-completed-questions",
-  "feeq-completed-coding",
-  "feeq-completed-machine-coding",
-  "feeq-recently-viewed",
-  "feeq-bookmarks",
-  "feeq-notes",
-  "feeq-theme",
-  "feeq-flashcard-progress",
-];
 
 export default function Settings() {
   const { theme, setTheme } = useThemeContext();
@@ -23,7 +13,7 @@ export default function Settings() {
 
   const handleExport = useCallback(() => {
     const data: Record<string, unknown> = {};
-    STORAGE_KEYS.forEach((key) => {
+    EXPORTABLE_STORAGE_KEYS.forEach((key) => {
       const val = localStorage.getItem(key);
       if (val !== null) {
         try {
@@ -64,7 +54,9 @@ export default function Settings() {
           }
           let imported = 0;
           Object.entries(data).forEach(([key, value]) => {
-            if (STORAGE_KEYS.includes(key)) {
+            if (
+              (EXPORTABLE_STORAGE_KEYS as readonly string[]).includes(key)
+            ) {
               localStorage.setItem(key, JSON.stringify(value));
               imported++;
             }
@@ -83,7 +75,7 @@ export default function Settings() {
   );
 
   const handleReset = useCallback(() => {
-    STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
+    EXPORTABLE_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
     setShowResetModal(false);
     window.location.reload();
   }, []);

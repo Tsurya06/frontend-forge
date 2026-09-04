@@ -178,7 +178,7 @@ class TextHighlighter {
     
     const textNodes = [];
     let node;
-    while (node = walker.nextNode()) {
+    while ((node = walker.nextNode()) !== null) {
       if (regex.test(node.textContent)) {
         textNodes.push(node);
       }

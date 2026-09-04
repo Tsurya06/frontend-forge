@@ -6,7 +6,9 @@ type NotesContextValue = ReturnType<typeof useNotes>;
 
 const NotesContext = createContext<NotesContextValue | null>(null);
 
-export function NotesProvider({ children }: { children: ReactNode }) {
+export function NotesProvider({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const notes = useNotes();
   return (
     <NotesContext.Provider value={notes}>{children}</NotesContext.Provider>

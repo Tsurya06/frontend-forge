@@ -6,7 +6,9 @@ import { Card } from "@/components/common/Card";
 import { Badge } from "@/components/common/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Pagination } from "@/components/common/Pagination";
-import { allCodingProblems } from "@/data";
+import { PageSkeleton } from "@/components/common/PageSkeleton";
+import { codingApi } from "@/services/api";
+import { useApiQuery } from "@/services/api/hooks/useApi";
 import type { Difficulty, CodingProblem } from "@/types";
 import styles from "./Coding.module.css";
 
@@ -33,8 +35,11 @@ export default function Coding() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
 
+  const { data: problemsData, loading } = useApiQuery<CodingProblem[]>(() => codingApi.getAll());
+  const allProblems: CodingProblem[] = useMemo(() => problemsData ?? [], [problemsData]);
+
   const filtered = useMemo<CodingProblem[]>(() => {
-    let problems = [...allCodingProblems];
+    let problems = [...allProblems];
 
     if (search) {
       const q = search.toLowerCase();
@@ -58,7 +63,7 @@ export default function Coding() {
     }
 
     return problems;
-  }, [search, difficultyFilter, completionFilter, completedCoding]);
+  }, [allProblems, search, difficultyFilter, completionFilter, completedCoding]);
 
   const totalProblems = filtered.length;
   const totalPages = Math.max(1, Math.ceil(totalProblems / pageSize));
@@ -70,7 +75,7 @@ export default function Coding() {
   }, [filtered, safeCurrentPage, pageSize]);
 
   const totalDone = completedCoding.length;
-  const total = allCodingProblems.length;
+  const total = allProblems.length;
 
   return (
     <div className={styles.page}>
@@ -156,11 +161,13 @@ export default function Coding() {
 
       {/* ── Scrollable Problem List Body with Pagination ── */}
       <div className={styles.scrollableContent}>
-        {totalProblems === 0 ? (
+        {loading ? (
+          <PageSkeleton variant="grid" />
+        ) : totalProblems === 0 ? (
           <EmptyState
             icon="💻"
             title="No problems found"
-            description="Try adjusting your search query or filters"
+            description="No coding problems are available."
             actionLabel="Reset filters"
             onAction={() => {
               setSearch("");

@@ -4,10 +4,10 @@ type BadgeVariant =
   "beginner" | "intermediate" | "advanced" | "senior" | "category" | "tag";
 
 interface BadgeProps {
-  children: React.ReactNode;
-  variant?: BadgeVariant;
-  size?: "small" | "medium";
-  className?: string;
+  readonly children: React.ReactNode;
+  readonly variant?: BadgeVariant;
+  readonly size?: "small" | "medium";
+  readonly className?: string;
 }
 
 export function Badge({
@@ -15,7 +15,7 @@ export function Badge({
   variant = "tag",
   size = "small",
   className,
-}: BadgeProps) {
+}: Readonly<BadgeProps>) {
   const badgeClass = [styles.badge, styles[variant], styles[size], className]
     .filter(Boolean)
     .join(" ");

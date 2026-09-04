@@ -4,7 +4,9 @@ import { ProgressProvider } from "@/context/ProgressContext";
 import { BookmarkProvider } from "@/context/BookmarkContext";
 import { NotesProvider } from "@/context/NotesContext";
 
-export function AppProviders({ children }: { children: ReactNode }) {
+export function AppProviders({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   return (
     <ThemeProvider>
       <ProgressProvider>

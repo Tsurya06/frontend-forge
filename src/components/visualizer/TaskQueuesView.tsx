@@ -3,10 +3,10 @@ import type { WebApiTask, QueueItem } from "@/utils/runtimeVisualizerEngine";
 import styles from "./VisualizerComponents.module.css";
 
 interface TaskQueuesViewProps {
-  webApis: WebApiTask[];
-  microtasks: QueueItem[];
-  macrotasks: QueueItem[];
-  onInfoClick?: (area: "webapis" | "microtasks" | "macrotasks") => void;
+  readonly webApis: readonly WebApiTask[] | WebApiTask[];
+  readonly microtasks: readonly QueueItem[] | QueueItem[];
+  readonly macrotasks: readonly QueueItem[] | QueueItem[];
+  readonly onInfoClick?: (area: "webapis" | "microtasks" | "macrotasks") => void;
 }
 
 export function TaskQueuesView({
@@ -14,7 +14,7 @@ export function TaskQueuesView({
   microtasks,
   macrotasks,
   onInfoClick,
-}: TaskQueuesViewProps) {
+}: Readonly<TaskQueuesViewProps>) {
   return (
     <div className={styles.queuesContainer}>
       {/* ── 1. Web APIs Background Worker Threads ── */}

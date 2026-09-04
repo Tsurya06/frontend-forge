@@ -3,45 +3,45 @@ import { Routes, Route } from "react-router-dom";
 import Layout from "@/app/layout/Layout";
 
 // Primary Navigation Routes (eagerly loaded for instantaneous 0ms tab switching)
-import Dashboard from "@/pages/Dashboard";
-import Roadmap from "@/pages/Roadmap";
-import Topics from "@/pages/Topics";
-import Coding from "@/pages/Coding";
-import MachineCoding from "@/pages/MachineCoding";
-import SystemDesign from "@/pages/SystemDesign";
-import Daily from "@/pages/Daily";
-import Playground from "@/pages/Playground";
-import Bookmarks from "@/pages/Bookmarks";
-import Progress from "@/pages/Progress";
-import Search from "@/pages/Search";
-import Settings from "@/pages/Settings";
+import Dashboard from "@/pages/dashboard/Dashboard";
+import Roadmap from "@/pages/dashboard/Roadmap";
+import Topics from "@/pages/topics/Topics";
+import Coding from "@/pages/coding/Coding";
+import MachineCoding from "@/pages/machineCoding/MachineCoding";
+import SystemDesign from "@/pages/systemDesign/SystemDesign";
+import Daily from "@/pages/practice/Daily";
+import Playground from "@/pages/playground/Playground";
+import Bookmarks from "@/pages/user/Bookmarks";
+import Progress from "@/pages/user/Progress";
+import Search from "@/pages/user/Search";
+import Settings from "@/pages/user/Settings";
 
 // Deep / Specialized sub-routes (lazy loaded with idle prefetching)
-const TopicDetail = lazy(() => import("@/pages/TopicDetail"));
-const CategoryPage = lazy(() => import("@/pages/CategoryPage"));
-const CodingDetail = lazy(() => import("@/pages/CodingDetail"));
-const MachineCodingDetail = lazy(() => import("@/pages/MachineCodingDetail"));
-const SystemDesignDetail = lazy(() => import("@/pages/SystemDesignDetail"));
-const Senior = lazy(() => import("@/pages/Senior"));
-const Quiz = lazy(() => import("@/pages/Quiz"));
-const Flashcards = lazy(() => import("@/pages/Flashcards"));
-const Interview = lazy(() => import("@/pages/Interview"));
-const Visualizer = lazy(() => import("@/pages/Visualizer"));
-const NotFound = lazy(() => import("@/pages/NotFound"));
+const TopicDetail = lazy(() => import("@/pages/topics/TopicDetail"));
+const CategoryPage = lazy(() => import("@/pages/topics/CategoryPage"));
+const CodingDetail = lazy(() => import("@/pages/coding/CodingDetail"));
+const MachineCodingDetail = lazy(() => import("@/pages/machineCoding/MachineCodingDetail"));
+const SystemDesignDetail = lazy(() => import("@/pages/systemDesign/SystemDesignDetail"));
+const Senior = lazy(() => import("@/pages/dashboard/Senior"));
+const Quiz = lazy(() => import("@/pages/practice/Quiz"));
+const Flashcards = lazy(() => import("@/pages/practice/Flashcards"));
+const Interview = lazy(() => import("@/pages/practice/Interview"));
+const Visualizer = lazy(() => import("@/pages/visualizer/Visualizer"));
+const NotFound = lazy(() => import("@/pages/notFound/NotFound"));
 
 // Background prefetch during browser idle time
 function startIdlePrefetch() {
   if (typeof window === "undefined") return;
   const prefetch = () => {
-    import("@/pages/TopicDetail");
-    import("@/pages/CodingDetail");
-    import("@/pages/MachineCodingDetail");
-    import("@/pages/SystemDesignDetail");
-    import("@/pages/CategoryPage");
-    import("@/pages/Senior");
-    import("@/pages/Quiz");
-    import("@/pages/Flashcards");
-    import("@/pages/Interview");
+    import("@/pages/topics/TopicDetail");
+    import("@/pages/coding/CodingDetail");
+    import("@/pages/machineCoding/MachineCodingDetail");
+    import("@/pages/systemDesign/SystemDesignDetail");
+    import("@/pages/topics/CategoryPage");
+    import("@/pages/dashboard/Senior");
+    import("@/pages/practice/Quiz");
+    import("@/pages/practice/Flashcards");
+    import("@/pages/practice/Interview");
   };
 
   if ("requestIdleCallback" in window) {
@@ -51,25 +51,7 @@ function startIdlePrefetch() {
   }
 }
 
-const CATEGORIES = [
-  "javascript",
-  "html",
-  "css",
-  "browser",
-  "react",
-  "redux",
-  "typescript",
-  "performance",
-  "testing",
-  "security",
-  "design-patterns",
-  "git",
-  "build-tools",
-  "package-management",
-  "code-quality",
-  "accessibility",
-] as const;
-
+import { ROUTES, CATEGORIES } from "@/constants/routes";
 import { PageSkeleton } from "@/components/common";
 
 export function AppRoutes() {
@@ -82,20 +64,20 @@ export function AppRoutes() {
       <Route element={<Layout />}>
         {/* Core Instant Navigation Routes */}
         <Route index element={<Dashboard />} />
-        <Route path="roadmap" element={<Roadmap />} />
-        <Route path="topics" element={<Topics />} />
-        <Route path="topic" element={<Topics />} />
-        <Route path="coding" element={<Coding />} />
-        <Route path="machine-coding" element={<MachineCoding />} />
-        <Route path="system-design" element={<SystemDesign />} />
-        <Route path="daily" element={<Daily />} />
-        <Route path="playground" element={<Playground />} />
-        <Route path="bookmarks" element={<Bookmarks />} />
-        <Route path="progress" element={<Progress />} />
-        <Route path="search" element={<Search />} />
-        <Route path="settings" element={<Settings />} />
+        <Route path={ROUTES.ROADMAP.slice(1)} element={<Roadmap />} />
+        <Route path={ROUTES.TOPICS.slice(1)} element={<Topics />} />
+        <Route path={ROUTES.TOPIC_SHORT.slice(1)} element={<Topics />} />
+        <Route path={ROUTES.CODING.slice(1)} element={<Coding />} />
+        <Route path={ROUTES.MACHINE_CODING.slice(1)} element={<MachineCoding />} />
+        <Route path={ROUTES.SYSTEM_DESIGN.slice(1)} element={<SystemDesign />} />
+        <Route path={ROUTES.DAILY.slice(1)} element={<Daily />} />
+        <Route path={ROUTES.PLAYGROUND.slice(1)} element={<Playground />} />
+        <Route path={ROUTES.BOOKMARKS.slice(1)} element={<Bookmarks />} />
+        <Route path={ROUTES.PROGRESS.slice(1)} element={<Progress />} />
+        <Route path={ROUTES.SEARCH.slice(1)} element={<Search />} />
+        <Route path={ROUTES.SETTINGS.slice(1)} element={<Settings />} />
         <Route
-          path="visualizer"
+          path={ROUTES.VISUALIZER.slice(1)}
           element={
             <Suspense fallback={<PageSkeleton variant="problem" />}>
               <Visualizer />
@@ -103,7 +85,7 @@ export function AppRoutes() {
           }
         />
         <Route
-          path="runtime"
+          path={ROUTES.RUNTIME.slice(1)}
           element={
             <Suspense fallback={<PageSkeleton variant="problem" />}>
               <Visualizer />
@@ -169,7 +151,7 @@ export function AppRoutes() {
         />
 
         <Route
-          path="senior"
+          path={ROUTES.SENIOR.slice(1)}
           element={
             <Suspense fallback={<PageSkeleton variant="grid" />}>
               <Senior />
@@ -177,7 +159,7 @@ export function AppRoutes() {
           }
         />
         <Route
-          path="quiz"
+          path={ROUTES.QUIZ.slice(1)}
           element={
             <Suspense fallback={<PageSkeleton variant="grid" />}>
               <Quiz />
@@ -185,7 +167,7 @@ export function AppRoutes() {
           }
         />
         <Route
-          path="flashcards"
+          path={ROUTES.FLASHCARDS.slice(1)}
           element={
             <Suspense fallback={<PageSkeleton variant="grid" />}>
               <Flashcards />
@@ -193,7 +175,7 @@ export function AppRoutes() {
           }
         />
         <Route
-          path="interview"
+          path={ROUTES.INTERVIEW.slice(1)}
           element={
             <Suspense fallback={<PageSkeleton variant="grid" />}>
               <Interview />

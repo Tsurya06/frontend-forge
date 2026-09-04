@@ -2,17 +2,20 @@ import { RefreshCw, Info } from "lucide-react";
 import styles from "./VisualizerComponents.module.css";
 
 interface EventLoopRotorProps {
-  status:
+  readonly status:
     | "stack-running"
     | "checking-microtasks"
     | "draining-microtask"
     | "checking-macrotasks"
     | "pulling-macrotask"
     | "idle";
-  onInfoClick?: () => void;
+  readonly onInfoClick?: () => void;
 }
 
-export function EventLoopRotor({ status, onInfoClick }: EventLoopRotorProps) {
+export function EventLoopRotor({
+  status,
+  onInfoClick,
+}: Readonly<EventLoopRotorProps>) {
   const isSpinning = status !== "idle";
 
   const getStatusDetails = () => {

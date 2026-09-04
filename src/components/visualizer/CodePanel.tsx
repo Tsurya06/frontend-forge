@@ -2,12 +2,13 @@ import { useState, useRef, useEffect, useMemo, type UIEvent } from "react";
 import { Copy, Check, Sparkles, Palette } from "lucide-react";
 import Prism from "@/lib/prism";
 import styles from "./CodePanel.module.css";
+import { STORAGE_KEYS } from "@/constants/storage";
 
 interface CodePanelProps {
-  code: string;
-  activeLine: number;
-  title: string;
-  onCodeChange: (newCode: string) => void;
+  readonly code: string;
+  readonly activeLine: number;
+  readonly title: string;
+  readonly onCodeChange: (newCode: string) => void;
 }
 
 export function CodePanel({
@@ -15,10 +16,10 @@ export function CodePanel({
   activeLine,
   title,
   onCodeChange,
-}: CodePanelProps) {
+}: Readonly<CodePanelProps>) {
   const [copied, setCopied] = useState(false);
   const [codeTheme, setCodeTheme] = useState(() => {
-    return localStorage.getItem("feeq-code-theme") || "onedark";
+    return localStorage.getItem(STORAGE_KEYS.CODE_THEME) || "onedark";
   });
   const gutterRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -46,7 +47,7 @@ export function CodePanel({
 
   const handleThemeChange = (newTheme: string) => {
     setCodeTheme(newTheme);
-    localStorage.setItem("feeq-code-theme", newTheme);
+    localStorage.setItem(STORAGE_KEYS.CODE_THEME, newTheme);
   };
 
   // Synchronize vertical scroll between textarea, highlight pre, and line-number gutter

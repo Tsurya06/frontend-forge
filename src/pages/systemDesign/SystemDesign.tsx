@@ -4,9 +4,11 @@ import { SearchInput } from "@/components/common/SearchInput";
 import { Card } from "@/components/common/Card";
 import { Badge } from "@/components/common/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
+import { PageSkeleton } from "@/components/common/PageSkeleton";
 import { useVirtualGrid } from "@/hooks/useVirtualGrid";
-import { allSystemDesignProblems } from "@/data";
-import type { Difficulty } from "@/types";
+import { systemDesignApi } from "@/services/api";
+import { useApiQuery } from "@/services/api/hooks/useApi";
+import type { Difficulty, SystemDesignProblem } from "@/types";
 import styles from "./SystemDesign.module.css";
 
 const difficultyVariant: Record<
@@ -23,8 +25,13 @@ export default function SystemDesign() {
   const [search, setSearch] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
 
-  const filtered = useMemo(() => {
-    let problems = [...allSystemDesignProblems];
+  const { data: problemsData, loading } = useApiQuery<SystemDesignProblem[]>(() =>
+    systemDesignApi.getAll()
+  );
+  const allProblems: SystemDesignProblem[] = useMemo(() => problemsData ?? [], [problemsData]);
+
+  const filtered = useMemo<SystemDesignProblem[]>(() => {
+    let problems = [...allProblems];
 
     if (search) {
       const q = search.toLowerCase();
@@ -41,7 +48,7 @@ export default function SystemDesign() {
     }
 
     return problems;
-  }, [search, difficultyFilter]);
+  }, [allProblems, search, difficultyFilter]);
 
   const {
     visibleItems: renderedProblems,
@@ -85,7 +92,9 @@ export default function SystemDesign() {
       </div>
 
       <div className={styles.scrollableContent}>
-        {filtered.length === 0 ? (
+        {loading ? (
+          <PageSkeleton variant="grid" />
+        ) : filtered.length === 0 ? (
           <EmptyState
             icon="📐"
             title="No system design problems found"

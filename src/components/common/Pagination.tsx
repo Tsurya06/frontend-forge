@@ -1,13 +1,13 @@
 import styles from "./Pagination.module.css";
 
 interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  pageSize: number;
-  pageSizeOptions?: number[];
-  onPageChange: (page: number) => void;
-  onPageSizeChange?: (size: number) => void;
+  readonly currentPage: number;
+  readonly totalPages: number;
+  readonly totalItems: number;
+  readonly pageSize: number;
+  readonly pageSizeOptions?: readonly number[] | number[];
+  readonly onPageChange: (page: number) => void;
+  readonly onPageSizeChange?: (size: number) => void;
 }
 
 export function Pagination({
@@ -18,7 +18,7 @@ export function Pagination({
   pageSizeOptions = [10, 20, 50, 100],
   onPageChange,
   onPageSizeChange,
-}: PaginationProps) {
+}: Readonly<PaginationProps>) {
   if (totalItems === 0) return null;
 
   const startIdx = Math.min((currentPage - 1) * pageSize + 1, totalItems);

@@ -6,7 +6,9 @@ type ProgressContextValue = ReturnType<typeof useProgress>;
 
 const ProgressContext = createContext<ProgressContextValue | null>(null);
 
-export function ProgressProvider({ children }: { children: ReactNode }) {
+export function ProgressProvider({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const progress = useProgress();
   return (
     <ProgressContext.Provider value={progress}>

@@ -1,12 +1,12 @@
 import styles from "./Card.module.css";
 
 interface CardProps {
-  children: React.ReactNode;
-  header?: React.ReactNode;
-  footer?: React.ReactNode;
-  padding?: "compact" | "default" | "spacious";
-  onClick?: () => void;
-  className?: string;
+  readonly children: React.ReactNode;
+  readonly header?: React.ReactNode;
+  readonly footer?: React.ReactNode;
+  readonly padding?: "compact" | "default" | "spacious";
+  readonly onClick?: () => void;
+  readonly className?: string;
 }
 
 export function Card({
@@ -16,7 +16,7 @@ export function Card({
   padding = "default",
   onClick,
   className,
-}: CardProps) {
+}: Readonly<CardProps>) {
   const Tag = onClick ? "button" : "div";
 
   const cardClass = [

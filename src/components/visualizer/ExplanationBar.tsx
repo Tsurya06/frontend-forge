@@ -1,11 +1,11 @@
 import styles from "./VisualizerComponents.module.css";
 
 interface ExplanationBarProps {
-  step: number;
-  totalSteps: number;
-  explanation: string;
-  line: number;
-  phase: string;
+  readonly step: number;
+  readonly totalSteps: number;
+  readonly explanation: string;
+  readonly line: number;
+  readonly phase: string;
 }
 
 export function ExplanationBar({
@@ -14,7 +14,7 @@ export function ExplanationBar({
   explanation,
   line,
   phase,
-}: ExplanationBarProps) {
+}: Readonly<ExplanationBarProps>) {
   return (
     <div className={styles.explanationCard}>
       <div className={styles.explanationHeader}>

@@ -1,11 +1,11 @@
 import styles from "./Tooltip.module.css";
 
 interface TooltipProps {
-  text: string;
-  children: React.ReactNode;
+  readonly text: string;
+  readonly children: React.ReactNode;
 }
 
-export function Tooltip({ text, children }: TooltipProps) {
+export function Tooltip({ text, children }: Readonly<TooltipProps>) {
   return (
     <span className={styles.wrapper}>
       {children}

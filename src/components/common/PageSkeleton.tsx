@@ -1,10 +1,12 @@
 import styles from "./PageSkeleton.module.css";
 
 interface PageSkeletonProps {
-  variant?: "problem" | "grid" | "detail" | "editor";
+  readonly variant?: "problem" | "grid" | "detail" | "editor";
 }
 
-export function PageSkeleton({ variant = "problem" }: PageSkeletonProps) {
+export function PageSkeleton({
+  variant = "problem",
+}: Readonly<PageSkeletonProps>) {
   if (variant === "grid") {
     return (
       <div className={styles.gridContainer} aria-hidden="true">

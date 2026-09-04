@@ -1,11 +1,11 @@
 import styles from "./ProgressBar.module.css";
 
 interface ProgressBarProps {
-  value: number;
-  label?: string;
-  showPercentage?: boolean;
-  size?: "sm" | "md" | "lg";
-  color?: "primary" | "success" | "warning" | "error" | "accent";
+  readonly value: number;
+  readonly label?: string;
+  readonly showPercentage?: boolean;
+  readonly size?: "sm" | "md" | "lg";
+  readonly color?: "primary" | "success" | "warning" | "error" | "accent";
 }
 
 export function ProgressBar({
@@ -14,7 +14,7 @@ export function ProgressBar({
   showPercentage = false,
   size = "md",
   color = "primary",
-}: ProgressBarProps) {
+}: Readonly<ProgressBarProps>) {
   const clamped = Math.min(100, Math.max(0, value));
 
   return (

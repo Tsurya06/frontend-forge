@@ -1,16 +1,16 @@
 import styles from "./Skeleton.module.css";
 
 interface SkeletonProps {
-  variant?: "text" | "card" | "list";
-  lines?: number;
-  className?: string;
+  readonly variant?: "text" | "card" | "list";
+  readonly lines?: number;
+  readonly className?: string;
 }
 
 export function Skeleton({
   variant = "text",
   lines = 3,
   className,
-}: SkeletonProps) {
+}: Readonly<SkeletonProps>) {
   if (variant === "card") {
     return (
       <div

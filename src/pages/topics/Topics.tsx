@@ -6,9 +6,12 @@ import { Card } from "@/components/common/Card";
 import { Badge } from "@/components/common/Badge";
 import { ProgressBar } from "@/components/common/ProgressBar";
 import { EmptyState } from "@/components/common/EmptyState";
+import { PageSkeleton } from "@/components/common/PageSkeleton";
 import { useVirtualGrid } from "@/hooks/useVirtualGrid";
-import { allTopics, categories } from "@/data";
-import type { Difficulty } from "@/types";
+import { topicsApi } from "@/services/api";
+import { useApiQuery } from "@/services/api/hooks/useApi";
+import { categories } from "@/data";
+import type { Difficulty, Topic } from "@/types";
 import styles from "./Topics.module.css";
 
 type SortOption = "alphabetical" | "difficulty" | "progress";
@@ -42,8 +45,11 @@ export default function Topics() {
   const [sortBy, setSortBy] = useState<SortOption>("alphabetical");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
-  const filtered = useMemo(() => {
-    let topics = [...allTopics];
+  const { data: topicsData, loading } = useApiQuery<Topic[]>(() => topicsApi.getAll());
+  const allTopicsList: Topic[] = useMemo(() => topicsData ?? [], [topicsData]);
+
+  const filtered = useMemo<Topic[]>(() => {
+    let topics = [...allTopicsList];
 
     if (search) {
       const q = search.toLowerCase();
@@ -98,6 +104,7 @@ export default function Topics() {
 
     return topics;
   }, [
+    allTopicsList,
     search,
     categoryFilter,
     difficultyFilter,
@@ -205,7 +212,9 @@ export default function Topics() {
       </div>
 
       <div className={styles.scrollableContent}>
-        {filtered.length === 0 ? (
+        {loading ? (
+          <PageSkeleton variant="grid" />
+        ) : filtered.length === 0 ? (
           <EmptyState
             icon="🔍"
             title="No topics found"

@@ -3,10 +3,10 @@ import type { HeapObject } from "@/utils/runtimeVisualizerEngine";
 import styles from "./VisualizerComponents.module.css";
 
 interface MemoryHeapViewProps {
-  heap: HeapObject[];
-  highlightAddress?: string;
-  onSelectAddress?: (addr: string) => void;
-  onInfoClick?: () => void;
+  readonly heap: readonly HeapObject[] | HeapObject[];
+  readonly highlightAddress?: string;
+  readonly onSelectAddress?: (addr: string) => void;
+  readonly onInfoClick?: () => void;
 }
 
 export function MemoryHeapView({
@@ -14,7 +14,7 @@ export function MemoryHeapView({
   highlightAddress,
   onSelectAddress,
   onInfoClick,
-}: MemoryHeapViewProps) {
+}: Readonly<MemoryHeapViewProps>) {
   return (
     <div className={styles.panelCard}>
       <div className={styles.panelHeader}>

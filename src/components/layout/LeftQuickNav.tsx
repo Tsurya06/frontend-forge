@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useProgressContext } from "@/context/ProgressContext";
+import { STORAGE_KEYS } from "@/constants/storage";
 import {
   Code2,
   BookOpen,
@@ -23,7 +24,7 @@ export function LeftQuickNav() {
   const { completedCoding, completedQuestions } = useProgressContext();
   const [collapsed, setCollapsed] = useState(() => {
     try {
-      return localStorage.getItem("sidebar_collapsed") === "true";
+      return localStorage.getItem(STORAGE_KEYS.SIDEBAR_COLLAPSED) === "true";
     } catch {
       return false;
     }
@@ -33,7 +34,7 @@ export function LeftQuickNav() {
     setCollapsed((prev) => {
       const next = !prev;
       try {
-        localStorage.setItem("sidebar_collapsed", String(next));
+        localStorage.setItem(STORAGE_KEYS.SIDEBAR_COLLAPSED, String(next));
       } catch {}
       return next;
     });
