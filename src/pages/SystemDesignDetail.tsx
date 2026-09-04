@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useBookmarkContext } from "@/context/BookmarkContext";
 import { Badge } from "@/components/common/Badge";
 import { Accordion } from "@/components/common/Accordion";
@@ -20,6 +20,7 @@ const difficultyVariant: Record<
 
 export default function SystemDesignDetail() {
   const { problemId } = useParams<{ problemId: string }>();
+  const navigate = useNavigate();
   const { isBookmarked, toggleBookmark } = useBookmarkContext();
 
   const problem = useMemo(() => {
@@ -35,7 +36,7 @@ export default function SystemDesignDetail() {
           title="Problem not found"
           description="The system design problem you're looking for doesn't exist."
           actionLabel="Browse Problems"
-          onAction={() => window.location.assign("/system-design")}
+          onAction={() => navigate("/system-design")}
         />
       </div>
     );

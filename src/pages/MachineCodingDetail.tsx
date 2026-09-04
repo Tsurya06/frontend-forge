@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useProgressContext } from "@/context/ProgressContext";
 import { useBookmarkContext } from "@/context/BookmarkContext";
 import { Badge } from "@/components/common/Badge";
@@ -22,6 +22,7 @@ const difficultyVariant: Record<
 
 export default function MachineCodingDetail() {
   const { problemId } = useParams<{ problemId: string }>();
+  const navigate = useNavigate();
   const { isComplete, markComplete } = useProgressContext();
   const { isBookmarked, toggleBookmark } = useBookmarkContext();
 
@@ -38,7 +39,7 @@ export default function MachineCodingDetail() {
           title="Problem not found"
           description="The machine coding problem you're looking for doesn't exist."
           actionLabel="Browse Problems"
-          onAction={() => window.location.assign("/machine-coding")}
+          onAction={() => navigate("/machine-coding")}
         />
       </div>
     );

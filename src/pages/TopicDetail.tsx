@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useProgressContext } from "@/context/ProgressContext";
 import { Badge } from "@/components/common/Badge";
 import { Tabs } from "@/components/common/Tabs";
@@ -23,6 +23,7 @@ const difficultyVariant: Record<
 
 export default function TopicDetail() {
   const { topicId } = useParams<{ topicId: string }>();
+  const navigate = useNavigate();
   const { completedQuestions, addRecentlyViewed } = useProgressContext();
 
   const topic = useMemo(() => {
@@ -98,7 +99,7 @@ export default function TopicDetail() {
           title="Topic not found"
           description="The topic you're looking for doesn't exist."
           actionLabel="Browse Topics"
-          onAction={() => window.location.assign("/topics")}
+          onAction={() => navigate("/topics")}
         />
       </div>
     );

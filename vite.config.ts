@@ -2,28 +2,51 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 import path from 'path'
 
-export default defineConfig({
-  plugins: [react()],
-  base: process.env.VITE_BASE || (process.env.NODE_ENV === 'production' ? '/frontend-forge/' : '/'),
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
+function prismFixPlugin() {
+  return {
+    name: 'prismjs-import-fix',
+    transform(code: string, id: string) {
+      if (id.includes('prismjs') && id.includes('components') && !id.endsWith('index.js')) {
+        return {
+          code: `import Prism from 'prismjs';\nif (typeof window !== 'undefined') { window.Prism = Prism; }\nif (typeof globalThis !== 'undefined') { globalThis.Prism = Prism; }\n${code}`,
+          map: null,
+        }
+      }
     },
-  },
-  build: {
-    modulePreload: {
-      polyfill: true,
+  }
+}
+
+export default defineConfig(({ mode, command }) => {
+  const isProd =
+    mode === 'production' ||
+    command === 'build' ||
+    process.env.NODE_ENV === 'production'
+
+  return {
+    plugins: [react(), prismFixPlugin()],
+    base: process.env.VITE_BASE || (isProd ? '/frontend-forge/' : '/'),
+    resolve: {
+      alias: {
+        '@': path.resolve(import.meta.dirname, './src'),
+      },
     },
-    cssCodeSplit: true,
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules/@monaco-editor') || id.includes('node_modules/monaco-editor')) {
-            return 'monaco-vendor';
-          }
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
-            return 'react-vendor';
-          }
+    build: {
+      modulePreload: {
+        polyfill: true,
+      },
+      cssCodeSplit: true,
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            if (id.includes('node_modules/@monaco-editor') || id.includes('node_modules/monaco-editor')) {
+              return 'monaco-vendor';
+            }
+            if (id.includes('node_modules/prismjs')) {
+              return 'prism-vendor';
+            }
+            if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
+              return 'react-vendor';
+            }
           if (id.includes('src/data/coding')) {
             return 'data-coding';
           }
@@ -44,10 +67,12 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 1500,
   },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/test/setup.ts',
-    css: true,
-  },
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: './src/test/setup.ts',
+      css: true,
+    },
+  }
 })
+

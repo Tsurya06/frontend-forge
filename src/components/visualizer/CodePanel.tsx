@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useMemo, type UIEvent } from "react";
 import { Copy, Check, Sparkles, Palette } from "lucide-react";
-import Prism from "prismjs";
-import "prismjs/components/prism-javascript";
+import Prism from "@/lib/prism";
 import styles from "./CodePanel.module.css";
 
 interface CodePanelProps {
