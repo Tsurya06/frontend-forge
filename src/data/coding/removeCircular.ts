@@ -33,16 +33,14 @@ Requirements:
 
   examples: [
     {
-      input: `const obj = { a: 1 };\nobj.self = obj;\nremoveCircular(obj)`,
-      output: '{ a: 1, self: undefined } (or "[Circular]")',
-      explanation:
-        "The self-referential cycle is removed, making the object safely serializable with JSON.stringify().",
+      input: `const obj = { a: 1 };\nobj.self = obj;\nconst cleaned = removeCircular(obj);\ncleaned.a === 1 && cleaned.self === undefined;`,
+      output: `true`,
+      explanation: "Circular self reference is replaced with undefined.",
     },
     {
-      input: `const shared = { x: 10 };\nconst obj = { first: shared, second: shared };\nremoveCircular(obj)`,
-      output: "{ first: { x: 10 }, second: { x: 10 } }",
-      explanation:
-        "Shared reference (DAG) is not a cycle and is properly cloned without being removed.",
+      input: `const shared = { x: 10 };\nconst obj = { first: shared, second: shared };\nremoveCircular(obj);`,
+      output: `{ first: { x: 10 }, second: { x: 10 } }`,
+      explanation: "Shared non-circular DAG reference is preserved.",
     },
   ],
 

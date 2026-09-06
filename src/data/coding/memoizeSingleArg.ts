@@ -30,21 +30,19 @@ Memoization is a fundamental optimization technique. It's the basis for React.me
 
   examples: [
     {
-      input: `const square = memoize(x => { console.log("calc"); return x * x; });\nsquare(4); // logs "calc", returns 16\nsquare(4);`,
-      output: '16 (no "calc" logged second time)',
-      explanation:
-        "First call computes and caches. Second call returns cached result.",
+      input: `const square = memoize(x => x * x);\n[square(4), square(4)];`,
+      output: `[16, 16]`,
+      explanation: "Returns cached result on subsequent invocations with same argument.",
     },
     {
-      input: `const memoFib = memoize(n => n <= 1 ? n : memoFib(n-1) + memoFib(n-2));\nmemoFib(40);`,
-      output: "102334155 (computed instantly)",
-      explanation:
-        "Without memoization, fib(40) takes billions of operations. Memoized version computes each value once.",
+      input: `const upper = memoize(s => s.toUpperCase());\n[upper("hello"), upper("world"), upper("hello")];`,
+      output: `["HELLO", "WORLD", "HELLO"]`,
+      explanation: "Different arguments produce separate cache entries.",
     },
     {
-      input: `const upper = memoize(s => s.toUpperCase());\nupper("hello"); // "HELLO"\nupper("world"); // "WORLD"\nupper("hello");`,
-      output: '"HELLO" (from cache)',
-      explanation: "Different arguments get separate cache entries.",
+      input: `let count = 0;\nconst fn = memoize(x => { count++; return x * 2; });\nfn(5); fn(5);\ncount;`,
+      output: `1`,
+      explanation: "Underlying calculation only executed once.",
     },
   ],
 

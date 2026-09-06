@@ -30,22 +30,19 @@ This is a fundamental optimization technique used extensively in React (useMemo,
 
   examples: [
     {
-      input: `const add = (a, b) => { console.log("computing"); return a + b; };\nconst memoAdd = memoize(add);\nmemoAdd(1, 2); // logs "computing", returns 3\nmemoAdd(1, 2);`,
-      output: '3 (no "computing" logged the second time)',
-      explanation:
-        "The second call with same args returns the cached result without executing the original function.",
+      input: `let count = 0;\nconst add = memoize((a, b) => { count++; return a + b; });\nconst r1 = add(1, 2);\nconst r2 = add(1, 2);\n[r1, r2, count];`,
+      output: `[3, 3, 1]`,
+      explanation: "The second call returns cached result without executing original function.",
     },
     {
-      input: `const fn = memoize((x, y) => x * y);\nfn(3, 4); // 12\nfn(3, 5); // 15\nfn(3, 4);`,
-      output: "12 (from cache)",
-      explanation:
-        "Different argument sets have independent cache entries. (3,4) and (3,5) are separate.",
+      input: `const multiply = memoize((a, b) => a * b);\n[multiply(3, 4), multiply(3, 5), multiply(3, 4)];`,
+      output: `[12, 15, 12]`,
+      explanation: "Separate argument pairs cache independently.",
     },
     {
       input: `const factorial = memoize((n) => n <= 1 ? 1 : n * factorial(n - 1));\nfactorial(5);`,
-      output: "120",
-      explanation:
-        "Memoization works with recursive functions, caching intermediate results.",
+      output: `120`,
+      explanation: "Memoization works with recursive functions.",
     },
   ],
 

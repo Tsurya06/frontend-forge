@@ -180,70 +180,79 @@ export default function CodingDetail() {
     }
   };
 
-  const runCode = useCallback(() => {
+  const executeCode = useCallback((isSubmit: boolean) => {
     if (!problem) return;
     setIsRunning(true);
 
     if (isHtmlCss) {
       setRightTab("preview");
       setIsRunning(false);
-      const trimmed = userCode.trim();
-      const hasHtml = trimmed.includes("<") && trimmed.includes(">");
-      const hasCss = trimmed.includes("{") && trimmed.includes("}");
-      if (hasHtml && hasCss && trimmed.length > 100) {
-        markComplete(problem.id, "coding");
+      if (isSubmit) {
+        const trimmed = userCode.trim();
+        const hasHtml = trimmed.includes("<") && trimmed.includes(">");
+        const hasCss = trimmed.includes("{") && trimmed.includes("}");
+        if (hasHtml && hasCss && trimmed.length > 100) {
+          markComplete(problem.id, "coding");
 
-        const newSub: UserSubmission = {
-          id: String(Date.now()),
-          timestamp: new Date().toLocaleTimeString(),
-          status: "accepted",
-          passedCases: 1,
-          totalCases: 1,
-          runtimeMs: 0,
-          codeSnippet: userCode.slice(0, 120),
-        };
-        const updated = [newSub, ...submissions.slice(0, 9)];
-        setSubmissions(updated);
-        saveStorageSubmissions(problem.id, updated);
+          const newSub: UserSubmission = {
+            id: String(Date.now()),
+            timestamp: new Date().toLocaleTimeString(),
+            status: "accepted",
+            passedCases: 1,
+            totalCases: 1,
+            runtimeMs: 0,
+            codeSnippet: userCode.slice(0, 120),
+          };
+          const updated = [newSub, ...submissions.slice(0, 9)];
+          setSubmissions(updated);
+          saveStorageSubmissions(problem.id, updated);
+        }
       }
       return;
     }
 
     setRightTab("result");
 
-    setTimeout(() => {
-      const result = evaluateProblem(userCode, problem.examples);
+    setTimeout(async () => {
+      const result = await evaluateProblem(userCode, problem.examples);
       setEvaluationResult(result);
       setIsRunning(false);
 
-      const newSub: UserSubmission = {
-        id: String(Date.now()),
-        timestamp: new Date().toLocaleTimeString(),
-        status:
-          result.status === "accepted"
-            ? "accepted"
-            : result.status === "runtime_error"
-              ? "runtime_error"
-              : "wrong_answer",
-        passedCases: result.passedCases,
-        totalCases: result.totalCases,
-        runtimeMs: result.totalTime,
-        codeSnippet: userCode.slice(0, 120),
-      };
+      // Only Submit actions record in submission history and mark problem as completed
+      if (isSubmit) {
+        const newSub: UserSubmission = {
+          id: String(Date.now()),
+          timestamp: new Date().toLocaleTimeString(),
+          status:
+            result.status === "accepted"
+              ? "accepted"
+              : result.status === "runtime_error"
+                ? "runtime_error"
+                : "wrong_answer",
+          passedCases: result.passedCases,
+          totalCases: result.totalCases,
+          runtimeMs: result.totalTime,
+          codeSnippet: userCode.slice(0, 120),
+        };
 
-      const updated = [newSub, ...submissions.slice(0, 9)];
-      setSubmissions(updated);
-      saveStorageSubmissions(problem.id, updated);
+        const updated = [newSub, ...submissions.slice(0, 9)];
+        setSubmissions(updated);
+        saveStorageSubmissions(problem.id, updated);
 
-      if (result.status === "accepted") {
-        markComplete(problem.id, "coding");
+        if (result.status === "accepted") {
+          markComplete(problem.id, "coding");
+        }
       }
     }, 60);
   }, [problem, userCode, submissions, markComplete, isHtmlCss]);
 
+  const handleRun = useCallback(() => {
+    executeCode(false);
+  }, [executeCode]);
+
   const handleSubmit = useCallback(() => {
-    runCode();
-  }, [runCode]);
+    executeCode(true);
+  }, [executeCode]);
 
   const passCount = submissions.filter((s) => s.status === "accepted").length;
   const failCount = submissions.filter((s) => s.status !== "accepted").length;
@@ -429,7 +438,7 @@ export default function CodingDetail() {
         passCount={passCount}
         failCount={failCount}
         hasSubmissions={submissions.length > 0}
-        onRun={runCode}
+        onRun={handleRun}
         onSubmit={handleSubmit}
         onPrev={() =>
           prevProblem && navigate(ROUTES.CODING_DETAIL(prevProblem.id))

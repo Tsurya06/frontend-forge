@@ -25,20 +25,14 @@ Your solution should handle division by zero gracefully, support an optional ini
 
   examples: [
     {
-      input: `calc().add(10).subtract(5).multiply(20).divide(2).getResult()`,
-      output: `50`,
-      explanation: "Starting from 0: +10=10, -5=5, *20=100, /2=50.",
+      input: `const c = calc(10);\nc.add(5);\nconst r1 = c.getResult();\nc.reset();\n[r1, c.getResult()];`,
+      output: `[15, 10]`,
+      explanation: "Chaining arithmetic operations and resetting to initial value.",
     },
     {
-      input: `calc(100).divide(10).subtract(5).getResult()`,
-      output: `5`,
-      explanation: "Starting from 100: /10=10, -5=5.",
-    },
-    {
-      input: `const c = calc(10);\nc.add(5).getResult(); // 15\nc.reset().getResult(); // 10`,
-      output: `15 then 10 after reset`,
-      explanation:
-        "The calculator maintains state across operations and can be reset to its initial value.",
+      input: `calc(5).add(3).multiply(4).subtract(2).divide(3).getResult();`,
+      output: `10`,
+      explanation: "((5 + 3) * 4 - 2) / 3 = 10",
     },
   ],
 

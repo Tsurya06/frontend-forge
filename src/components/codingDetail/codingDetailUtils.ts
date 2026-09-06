@@ -36,12 +36,41 @@ export function generateStarterCode(problem: CodingProblem): string {
   }
 
   const trimmed = problem.implementation.trim();
+
+  // Try to find the target function from examples first (e.g. highlightText, deepMerge, camelCaseKeys)
+  const exampleText = (problem.examples || []).map((e) => e.input).join("\n");
+  const callMatches = Array.from(
+    exampleText.matchAll(/(?:^|[^a-zA-Z0-9_$])([a-zA-Z0-9_$]+)\s*\(/g),
+  ).map((m) => m[1]);
+
+  let targetIndex: number | null = null;
+
+  for (const calledFn of callMatches) {
+    if (
+      calledFn &&
+      !["console", "log", "alert", "setTimeout", "setInterval", "Promise", "Array", "Object"].includes(calledFn)
+    ) {
+      const specificRegex = new RegExp(
+        `(?:(?:async\\s+)?function\\s+${calledFn}\\s*\\(|class\\s+${calledFn}\\b|(?:const|let|var)\\s+${calledFn}\\s*=\\s*(?:async\\s+)?(?:\\([^)]*\\)|[a-zA-Z0-9_$]+)\\s*=>)`,
+      );
+      const match = trimmed.match(specificRegex);
+      if (match && typeof match.index === "number") {
+        targetIndex = match.index;
+        break;
+      }
+    }
+  }
+
   let targetCode = trimmed;
-  const fnOrClassMatch = trimmed.match(
-    /(?:(?:async\s+)?function\s+[a-zA-Z0-9_$]+|class\s+[a-zA-Z0-9_$]+|[A-Za-z0-9_$]+(?:\.prototype)?\.[a-zA-Z0-9_$]+\s*=\s*(?:async\s+)?function|(?:const|let|var)\s+[a-zA-Z0-9_$]+\s*=\s*(?:async\s+)?(?:\([^)]*\)|[a-zA-Z0-9_$]+)\s*=>)/,
-  );
-  if (fnOrClassMatch && typeof fnOrClassMatch.index === "number") {
-    targetCode = trimmed.slice(fnOrClassMatch.index);
+  if (targetIndex !== null) {
+    targetCode = trimmed.slice(targetIndex);
+  } else {
+    const fnOrClassMatch = trimmed.match(
+      /(?:(?:async\s+)?function\s+[a-zA-Z0-9_$]+|class\s+[a-zA-Z0-9_$]+|[A-Za-z0-9_$]+(?:\.prototype)?\.[a-zA-Z0-9_$]+\s*=\s*(?:async\s+)?function|(?:const|let|var)\s+[a-zA-Z0-9_$]+\s*=\s*(?:async\s+)?(?:\([^)]*\)|[a-zA-Z0-9_$]+)\s*=>)/,
+    );
+    if (fnOrClassMatch && typeof fnOrClassMatch.index === "number") {
+      targetCode = trimmed.slice(fnOrClassMatch.index);
+    }
   }
 
   let openParen = 0;

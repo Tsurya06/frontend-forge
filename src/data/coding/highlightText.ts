@@ -5,9 +5,9 @@ export const highlightTextProblem: CodingProblem = {
   title: "Highlight Search Term in Text",
   difficulty: "Beginner",
   category: "Coding",
-  tags: ["string-manipulation", "regex", "DOM", "search", "text-processing"],
+  tags: ["string-manipulation", "regex", "algorithms", "search", "text-processing"],
 
-  problem: `Implement a function that takes a text string and a search term, and returns a new string where every occurrence of the search term is wrapped in <mark> tags for highlighting. The search should be case-insensitive, meaning searching for "hello" should also highlight "Hello" and "HELLO", but the original casing in the text must be preserved in the output.
+  problem: `Implement a JavaScript utility function highlightText(text, searchTerm) that takes a text string and a search term, and returns a new string where every occurrence of the search term is wrapped in <mark> tags for highlighting. The search should be case-insensitive, meaning searching for "hello" should also highlight "Hello" and "HELLO", but the original casing in the text must be preserved in the output.
 
 This is a common feature in search-as-you-type UIs, documentation viewers, and text editors. The implementation must handle special regex characters in the search term (e.g., searching for "C++" should not break), empty search terms, and overlapping or adjacent matches.
 

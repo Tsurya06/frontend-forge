@@ -32,21 +32,20 @@ Your solution must use a WeakMap to track already-cloned objects. When a previou
 
   examples: [
     {
-      input: `const obj = { a: 1, b: { c: 2, d: [3, 4] } };\nconst clone = deepCopy(obj);\nclone.b.c = 99;`,
-      output: "obj.b.c is still 2 (original unaffected)",
+      input: `const obj = { a: 1, b: { c: 2, d: [3, 4] } };\nconst clone = deepCopy(obj);\nclone.b.c = 99;\nobj.b.c;`,
+      output: `2`,
       explanation:
         "The nested object is independently cloned, so mutations to the clone do not affect the original.",
     },
     {
-      input: `const obj = { name: "test" };\nobj.self = obj;\nconst clone = deepCopy(obj);`,
-      output: "clone.self === clone (circular ref preserved, no infinite loop)",
+      input: `const obj = { name: "test" };\nobj.self = obj;\nconst clone = deepCopy(obj);\nclone.self === clone;`,
+      output: `true`,
       explanation:
         "The WeakMap detects the circular reference and returns the already-created clone object.",
     },
     {
-      input: `const original = { date: new Date("2024-01-01"), regex: /abc/gi };\nconst clone = deepCopy(original);`,
-      output:
-        "clone.date instanceof Date === true, clone.regex instanceof RegExp === true",
+      input: `const original = { date: new Date("2024-01-01"), regex: /abc/gi };\nconst clone = deepCopy(original);\nclone.date instanceof Date && clone.regex instanceof RegExp && clone.date.getTime() === original.date.getTime();`,
+      output: `true`,
       explanation:
         "Special built-in objects are cloned using their constructors with the original values.",
     },

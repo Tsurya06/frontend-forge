@@ -25,20 +25,20 @@ Debouncing is one of the most commonly asked frontend interview questions. It te
 
   examples: [
     {
-      input: `const log = debounce((msg) => console.log(msg), 300);\nlog("a"); log("b"); log("c");`,
-      output: 'Logs "c" after 300ms (only the last call)',
+      input: `let calls = [];\nconst fn = debounce((x) => calls.push(x), 100);\nfn("a"); fn("b"); fn("c");\nfn.flush();\ncalls;`,
+      output: `["c"]`,
       explanation:
-        'Each call resets the timer. Only the last call ("c") executes after the wait period.',
+        'Each call resets the timer. Only the last call ("c") executes after flush.',
     },
     {
-      input: `const log = debounce((msg) => console.log(msg), 300, { leading: true });\nlog("a"); log("b"); log("c");`,
-      output: 'Logs "a" immediately, then "c" after 300ms',
+      input: `let calls = [];\nconst fn = debounce((x) => calls.push(x), 100, { leading: true, trailing: false });\nfn("a"); fn("b"); fn("c");\ncalls;`,
+      output: `["a"]`,
       explanation:
-        "With leading: true, the first call fires immediately. The trailing call fires with the most recent args.",
+        "With leading: true and trailing: false, the first call fires immediately.",
     },
     {
-      input: `const search = debounce(query => fetch(query), 500);\nsearch("h"); search("he"); search("hel");\nsearch.cancel();`,
-      output: "No fetch is made (cancelled)",
+      input: `let calls = [];\nconst search = debounce((q) => calls.push(q), 100);\nsearch("h"); search("he");\nsearch.cancel();\nsearch.flush();\ncalls;`,
+      output: `[]`,
       explanation: "cancel() aborts the pending debounced execution.",
     },
   ],

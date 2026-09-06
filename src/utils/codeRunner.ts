@@ -134,20 +134,47 @@ function deepStructuralEqual(a: unknown, b: unknown): boolean {
 /**
  * Deep equality check for comparing test outputs
  */
+function unquote(str: string): string {
+  const trimmed = str.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'")) ||
+    (trimmed.startsWith("`") && trimmed.endsWith("`"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+  return trimmed;
+}
+
+function parseExpectedObject(str: string): unknown {
+  try {
+    return JSON.parse(str);
+  } catch {}
+  try {
+    return new Function("return (" + str + ")")();
+  } catch {}
+  return undefined;
+}
+
+/**
+ * Robust equality check for comparing test outputs.
+ * Enforces strict equality (NEVER loose normExpected.includes(actual)).
+ */
 function isValueMatch(
   actual: unknown,
   expectedStr: string,
   logs: string[],
 ): boolean {
   const normExpected = expectedStr.trim();
-
-  // Boolean match
-  if (normExpected === "true" && actual === true) return true;
-  if (normExpected === "false" && actual === false) return true;
+  const unquotedExpected = unquote(normExpected);
 
   // Null / Undefined match
   if (normExpected === "null" && actual === null) return true;
   if (normExpected === "undefined" && actual === undefined) return true;
+
+  // Boolean match
+  if (normExpected === "true" && actual === true) return true;
+  if (normExpected === "false" && actual === false) return true;
 
   // Number match
   if (
@@ -158,51 +185,57 @@ function isValueMatch(
     return true;
   }
 
-  // String match
+  // String match (STRICT: exact match only)
   if (typeof actual === "string") {
     if (
       actual === normExpected ||
+      actual === unquotedExpected ||
       `"${actual}"` === normExpected ||
-      `'${actual}'` === normExpected ||
-      normExpected.includes(actual)
+      `'${actual}'` === normExpected
     ) {
       return true;
     }
   }
 
   // Deep Structural JSON & Object match (key-order independent)
-  try {
-    const parsedExpected = JSON.parse(normExpected);
-    if (deepStructuralEqual(actual, parsedExpected)) {
+  if (typeof actual === "object" && actual !== null) {
+    const parsedExpected = parseExpectedObject(normExpected) ?? parseExpectedObject(unquotedExpected);
+    if (parsedExpected !== undefined && deepStructuralEqual(actual, parsedExpected)) {
       return true;
     }
-  } catch {
-    // If not JSON, continue with other checks
+
+    try {
+      const actualJSON = JSON.stringify(actual);
+      if (
+        actualJSON === normExpected ||
+        actualJSON === unquotedExpected ||
+        actualJSON.replace(/\s+/g, "") === normExpected.replace(/\s+/g, "") ||
+        actualJSON.replace(/\s+/g, "") === unquotedExpected.replace(/\s+/g, "")
+      ) {
+        return true;
+      }
+    } catch {}
   }
 
-  // Raw JSON String match
-  try {
-    const actualJSON = JSON.stringify(actual);
-    if (
-      actualJSON === normExpected ||
-      actualJSON.replace(/\s+/g, "") === normExpected.replace(/\s+/g, "")
-    ) {
-      return true;
-    }
-  } catch {
-    // Ignore circular / non-serializable
-  }
-
-  // Formatted value match
+  // Formatted value match (only if non-empty unless expected is empty)
   const formattedActual = formatValue(actual).replace(/\s+/g, "");
   const formattedExpected = normExpected.replace(/\s+/g, "");
-  if (formattedActual === formattedExpected) return true;
+  const formattedUnquoted = unquotedExpected.replace(/\s+/g, "");
+  if (
+    formattedActual.length > 0 &&
+    (formattedActual === formattedExpected || formattedActual === formattedUnquoted)
+  ) {
+    return true;
+  }
 
-  // Check logs for side-effect / console output match (e.g. Logs "c" after 300ms)
-  for (const log of logs) {
+  // Exact console log match
+  if (logs.length > 0) {
+    const joinedLogs = logs.join("\n").trim();
     if (
-      normExpected.toLowerCase().includes(log.toLowerCase()) ||
-      log.toLowerCase().includes(normExpected.toLowerCase())
+      joinedLogs === normExpected ||
+      joinedLogs === unquotedExpected ||
+      joinedLogs.replace(/\s+/g, "") === normExpected.replace(/\s+/g, "") ||
+      joinedLogs.replace(/\s+/g, "") === unquotedExpected.replace(/\s+/g, "")
     ) {
       return true;
     }
@@ -346,10 +379,44 @@ export function protectInfiniteLoops(code: string): string {
 /**
  * Real test runner that evaluates user code against actual problem examples.
  */
-export function evaluateProblem(
+function prepareSnippet(snippet: string): string {
+  const trimmed = snippet.trim().replace(/;+$/, "");
+  
+  const lines = trimmed.split("\n");
+  const lastLine = (lines[lines.length - 1] ?? "").replace(/\/\/.*$/, "").trim().replace(/;+$/, "");
+
+  // If the last line already starts with return, leave it as is
+  if (/^return\b/.test(lastLine)) {
+    return trimmed;
+  }
+
+  // Try wrapping the whole snippet as an expression in an async context
+  try {
+    new Function("return (async () => { return (" + trimmed + "); })");
+    return "return (" + trimmed + ");";
+  } catch {}
+
+  // Multi-statement snippet: find the last expression statement to return
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const clean = (lines[i] ?? "").replace(/\/\/.*$/, "").trim().replace(/;+$/, "");
+    if (!clean) continue;
+    if (/^(?:const|let|var|if|for|while|function|class|try|catch|switch|import|export)\b/.test(clean)) {
+      break;
+    }
+    const lastExpr = lines.slice(i).join("\n").replace(/\/\/.*$/, "").trim().replace(/;+$/, "");
+    const candidate = lines.slice(0, i).join("\n") + "\nreturn (" + lastExpr + ");";
+    try {
+      new Function("return (async () => { " + candidate + " })");
+      return candidate;
+    } catch {}
+  }
+  return trimmed;
+}
+
+export async function evaluateProblem(
   userCode: string,
   examples: Array<{ input: string; output: string; explanation?: string }>,
-): ProblemEvaluationResult {
+): Promise<ProblemEvaluationResult> {
   const allLogs: string[] = [];
   const caseResults: TestCaseEvaluation[] = [];
   let totalTime = 0;
@@ -414,38 +481,22 @@ export function evaluateProblem(
         }
       `;
 
-      let runnerBody = "";
-
-      if (
-        testSnippet.includes("\n") ||
-        testSnippet.includes(";") ||
-        testSnippet.includes("const ") ||
-        testSnippet.includes("let ")
-      ) {
-        // Multi-line statement
-        runnerBody = `
-          ${timeoutPreamble}
-          ${guardedCode}
-          
-          let __result;
+      const preparedSnippet = prepareSnippet(testSnippet);
+      const runnerBody = `
+        ${timeoutPreamble}
+        ${guardedCode}
+        
+        return (async () => {
           try {
-            ${testSnippet}
-            if (typeof __result !== 'undefined') return __result;
+            ${preparedSnippet}
           } catch (e) {
             throw e;
           }
-        `;
-      } else {
-        // Single expression
-        runnerBody = `
-          ${timeoutPreamble}
-          ${guardedCode}
-          return (${testSnippet});
-        `;
-      }
+        })();
+      `;
 
       const fn = new Function(runnerBody);
-      actualResult = fn();
+      actualResult = await fn();
     } catch (err: unknown) {
       runError = err instanceof Error ? err.message : String(err);
     } finally {

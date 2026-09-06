@@ -32,10 +32,14 @@ The implementation must handle:
 
   examples: [
     {
-      input: `const schema = {\n  tag: 'div',\n  props: { className: 'card', id: 'card-1' },\n  children: [\n    { tag: 'h2', children: ['Hello World'] },\n    { tag: 'p', props: { style: { color: 'blue' } }, children: ['Dynamic DOM tree'] },\n    { tag: 'button', events: { click: () => alert('clicked') }, children: ['Click Me'] }\n  ]\n};\nconst root = document.getElementById('app');\nrenderDOMTree(schema, root);`,
-      output:
-        '<div class="card" id="card-1"><h2>Hello World</h2><p style="color: blue;">Dynamic DOM tree</p><button>Click Me</button></div> mounted inside root',
-      explanation: "Constructs the full interactive DOM hierarchy.",
+      input: `const schema = {\n  tag: 'div',\n  props: { className: 'card', id: 'card-1' },\n  children: [\n    { tag: 'h2', children: ['Hello World'] },\n    { tag: 'p', props: { style: { color: 'blue' } }, children: ['Dynamic DOM tree'] }\n  ]\n};\nconst root = document.createElement('div');\nrenderDOMTree(schema, root);\nroot.firstElementChild.id;`,
+      output: `"card-1"`,
+      explanation: "Mounts the root element with correct props.",
+    },
+    {
+      input: `const root = document.createElement('div');\nrenderDOMTree({ tag: 'span', children: ['Test'] }, root);\nroot.textContent;`,
+      output: `"Test"`,
+      explanation: "Renders text content into the element.",
     },
   ],
 

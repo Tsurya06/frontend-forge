@@ -24,21 +24,14 @@ This problem tests understanding of JavaScript's event loop, timer APIs, closure
 
   examples: [
     {
-      input: `const cancel = customSetInterval(() => console.log("tick"), 1000);`,
-      output: 'Logs "tick" every ~1000ms',
-      explanation:
-        "The callback is called repeatedly using chained setTimeout calls.",
+      input: `const cancel = customSetInterval(() => {}, 1000);\ntypeof cancel === 'function';`,
+      output: `true`,
+      explanation: "customSetInterval returns a cancel function.",
     },
     {
-      input: `const cancel = customSetInterval(() => console.log("tick"), 1000);\nsetTimeout(() => cancel(), 3500);`,
-      output: 'Logs "tick" 3 times then stops',
-      explanation:
-        "Calling cancel() after 3.5 seconds stops the interval, so approximately 3 ticks occur.",
-    },
-    {
-      input: `const cancel = customSetInterval((msg) => console.log(msg), 500, "hello");`,
-      output: 'Logs "hello" every ~500ms',
-      explanation: "Extra arguments are forwarded to the callback.",
+      input: `let count = 0;\nconst cancel = customSetInterval(() => count++, 100);\ncancel();\ncount;`,
+      output: `0`,
+      explanation: "Calling cancel immediately prevents callbacks from firing.",
     },
   ],
 

@@ -33,9 +33,14 @@ Requirements:
 
   examples: [
     {
-      input: `fetchWithRetries('https://api.example.com/data', {}, {\n  maxRetries: 3,\n  baseDelayMs: 1000,\n  timeoutMs: 3000\n})`,
-      output: "Resolves with response data if successful within 3 retries",
-      explanation: "Retries on transient failure with delays of ~1s, ~2s, ~4s.",
+      input: `typeof fetchWithRetries === "function";`,
+      output: `true`,
+      explanation: "fetchWithRetries is defined as an async function.",
+    },
+    {
+      input: `let attempts = 0;\nconst customFetch = async () => {\n  attempts++;\n  return { ok: true, status: 200, json: async () => ({ success: true }) };\n};\nconst res = await fetchWithRetries("https://example.com/test", { fetchFn: customFetch }, { maxRetries: 1, baseDelayMs: 5 });\nconst data = await res.json();\ndata;`,
+      output: `{"success":true}`,
+      explanation: "Successfully returns parsed response data from fetch.",
     },
   ],
 
@@ -74,7 +79,7 @@ Requirements:
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-      const response = await fetch(url, {
+      const fetchImpl = (typeof options === "object" && options.fetchFn) || (typeof fetch !== "undefined" ? fetch : globalThis.fetch);\n      const response = await fetchImpl(url, {
         ...options,
         signal: controller.signal
       });

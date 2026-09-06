@@ -40,16 +40,19 @@ The utility must:
 
   examples: [
     {
-      input: `const monitor = initWebVitalsMonitor(metric => console.log(metric));\n// Triggers real-time metric reporting as user interacts with page`,
-      output: `{ name: 'LCP', value: 1420, rating: 'good', element: 'img.hero-banner' }`,
-      explanation:
-        "Reports LCP at 1.42 seconds (within the 2.5s good threshold).",
+      input: `getRating('LCP', 1420);`,
+      output: `"good"`,
+      explanation: "LCP of 1.42s is under the 2.5s good threshold.",
     },
     {
-      input: `diagnoseScenario('SSR server rendered document query takes 3500ms before returning initial byte')`,
-      output: `{ primaryMetric: 'TTFB', impact: 'high', cascadedMetrics: ['FCP', 'LCP'], rootCause: 'Server-side database delay or un-cached SSR generation' }`,
-      explanation:
-        "Identifies TTFB as the initial failure point cascading to FCP and LCP.",
+      input: `getRating('CLS', 0.3);`,
+      output: `"poor"`,
+      explanation: "CLS of 0.3 exceeds the 0.25 poor threshold.",
+    },
+    {
+      input: `getRating('FCP', 2200);`,
+      output: `"needs-improvement"`,
+      explanation: "FCP between 1.8s and 3.0s needs improvement.",
     },
   ],
 

@@ -25,22 +25,19 @@ The function takes: arr1 (the first sorted array with trailing space), m (number
 
   examples: [
     {
-      input: `merge([1, 3, 5, 0, 0, 0], 3, [2, 4, 6], 3)`,
-      output: `arr1 becomes [1, 2, 3, 4, 5, 6]`,
-      explanation:
-        "Starting from the end, compare 5 vs 6 → place 6, then 5 vs 4 → place 5, continue until all elements are placed.",
+      input: `const arr1 = [1, 3, 5, 0, 0, 0];\nmerge(arr1, 3, [2, 4, 6], 3);\narr1;`,
+      output: `[1, 2, 3, 4, 5, 6]`,
+      explanation: "Merges sorted arr2 into arr1 in-place.",
     },
     {
-      input: `merge([4, 5, 6, 0, 0, 0], 3, [1, 2, 3], 3)`,
-      output: `arr1 becomes [1, 2, 3, 4, 5, 6]`,
-      explanation:
-        "All elements of arr2 are smaller, so they fill the front while arr1 elements shift to the back.",
+      input: `const arr1 = [4, 5, 6, 0, 0, 0];\nmerge(arr1, 3, [1, 2, 3], 3);\narr1;`,
+      output: `[1, 2, 3, 4, 5, 6]`,
+      explanation: "Handles case where all arr2 elements are smaller.",
     },
     {
-      input: `merge([1, 0], 1, [2], 1)`,
-      output: `arr1 becomes [1, 2]`,
-      explanation:
-        "Simple case: 2 > 1, so 2 goes at index 1. Then 1 stays at index 0.",
+      input: `const arr1 = [1, 0];\nmerge(arr1, 1, [2], 1);\narr1;`,
+      output: `[1, 2]`,
+      explanation: "Merges single-element arrays.",
     },
   ],
 

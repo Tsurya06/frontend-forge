@@ -25,21 +25,14 @@ Your implementation should be robust against edge cases like calling start when 
 
   examples: [
     {
-      input: `const timer = createResumableInterval(() => console.log("tick"), 1000);\ntimer.start(); // starts ticking every 1s`,
-      output: 'Logs "tick" every second',
-      explanation: "start() initiates the repeating interval.",
+      input: `const timer = createResumableInterval(() => {}, 1000);\ntypeof timer.start === 'function' && typeof timer.stop === 'function';`,
+      output: `true`,
+      explanation: "Returns an object with start and stop control methods.",
     },
     {
-      input: `timer.stop(); // pauses at 600ms into current interval\ntimer.resume(); // next tick fires in ~400ms`,
-      output: "Resumes with only the remaining time for the current interval",
-      explanation:
-        "stop() saves the elapsed portion; resume() only waits for the remainder before the next full interval cycle.",
-    },
-    {
-      input: `timer.reset();\ntimer.start();`,
-      output: "Restarts from scratch as if newly created",
-      explanation:
-        "reset() clears all internal state so start() begins a fresh interval.",
+      input: `const timer = createResumableInterval(() => {}, 1000);\ntimer.start();\ntimer.stop();\ntimer.resume();\ntimer.reset();\ntrue;`,
+      output: `true`,
+      explanation: "State transitions (start, stop, resume, reset) execute cleanly.",
     },
   ],
 

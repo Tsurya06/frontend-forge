@@ -34,16 +34,14 @@ The implementation must support:
 
   examples: [
     {
-      input: `const subject = new Subject();\nconst sub1 = subject.subscribe(val => console.log('Sub 1:', val));\nsubject.next(10);\nconst sub2 = subject.subscribe(val => console.log('Sub 2:', val));\nsubject.next(20);\nsub1.unsubscribe();\nsubject.next(30);`,
-      output: `Sub 1: 10\nSub 1: 20\nSub 2: 20\nSub 2: 30`,
-      explanation:
-        "sub1 receives 10 and 20, then unsubscribes; sub2 receives 20 and 30.",
+      input: `const subject = new Subject();\nconst msgs = [];\nconst sub1 = subject.subscribe(val => msgs.push('Sub 1: ' + val));\nsubject.next(10);\nconst sub2 = subject.subscribe(val => msgs.push('Sub 2: ' + val));\nsubject.next(20);\nsub1.unsubscribe();\nsubject.next(30);\nmsgs;`,
+      output: `["Sub 1: 10", "Sub 1: 20", "Sub 2: 20", "Sub 2: 30"]`,
+      explanation: "sub1 receives 10 and 20 then unsubscribes; sub2 receives 20 and 30.",
     },
     {
-      input: `const bSubject = new BehaviorSubject('initial');\nbSubject.subscribe(val => console.log('Received:', val));\nbSubject.next('updated');`,
-      output: `Received: initial\nReceived: updated`,
-      explanation:
-        "BehaviorSubject immediately emits its current value on subscription.",
+      input: `const bSubject = new BehaviorSubject('initial');\nconst msgs = [];\nbSubject.subscribe(val => msgs.push(val));\nbSubject.next('updated');\nmsgs;`,
+      output: `["initial", "updated"]`,
+      explanation: "BehaviorSubject emits initial value immediately upon subscription.",
     },
   ],
 

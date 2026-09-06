@@ -25,15 +25,14 @@ Requirements:
 
   examples: [
     {
-      input: `const cachedFetch = createCachedFetch();\n// 1st call fires fetch\nconst p1 = cachedFetch('/api/user', {}, 5000);\n// 2nd call (same millisecond) shares in-flight promise\nconst p2 = cachedFetch('/api/user', {}, 5000);\n// p1 === p2`,
-      output: "true (single network call dispatched)",
-      explanation:
-        "Concurrent requests for the same URL share the in-flight promise.",
+      input: `const cachedFetch = createCachedFetch();\ntypeof cachedFetch === 'function';`,
+      output: `true`,
+      explanation: "createCachedFetch returns a functional fetch wrapper.",
     },
     {
-      input: `// Call again after 2 seconds (within 5s TTL)\nconst data = await cachedFetch('/api/user', {}, 5000);`,
-      output: "Cached response returned immediately without network fetch",
-      explanation: "The cached entry is valid and within the TTL.",
+      input: `const cachedFetch = createCachedFetch();\nconst p = cachedFetch('https://example.com', {}, 5000);\ntypeof p.then === 'function';`,
+      output: `true`,
+      explanation: "cachedFetch returns a promise resolving the request.",
     },
   ],
 

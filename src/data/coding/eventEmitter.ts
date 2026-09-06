@@ -25,22 +25,19 @@ Key implementation details include supporting multiple listeners per event, main
 
   examples: [
     {
-      input: `const emitter = new EventEmitter();\nemitter.on('data', (msg) => console.log(msg));\nemitter.emit('data', 'hello');`,
-      output: 'Logs: "hello"',
-      explanation:
-        "The listener registered with on() is called when the event is emitted with the provided argument.",
+      input: `const emitter = new EventEmitter();\nconst msgs = [];\nemitter.on('data', (msg) => msgs.push(msg));\nemitter.emit('data', 'hello');\nmsgs;`,
+      output: `["hello"]`,
+      explanation: "The listener registered with on() receives emitted data.",
     },
     {
-      input: `emitter.once('connect', () => console.log('connected'));\nemitter.emit('connect');\nemitter.emit('connect');`,
-      output: 'Logs "connected" only once',
-      explanation:
-        "The once listener auto-unsubscribes after the first emit, so the second emit has no effect.",
+      input: `const emitter = new EventEmitter();\nlet count = 0;\nemitter.once('connect', () => count++);\nemitter.emit('connect');\nemitter.emit('connect');\ncount;`,
+      output: `1`,
+      explanation: "The once listener auto-unsubscribes after the first emit.",
     },
     {
-      input: `const listener = (x) => console.log(x);\nemitter.on('tick', listener);\nemitter.off('tick', listener);\nemitter.emit('tick', 42);`,
-      output: "Nothing logged",
-      explanation:
-        "The listener was removed with off() before emit, so it doesn't fire.",
+      input: `const emitter = new EventEmitter();\nlet count = 0;\nconst listener = (x) => count += x;\nemitter.on('tick', listener);\nemitter.off('tick', listener);\nemitter.emit('tick', 42);\ncount;`,
+      output: `0`,
+      explanation: "Removing listener with off prevents further invocations.",
     },
   ],
 

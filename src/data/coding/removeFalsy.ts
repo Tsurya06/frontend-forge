@@ -67,98 +67,30 @@ The "bottom-up" strategy is key: clean the deepest levels first, then check if t
 For flexibility, accepting a custom predicate instead of the default Boolean check allows users to customize what counts as "falsy" (e.g., keeping 0 but removing null).`,
 
   implementation: `function removeFalsy(value, predicate) {
-  const shouldRemove = predicate || ((v) => !v && v !== undefined);
-
-  function isEmptyContainer(v) {
-    if (Array.isArray(v)) return v.length === 0;
-    if (v && typeof v === 'object') return Object.keys(v).length === 0;
-    return false;
-  }
+  const isFalsy = predicate ? (v) => !predicate(v) : (v) => !v;
 
   function clean(val) {
     if (Array.isArray(val)) {
-      const cleaned = val
-        .map(item => clean(item))
-        .filter(item => {
-          if (isEmptyContainer(item)) return false;
-          return !!item || item === 0 || item === false;
-        });
-      return cleaned;
+      const arr = val.map(clean).filter(item => item !== undefined && !isFalsy(item));
+      return arr.length === 0 ? undefined : arr;
     }
 
     if (val !== null && typeof val === 'object') {
       const result = {};
-      for (const key of Object.keys(val)) {
-        const cleaned = clean(val[key]);
-        if (isEmptyContainer(cleaned)) continue;
-        if (!cleaned && cleaned !== 0 && cleaned !== false) continue;
-        result[key] = cleaned;
+      for (const [k, v] of Object.entries(val)) {
+        const cleaned = clean(v);
+        if (cleaned !== undefined && !isFalsy(cleaned)) {
+          result[k] = cleaned;
+        }
       }
-      return result;
+      return Object.keys(result).length === 0 ? undefined : result;
     }
 
     return val;
   }
 
-  const result = clean(value);
-  if (isEmptyContainer(result)) return Array.isArray(value) ? [] : {};
-  return result;
-}
-
-// Stricter version that removes all JS falsy values
-function removeFalsyStrict(value) {
-  function isEmptyContainer(v) {
-    if (Array.isArray(v)) return v.length === 0;
-    if (v && typeof v === 'object') return Object.keys(v).length === 0;
-    return false;
-  }
-
-  function clean(val) {
-    if (Array.isArray(val)) {
-      return val
-        .map(item => clean(item))
-        .filter(item => !isEmptyContainer(item) && Boolean(item));
-    }
-
-    if (val !== null && typeof val === 'object') {
-      const result = {};
-      for (const key of Object.keys(val)) {
-        const cleaned = clean(val[key]);
-        if (!Boolean(cleaned) || isEmptyContainer(cleaned)) continue;
-        result[key] = cleaned;
-      }
-      return result;
-    }
-
-    return val;
-  }
-
-  const result = clean(value);
-  return isEmptyContainer(result) ? (Array.isArray(value) ? [] : {}) : result;
-}
-
-// Usage
-const formData = {
-  name: 'Alice',
-  age: 0,
-  email: '',
-  address: {
-    street: '123 Main St',
-    apt: null,
-    city: '',
-    state: 'CA',
-    details: { floor: undefined, notes: '' },
-  },
-  tags: ['dev', '', null, 'admin'],
-  preferences: { theme: null, lang: undefined },
-};
-
-console.log(removeFalsyStrict(formData));
-// {
-//   name: 'Alice',
-//   address: { street: '123 Main St', state: 'CA' },
-//   tags: ['dev', 'admin']
-// }`,
+  return clean(value) || {};
+}`,
 
   implementationTS: `function removeFalsyStrict(value: unknown): unknown {
   function isEmptyContainer(v: unknown): boolean {

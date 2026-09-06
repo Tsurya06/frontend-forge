@@ -5,9 +5,9 @@ export const tableOfContentsProblem: CodingProblem = {
   title: "Build Table of Contents from Headings",
   difficulty: "Intermediate",
   category: "Coding",
-  tags: ["DOM", "tree", "recursion", "html-parsing", "nested-structure"],
+  tags: ["tree", "recursion", "algorithms", "nested-structure", "data-structures"],
 
-  problem: `Given a flat list of HTML heading elements (h1 through h6), build a nested tree structure representing a table of contents. Each heading has a level (1-6) and text content. The output should be a hierarchical tree where lower-level headings are nested as children of the nearest preceding higher-level heading.
+  problem: `Given a flat array of heading objects (representing h1 through h6 levels), build a nested tree structure representing a table of contents. Each heading has a level (1-6) and text content. The output should be a hierarchical tree where lower-level headings are nested as children of the nearest preceding higher-level heading.
 
 For example, an h2 following an h1 should become a child of that h1. An h3 following an h2 should become a child of that h2. If heading levels are skipped (e.g., h1 followed directly by h3), the h3 still nests under the h1. The result should be an array of top-level nodes, each with an optional children array.
 
@@ -25,21 +25,19 @@ This problem tests your ability to convert a flat sequential structure into a tr
 
   examples: [
     {
-      input: `[{ level: 1, text: "Intro" }, { level: 2, text: "Background" }, { level: 2, text: "Goals" }, { level: 1, text: "Main" }]`,
+      input: `buildTableOfContents([{ level: 1, text: "Intro" }, { level: 2, text: "Background" }, { level: 2, text: "Goals" }, { level: 1, text: "Main" }]);`,
       output: `[{ level: 1, text: "Intro", children: [{ level: 2, text: "Background", children: [] }, { level: 2, text: "Goals", children: [] }] }, { level: 1, text: "Main", children: [] }]`,
-      explanation:
-        "Two h2s nest under the first h1. The second h1 starts a new top-level section.",
+      explanation: "Nests headings under preceding parent headings.",
     },
     {
-      input: `[{ level: 1, text: "A" }, { level: 3, text: "B" }, { level: 2, text: "C" }]`,
+      input: `buildTableOfContents([{ level: 1, text: "A" }, { level: 3, text: "B" }, { level: 2, text: "C" }]);`,
       output: `[{ level: 1, text: "A", children: [{ level: 3, text: "B", children: [] }, { level: 2, text: "C", children: [] }] }]`,
-      explanation:
-        "Skipped level (h1 -> h3) still nests under h1. The h2 also nests under h1 since it has a higher level number.",
+      explanation: "Handles skipped levels appropriately.",
     },
     {
-      input: `[]`,
+      input: `buildTableOfContents([]);`,
       output: `[]`,
-      explanation: "Empty input returns empty output.",
+      explanation: "Empty array returns empty table of contents.",
     },
   ],
 

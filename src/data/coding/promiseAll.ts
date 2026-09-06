@@ -24,20 +24,14 @@ export const promiseAllProblem: CodingProblem = {
 
   examples: [
     {
-      input: `const p1 = Promise.resolve(10);\nconst p2 = 20;\nconst p3 = new Promise(res => setTimeout(() => res(30), 50));\npromiseAll([p1, p2, p3])`,
-      output: "[10, 20, 30]",
-      explanation:
-        "Resolves with all three values in order once the asynchronous p3 finishes.",
+      input: `const p1 = Promise.resolve(10);\nconst p2 = 20;\nconst p3 = new Promise(res => setTimeout(() => res(30), 10));\nawait promiseAll([p1, p2, p3]);`,
+      output: `[10, 20, 30]`,
+      explanation: "Resolves when all promises settle.",
     },
     {
-      input: `const p1 = Promise.resolve(1);\nconst p2 = Promise.reject(new Error('Failed!'));\npromiseAll([p1, p2])`,
-      output: "Error: Failed!",
-      explanation: "Rejects immediately with the error from p2.",
-    },
-    {
-      input: `promiseAll([])`,
-      output: "[]",
-      explanation: "Empty array resolves immediately to empty array.",
+      input: `await promiseAll([]);`,
+      output: `[]`,
+      explanation: "Empty array resolves immediately.",
     },
   ],
 

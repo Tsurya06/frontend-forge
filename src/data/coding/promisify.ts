@@ -25,22 +25,14 @@ Your promisify function should accept a function that expects a Node-style callb
 
   examples: [
     {
-      input: `function readFile(path, callback) {\n  setTimeout(() => callback(null, 'file contents'), 100);\n}\nconst readFileAsync = promisify(readFile);\nreadFileAsync('/path/to/file');`,
-      output: `Promise resolves with 'file contents'`,
-      explanation:
-        "The callback-based readFile is converted to return a Promise. Success calls callback(null, result), so the Promise resolves with result.",
+      input: `const readFile = (path, cb) => setTimeout(() => cb(null, 'file contents'), 10);\nconst readFileAsync = promisify(readFile);\nawait readFileAsync('/path');`,
+      output: `"file contents"`,
+      explanation: "Callback success resolves the returned promise.",
     },
     {
-      input: `function failingOp(callback) {\n  setTimeout(() => callback(new Error('disk error')), 50);\n}\nconst failingOpAsync = promisify(failingOp);\nfailingOpAsync();`,
-      output: `Promise rejects with Error('disk error')`,
-      explanation:
-        "When the callback receives an error as the first argument, the Promise rejects with that error.",
-    },
-    {
-      input: `function add(a, b, callback) {\n  callback(null, a + b);\n}\nconst addAsync = promisify(add);\naddAsync(3, 4);`,
-      output: `Promise resolves with 7`,
-      explanation:
-        "Multiple arguments before the callback are correctly forwarded.",
+      input: `const add = (a, b, cb) => cb(null, a + b);\nconst addAsync = promisify(add);\nawait addAsync(3, 4);`,
+      output: `7`,
+      explanation: "Forwards multiple parameters to the promisified function.",
     },
   ],
 

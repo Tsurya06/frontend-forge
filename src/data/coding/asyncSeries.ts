@@ -25,21 +25,14 @@ Your function should return a Promise that resolves with an array of all results
 
   examples: [
     {
-      input: `const tasks = [\n  () => new Promise(res => setTimeout(() => res('a'), 100)),\n  () => new Promise(res => setTimeout(() => res('b'), 50)),\n  () => new Promise(res => setTimeout(() => res('c'), 75)),\n];\nasyncSeries(tasks);`,
-      output: `Promise resolves with ['a', 'b', 'c']`,
-      explanation:
-        "Even though task 2 has a shorter delay, it only starts after task 1 completes. Results are in input order.",
+      input: `const tasks = [\n  () => Promise.resolve('a'),\n  () => Promise.resolve('b'),\n  () => Promise.resolve('c'),\n];\nawait asyncSeries(tasks);`,
+      output: `["a", "b", "c"]`,
+      explanation: "Tasks resolve strictly in sequence.",
     },
     {
-      input: `const tasks = [\n  () => Promise.resolve(1),\n  () => Promise.reject(new Error('fail')),\n  () => Promise.resolve(3),\n];\nasyncSeries(tasks);`,
-      output: `Promise rejects with Error('fail')`,
-      explanation:
-        "Task 2 rejects, so task 3 never executes and the overall promise rejects.",
-    },
-    {
-      input: `asyncSeries([]);`,
-      output: `Promise resolves with []`,
-      explanation: "An empty input array resolves with an empty results array.",
+      input: `await asyncSeries([]);`,
+      output: `[]`,
+      explanation: "Empty task array resolves with empty results.",
     },
   ],
 

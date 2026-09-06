@@ -9,6 +9,7 @@ import {
   saveStorageSubmissions,
 } from "@/components/codingDetail/codingDetailUtils";
 import { evaluateProblem } from "@/utils/codeRunner";
+import { highlightTextProblem, mergeObjectsProblem, camelCaseKeysProblem } from "@/data/coding";
 import type { CodingProblem } from "@/types";
 
 describe("Coding Detail Utilities & Submission Engine", () => {
@@ -65,6 +66,20 @@ describe("Coding Detail Utilities & Submission Engine", () => {
       expect(starter).toContain("function debounce(fn, delay) {");
       expect(starter).toContain("// Write your solution here");
     });
+
+    it("correctly identifies main function when helper functions precede it in implementation", () => {
+      const highlightStarter = generateStarterCode(highlightTextProblem);
+      expect(highlightStarter).toContain("function highlightText(text, searchTerm) {");
+      expect(highlightStarter).not.toContain("function escapeRegExp(string) {");
+
+      const mergeStarter = generateStarterCode(mergeObjectsProblem);
+      expect(mergeStarter).toContain("function deepMerge(target, source) {");
+      expect(mergeStarter).not.toContain("function isPlainObject(val) {");
+
+      const camelStarter = generateStarterCode(camelCaseKeysProblem);
+      expect(camelStarter).toContain("function camelCaseKeys(input) {");
+    });
+
   });
 
   describe("Local Storage Persistence for Code & Submissions", () => {
@@ -121,14 +136,14 @@ describe("Coding Detail Utilities & Submission Engine", () => {
       },
     ];
 
-    it("returns 'wrong_answer' when empty code is provided", () => {
-      const result = evaluateProblem("", twoSumExamples);
+    it("returns 'wrong_answer' when empty code is provided", async () => {
+      const result = await evaluateProblem("", twoSumExamples);
       expect(result.status).toBe("wrong_answer");
       expect(result.passedCases).toBe(0);
       expect(result.errorMessage).toContain("No code provided");
     });
 
-    it("returns 'accepted' when code passes all test cases", () => {
+    it("returns 'accepted' when code passes all test cases", async () => {
       const code = `
         function twoSum(nums, target) {
           const map = new Map();
@@ -140,7 +155,7 @@ describe("Coding Detail Utilities & Submission Engine", () => {
           return [];
         }
       `;
-      const result = evaluateProblem(code, twoSumExamples);
+      const result = await evaluateProblem(code, twoSumExamples);
       expect(result.status).toBe("accepted");
       expect(result.passedCases).toBe(2);
       expect(result.totalCases).toBe(2);
@@ -149,30 +164,30 @@ describe("Coding Detail Utilities & Submission Engine", () => {
       expect(result.cases[1]?.passed).toBe(true);
     });
 
-    it("returns 'wrong_answer' when code produces wrong output", () => {
+    it("returns 'wrong_answer' when code produces wrong output", async () => {
       const code = `
         function twoSum(nums, target) {
           return [0, 0];
         }
       `;
-      const result = evaluateProblem(code, twoSumExamples);
+      const result = await evaluateProblem(code, twoSumExamples);
       expect(result.status).toBe("wrong_answer");
       expect(result.failedCase).toBeDefined();
       expect(result.failedCase?.passed).toBe(false);
     });
 
-    it("returns 'runtime_error' when code throws exception during execution", () => {
+    it("returns 'runtime_error' when code throws exception during execution", async () => {
       const code = `
         function twoSum(nums, target) {
           throw new Error("IndexOutOfBounds");
         }
       `;
-      const result = evaluateProblem(code, twoSumExamples);
+      const result = await evaluateProblem(code, twoSumExamples);
       expect(result.status).toBe("runtime_error");
       expect(result.errorMessage).toContain("IndexOutOfBounds");
     });
 
-    it("captures console logs accurately during test runs", () => {
+    it("captures console logs accurately during test runs", async () => {
       const code = `
         function twoSum(nums, target) {
           console.log("Checking nums:", nums.length);
@@ -180,21 +195,86 @@ describe("Coding Detail Utilities & Submission Engine", () => {
           return [0, 1];
         }
       `;
-      const result = evaluateProblem(code, [twoSumExamples[0]!]);
+      const result = await evaluateProblem(code, [twoSumExamples[0]!]);
       expect(result.logs.some((l) => l.includes("Checking nums") && l.includes("4"))).toBe(true);
       expect(result.logs.some((l) => l.includes("[WARN]") && l.includes("Looking for target"))).toBe(true);
     });
 
-    it("safely aborts infinite loops and returns 'runtime_error' without freezing", () => {
+    it("safely aborts infinite loops and returns 'runtime_error' without freezing", async () => {
       const code = `
         function twoSum(nums, target) {
           while (true) {}
           return [0, 1];
         }
       `;
-      const result = evaluateProblem(code, twoSumExamples);
+      const result = await evaluateProblem(code, twoSumExamples);
       expect(result.status).toBe("runtime_error");
       expect(result.errorMessage).toMatch(/Time Limit Exceeded/i);
     });
   });
+
+  describe("CodingDetailHeader Run vs Submit Distinction", () => {
+    it("distinguishes Run and Submit button clicks cleanly", async () => {
+      const { CodingDetailHeader } = await import("@/components/codingDetail/CodingDetailHeader");
+      const { render, screen, fireEvent } = await import("@testing-library/react");
+      const { MemoryRouter } = await import("react-router-dom");
+
+      const onRunMock = vi.fn();
+      const onSubmitMock = vi.fn();
+
+      const sampleProblem = {
+        id: "test-prob",
+        title: "Test Problem",
+        difficulty: "Beginner" as const,
+        category: "Coding",
+        problem: "test",
+        tags: [],
+        requirements: [],
+        edgeCases: [],
+        examples: [],
+        optimalApproach: "",
+        implementation: "",
+        timeComplexity: "",
+        spaceComplexity: "",
+        stepByStep: [],
+      };
+
+      render(
+        <MemoryRouter>
+          <CodingDetailHeader
+            problem={sampleProblem}
+            prevProblem={null}
+            nextProblem={null}
+            isRunning={false}
+            isHtmlCss={false}
+            completed={false}
+            bookmarked={false}
+            passCount={0}
+            failCount={0}
+            hasSubmissions={false}
+            onRun={onRunMock}
+            onSubmit={onSubmitMock}
+            onPrev={vi.fn()}
+            onNext={vi.fn()}
+            onRandom={vi.fn()}
+            onToggleBookmark={vi.fn()}
+          />
+        </MemoryRouter>
+      );
+
+      const runBtn = screen.getByRole("button", { name: /^Run$/i });
+      const submitBtn = screen.getByRole("button", { name: /^Submit$/i });
+
+      // Click Run -> should call onRunMock ONLY
+      fireEvent.click(runBtn);
+      expect(onRunMock).toHaveBeenCalledTimes(1);
+      expect(onSubmitMock).not.toHaveBeenCalled();
+
+      // Click Submit -> should call onSubmitMock ONLY
+      fireEvent.click(submitBtn);
+      expect(onSubmitMock).toHaveBeenCalledTimes(1);
+      expect(onRunMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
 });

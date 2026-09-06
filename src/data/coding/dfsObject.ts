@@ -33,10 +33,9 @@ The function should:
 
   examples: [
     {
-      input: `const tree = {\n  a: 1,\n  b: {\n    c: 2,\n    d: 3\n  },\n  e: 4\n};\nconst visited = [];\ndfsObject(tree, n => visited.push(n.key));`,
-      output: `['a', 'b', 'c', 'd', 'e'] (descends deeply into b before visiting e)`,
-      explanation:
-        "Pre-order DFS visits a, enters branch b, visits c, d, then visits e.",
+      input: `const tree = {\n  a: 1,\n  b: {\n    c: 2,\n    d: 3\n  },\n  e: 4\n};\nconst visited = [];\ndfsObject(tree, n => visited.push(n.key));\nvisited;`,
+      output: `["a", "b", "c", "d", "e"]`,
+      explanation: "Traverses deeply into branches before sibling nodes.",
     },
   ],
 

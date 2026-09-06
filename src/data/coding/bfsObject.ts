@@ -32,9 +32,9 @@ The function should:
 
   examples: [
     {
-      input: `const tree = {\n  a: 1,\n  b: {\n    c: 2,\n    d: {\n      e: 3\n    }\n  },\n  f: 4\n};\nbfsObject(tree);`,
-      output: `['a', 'b', 'f', 'c', 'd', 'e'] (keys visited level-by-level)`,
-      explanation: "Level 1: a, b, f -> Level 2: c, d -> Level 3: e",
+      input: `const tree = {\n  a: 1,\n  b: {\n    c: 2,\n    d: {\n      e: 3\n    }\n  },\n  f: 4\n};\nbfsObject(tree).map(n => n.key);`,
+      output: `["a", "b", "f", "c", "d", "e"]`,
+      explanation: "Visits keys breadth-first level by level.",
     },
   ],
 
