@@ -32,7 +32,7 @@ describe("Data Integrity & Coverage Verification", () => {
   });
 
   it("should have all coding problems populated with required fields", () => {
-    expect(allCodingProblems.length).toBeGreaterThanOrEqual(33); // 33 core JS algorithm polyfills + HTML/CSS layout challenges
+    expect(allCodingProblems.length).toBe(32); // 32 core JS algorithm polyfills & utilities
 
     allCodingProblems.forEach((problem) => {
       expect(problem.id).toBeDefined();

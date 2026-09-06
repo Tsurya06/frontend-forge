@@ -10,3 +10,4 @@ export { PageSkeleton } from "./PageSkeleton";
 export { Spinner } from "./Spinner";
 export { Tooltip } from "./Tooltip";
 export { SearchInput } from "./SearchInput";
+export { OutputPredictionDrill } from "./OutputPredictionDrill";

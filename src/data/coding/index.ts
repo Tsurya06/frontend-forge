@@ -23,7 +23,6 @@ import { camelCaseKeysProblem } from "./camelCaseKeys";
 import { arrayFlatProblem } from "./arrayFlat";
 import { mergeSortedArraysProblem } from "./mergeSortedArrays";
 import { calculatorChainingProblem } from "./calculatorChaining";
-import { calcChainingMethodProblem } from "./calcChainingMethod";
 import { webVitalsScenariosProblem } from "./webVitalsScenarios";
 import { promiseAllProblem } from "./promiseAll";
 import { cachedFetchProblem } from "./cachedFetch";
@@ -41,8 +40,8 @@ import {
   cssSkeletonShimmerProblem,
 } from "./htmlCssProblems";
 
+// The 32 Core JavaScript Coding Questions and Polyfills
 export const codingProblems: CodingProblem[] = [
-  ...htmlCssCodingProblems,
   jsonSerializerProblem,
   curryingProblem,
   deepCopyProblem,
@@ -66,7 +65,6 @@ export const codingProblems: CodingProblem[] = [
   arrayFlatProblem,
   mergeSortedArraysProblem,
   calculatorChainingProblem,
-  calcChainingMethodProblem,
   webVitalsScenariosProblem,
   promiseAllProblem,
   cachedFetchProblem,
@@ -107,7 +105,6 @@ export {
   arrayFlatProblem,
   mergeSortedArraysProblem,
   calculatorChainingProblem,
-  calcChainingMethodProblem,
   webVitalsScenariosProblem,
   promiseAllProblem,
   cachedFetchProblem,

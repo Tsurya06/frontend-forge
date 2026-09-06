@@ -29,7 +29,7 @@ export const contentManifest: ContentManifest = {
   lastUpdated: "2026-09-01",
   totalTopics: 66,
   totalQuestions: 442,
-  totalCodingProblems: 34,
+  totalCodingProblems: 32,
   totalMachineCodingProblems: 35,
   totalSystemDesignProblems: 9,
   coveragePercentage: 100,

@@ -1,0 +1,223 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6, 1.5rem);
+  padding: var(--space-4, 1rem) 0;
+}
+
+.banner {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: var(--radius-xl, 12px);
+  padding: var(--space-5, 1.25rem);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4, 1rem);
+}
+
+.bannerIcon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.bannerContent {
+  flex: 1;
+}
+
+.bannerTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary, #f4f4f5);
+  margin-bottom: 0.25rem;
+}
+
+.bannerText {
+  font-size: 0.88rem;
+  color: var(--text-secondary, #a1a1aa);
+  line-height: 1.5;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary, #f4f4f5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionBadge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted, #71717a);
+}
+
+.challengeCard {
+  background: var(--bg-card, #181825);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: var(--radius-xl, 12px);
+  padding: var(--space-5, 1.25rem);
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(0, 0, 0, 0.05));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+}
+
+.challengeHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.challengeTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #f4f4f5);
+}
+
+.challengeMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.challengeDesc {
+  font-size: 0.88rem;
+  color: var(--text-secondary, #a1a1aa);
+  line-height: 1.55;
+}
+
+.challengeFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-2, 0.5rem);
+  padding-top: var(--space-3, 0.75rem);
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+}
+
+.launchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-md, 6px);
+  background: var(--color-primary, #6366f1);
+  color: #ffffff;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  transition: all 0.2s ease;
+}
+
+.launchBtn:hover {
+  background: var(--color-primary-hover, #4f46e5);
+  transform: translateY(-1px);
+}
+
+.scenarioCard {
+  background: var(--bg-card, #181825);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: var(--radius-xl, 12px);
+  padding: var(--space-5, 1.25rem);
+}
+
+.scenarioQuestion {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #818cf8;
+  line-height: 1.55;
+  margin-bottom: var(--space-3, 0.75rem);
+}
+
+.scenarioTextarea {
+  width: 100%;
+  min-height: 110px;
+  padding: var(--space-3, 0.75rem);
+  font-family: inherit;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  background: var(--bg-secondary, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-md, 6px);
+  color: var(--text-primary, #f4f4f5);
+  resize: vertical;
+  outline: none;
+  margin-bottom: var(--space-3, 0.75rem);
+}
+
+.scenarioTextarea:focus {
+  border-color: #6366f1;
+}
+
+.rubricToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-md, 6px);
+  background: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  color: var(--text-primary, #f4f4f5);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rubricToggleBtn:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.08));
+}
+
+.modelAnswerBox {
+  margin-top: var(--space-4, 1rem);
+  padding: var(--space-4, 1rem);
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-lg, 8px);
+  animation: fadeIn 0.2s ease;
+}
+
+.modelAnswerTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #818cf8;
+  margin-bottom: 0.5rem;
+}
+
+.modelAnswerText {
+  font-size: 0.88rem;
+  color: var(--text-secondary, #a1a1aa);
+  line-height: 1.6;
+}
+
+.rubricList {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #a1a1aa);
+  line-height: 1.5;
+}

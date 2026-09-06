@@ -276,10 +276,10 @@ export default function Dashboard() {
             >
               <div className={styles.bannerBadge}>POPULAR</div>
               <h2 className={styles.bannerTitle}>
-                Essential 28 JavaScript Polyfills
+                Essential 32 JavaScript Polyfills
               </h2>
               <p className={styles.bannerSubtitle}>
-                28 Core Algorithm & Polyfill challenges asked in Tier-1
+                32 Core Algorithm and Polyfill challenges asked in Tier-1
                 interviews
               </p>
             </Link>

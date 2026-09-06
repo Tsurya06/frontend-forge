@@ -516,3 +516,124 @@ export function evaluateProblem(
     logs: allLogs,
   };
 }
+
+/**
+ * Executes a standalone JavaScript snippet safely in a sandboxed Function scope,
+ * intercepting console logs, warnings, errors, and async results.
+ */
+export async function executeSnippet(
+  code: string,
+  timeoutMs: number = 2500,
+): Promise<RunResult> {
+  const logs: Array<{
+    type: "log" | "warn" | "error" | "info" | "result";
+    text: string;
+  }> = [];
+  const startTime = performance.now();
+  let hasError = false;
+
+  const appendLog = (
+    type: "log" | "warn" | "error" | "info" | "result",
+    ...args: unknown[]
+  ) => {
+    logs.push({
+      type,
+      text: args.map(formatValue).join(" "),
+    });
+  };
+
+  const sandboxConsole = {
+    log: (...args: unknown[]) => appendLog("log", ...args),
+    warn: (...args: unknown[]) => appendLog("warn", ...args),
+    error: (...args: unknown[]) => appendLog("error", ...args),
+    info: (...args: unknown[]) => appendLog("info", ...args),
+    clear: () => {
+      logs.length = 0;
+    },
+    table: (...args: unknown[]) => appendLog("log", ...args),
+  };
+
+  const activeTimers: number[] = [];
+  const sandboxSetTimeout = (handler: TimerHandler, timeout?: number, ...args: unknown[]) => {
+    const id = window.setTimeout(() => {
+      if (typeof handler === "function") {
+        try {
+          handler(...args);
+        } catch (err: unknown) {
+          hasError = true;
+          appendLog("error", `Async Error: ${err instanceof Error ? err.message : String(err)}`);
+        }
+      }
+    }, timeout);
+    activeTimers.push(id);
+    return id;
+  };
+
+  const sandboxSetInterval = (handler: TimerHandler, timeout?: number, ...args: unknown[]) => {
+    const id = window.setInterval(() => {
+      if (typeof handler === "function") {
+        try {
+          handler(...args);
+        } catch (err: unknown) {
+          hasError = true;
+          appendLog("error", `Interval Error: ${err instanceof Error ? err.message : String(err)}`);
+        }
+      }
+    }, timeout);
+    activeTimers.push(id);
+    return id;
+  };
+
+  try {
+    const jsExecutable = transpileToJS(code);
+    const runner = new Function(
+      "console",
+      "setTimeout",
+      "setInterval",
+      "clearTimeout",
+      "clearInterval",
+      "Promise",
+      `
+      return (async () => {
+        ${jsExecutable}
+      })();
+      `,
+    );
+
+    const execPromise = runner(
+      sandboxConsole,
+      sandboxSetTimeout,
+      sandboxSetInterval,
+      window.clearTimeout.bind(window),
+      window.clearInterval.bind(window),
+      Promise,
+    );
+
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error(`Execution timed out after ${timeoutMs}ms`)), timeoutMs);
+    });
+
+    const result = await Promise.race([execPromise, timeoutPromise]);
+    if (result !== undefined) {
+      appendLog("result", result);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 30));
+  } catch (err: unknown) {
+    hasError = true;
+    appendLog(
+      "error",
+      `Runtime / Syntax Error: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  } finally {
+    for (const id of activeTimers) {
+      window.clearTimeout(id);
+      window.clearInterval(id);
+    }
+  }
+
+  return {
+    logs,
+    executionTime: Math.round(performance.now() - startTime),
+    hasError,
+  };
+}

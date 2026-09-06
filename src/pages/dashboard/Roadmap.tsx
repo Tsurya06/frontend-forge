@@ -92,7 +92,7 @@ export default function Roadmap() {
                     <div className={styles.ongoingDetails}>
                       <div className={styles.ongoingHeader}>
                         <h3 className={styles.ongoingName}>
-                          28 Core JavaScript Polyfills
+                          {codingTotal} Core JavaScript Polyfills and Utilities
                         </h3>
                         <span className={styles.ongoingBadge}>
                           {codingDone === codingTotal ? "Completed" : "In Progress"}
@@ -105,7 +105,7 @@ export default function Roadmap() {
                         />
                       </div>
                       <div className={styles.progressMeta}>
-                        <span>Algorithm & Polyfill Mastery</span>
+                        <span>Algorithm and Polyfill Mastery</span>
                         <span>
                           {codingDone} / {codingTotal} Solved ({codingPercent}%)
                         </span>
@@ -148,7 +148,7 @@ export default function Roadmap() {
                           />
                         </div>
                         <div className={styles.progressMeta}>
-                          <span>Component Hierarchy & State</span>
+                          <span>Component Hierarchy and State</span>
                           <span>
                             {mcDone} / {mcTotal} Solved ({mcPercent}%)
                           </span>
@@ -170,11 +170,10 @@ export default function Roadmap() {
                   >
                     <div className={styles.cardHeader}>
                       <h3 className={styles.featuredCardTitle}>
-                        28 Core Polyfills
+                        {codingTotal} Core Polyfills
                       </h3>
                       <p className={styles.featuredCardDesc}>
-                        {codingDone}/{allCodingProblems.length} Algorithm &
-                        Polyfill Challenges
+                        {codingDone}/{allCodingProblems.length} Algorithm and Polyfill Challenges
                       </p>
                     </div>
                     <div className={styles.cardGraphic}>
@@ -184,14 +183,14 @@ export default function Roadmap() {
                     </div>
                   </Link>
 
-                  {/* Card 2: 35 Machine Coding */}
+                  {/* Card 2: {mcTotal} Machine Coding */}
                   <Link
                     to="/machine-coding"
                     className={`${styles.featuredCard} ${styles.cardTeal}`}
                   >
                     <div className={styles.cardHeader}>
                       <h3 className={styles.featuredCardTitle}>
-                        35 Machine Coding
+                        {mcTotal} Machine Coding
                       </h3>
                       <p className={styles.featuredCardDesc}>
                         {completedMachineCoding.length}/
@@ -251,10 +250,10 @@ export default function Roadmap() {
                 </div>
               </section>
 
-              {/* ── 3. Specialized Deep Dives & Assessment Tools ── */}
+              {/* ── 3. Specialized Deep Dives and Assessment Tools ── */}
               <section className={styles.sectionBlock}>
                 <h2 className={styles.sectionTitle}>
-                  Specialized Tools & Deep Dives
+                  Specialized Tools and Deep Dives
                 </h2>
                 <div className={styles.crackingGrid}>
                   <Link to="/visualizer" className={styles.crackCard}>
@@ -268,7 +267,7 @@ export default function Roadmap() {
                       Event Loop Visualizer
                     </h3>
                     <p className={styles.crackDesc}>
-                      Frame-by-frame V8 Call Stack, Memory Heap, Microtask &
+                      Frame-by-frame V8 Call Stack, Memory Heap, Microtask and
                       Macrotask queues simulation
                     </p>
                   </Link>
@@ -284,8 +283,7 @@ export default function Roadmap() {
                       Staff Engineering Guide
                     </h3>
                     <p className={styles.crackDesc}>
-                      RFC processes, technical vision, trade-off matrix &
-                      mentoring
+                      RFC processes, technical vision, trade-off matrix and mentoring
                     </p>
                   </Link>
 
@@ -301,7 +299,7 @@ export default function Roadmap() {
                     </h3>
                     <p className={styles.crackDesc}>
                       Realistic 45-minute timed interview with randomized
-                      questions & scoring
+                      questions and scoring
                     </p>
                   </Link>
 
@@ -317,7 +315,7 @@ export default function Roadmap() {
                     </h3>
                     <p className={styles.crackDesc}>
                       Rapid-fire 3D card flips covering core frontend interview
-                      concepts & APIs
+                      concepts and APIs
                     </p>
                   </Link>
                 </div>
@@ -341,7 +339,7 @@ export default function Roadmap() {
                         JavaScript Engine Mastery
                       </h3>
                       <p className={styles.thirtyDesc}>
-                        Closures, Promises, Prototypes & V8 Execution
+                        Closures, Promises, Prototypes and V8 Execution
                       </p>
                     </div>
                   </Link>
@@ -357,10 +355,10 @@ export default function Roadmap() {
                     </div>
                     <div className={styles.thirtyContent}>
                       <h3 className={styles.thirtyTitle}>
-                        React 19 & Architecture
+                        React 19 and Architecture
                       </h3>
                       <p className={styles.thirtyDesc}>
-                        Hooks, Server Components, Actions & Concurrent Mode
+                        Hooks, Server Components, Actions and Concurrent Mode
                       </p>
                     </div>
                   </Link>
@@ -376,10 +374,10 @@ export default function Roadmap() {
                     </div>
                     <div className={styles.thirtyContent}>
                       <h3 className={styles.thirtyTitle}>
-                        Web Performance & Vitals
+                        Web Performance and Vitals
                       </h3>
                       <p className={styles.thirtyDesc}>
-                        INP, LCP, CLS, Bundle Optimization & Profiling
+                        INP, LCP, CLS, Bundle Optimization and Profiling
                       </p>
                     </div>
                   </Link>
@@ -395,10 +393,10 @@ export default function Roadmap() {
                     </div>
                     <div className={styles.thirtyContent}>
                       <h3 className={styles.thirtyTitle}>
-                        Web Security & Defenses
+                        Web Security and Defenses
                       </h3>
                       <p className={styles.thirtyDesc}>
-                        XSS Prevention, CSRF Defense, CSP & CORS
+                        XSS Prevention, CSRF Defense, CSP and CORS
                       </p>
                     </div>
                   </Link>
@@ -412,56 +410,56 @@ export default function Roadmap() {
                 {[
                   {
                     week: 1,
-                    title: "JavaScript Engine & Asynchronous Patterns",
+                    title: "JavaScript Engine and Asynchronous Patterns",
                     topics:
                       "Event Loop, Microtasks, Closures, Promises, Prototypes",
                     link: "/topics/javascript-engine",
                   },
                   {
                     week: 2,
-                    title: "Polyfills & Utility Functions",
+                    title: "Polyfills and Utility Functions",
                     topics:
                       "Promise.all, debounce, throttle, deepCopy, deepEqual, memoize",
                     link: "/coding",
                   },
                   {
                     week: 3,
-                    title: "DOM & Browser Architecture",
+                    title: "DOM and Browser Architecture",
                     topics:
                       "Rendering pipeline, Reflow/Repaint, Event Delegation, Web APIs",
                     link: "/topics/browser-rendering",
                   },
                   {
                     week: 4,
-                    title: "React 19 & State Management",
+                    title: "React 19 and State Management",
                     topics:
                       "Hooks internals, Concurrent Mode, Actions, Optimistic UI, Redux Toolkit",
                     link: "/topics/react-components",
                   },
                   {
                     week: 5,
-                    title: "TypeScript & Type Systems",
+                    title: "TypeScript and Type Systems",
                     topics:
                       "Generics, Conditional Types, Type Narrowing, AST, Template Literals",
                     link: "/topics/typescript-generics",
                   },
                   {
                     week: 6,
-                    title: "Machine Coding & UI Engineering",
+                    title: "Machine Coding and UI Engineering",
                     topics:
                       "Autocomplete, Infinite Scroll, Modals, Resizable Splitter, Virtualization",
                     link: "/machine-coding",
                   },
                   {
                     week: 7,
-                    title: "Performance & Security",
+                    title: "Performance and Security",
                     topics:
                       "Core Web Vitals, INP, LCP, CLS, XSS, CSRF, CSP, Cache-Control, CDN",
                     link: "/topics/performance-metrics",
                   },
                   {
                     week: 8,
-                    title: "Frontend System Design & Staff Leadership",
+                    title: "Frontend System Design and Staff Leadership",
                     topics:
                       "Newsfeed architecture, Realtime Collab, Micro-frontends, Technical Strategy",
                     link: "/system-design",

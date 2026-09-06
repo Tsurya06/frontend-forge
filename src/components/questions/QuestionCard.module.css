@@ -182,3 +182,131 @@
   color: var(--accent);
   margin-bottom: var(--space-2);
 }
+
+/* ── Active Rehearsal Mode ── */
+.rehearsalBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: var(--font-semibold, 600);
+  color: #818cf8;
+  background-color: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-md, 6px);
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.rehearsalBtn:hover {
+  background-color: rgba(99, 102, 241, 0.18);
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+.rehearsalBtn.active {
+  background-color: #6366f1;
+  color: #ffffff;
+  border-color: #6366f1;
+}
+
+.rehearsalBox {
+  padding: 0 var(--space-5, 1.25rem) var(--space-4, 1rem);
+  border-top: 1px dashed var(--border-color, rgba(255, 255, 255, 0.08));
+  margin-top: var(--space-2, 0.5rem);
+  padding-top: var(--space-4, 1rem);
+  animation: fadeIn 0.2s ease;
+}
+
+.rehearsalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2, 0.5rem);
+}
+
+.rehearsalTitle {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #818cf8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rehearsalScore {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.rehearsalTextarea {
+  width: 100%;
+  min-height: 90px;
+  padding: var(--space-3, 0.75rem);
+  font-family: inherit;
+  font-size: var(--text-sm, 0.88rem);
+  line-height: var(--leading-relaxed, 1.6);
+  background: var(--bg-secondary, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-md, 6px);
+  color: var(--text-primary, #f4f4f5);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast, 0.15s ease);
+}
+
+.rehearsalTextarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.rubricSection {
+  margin-top: var(--space-3, 0.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rubricLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #71717a);
+}
+
+.rubricPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rubricPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  transition: all 0.15s ease;
+}
+
+.rubricPill.covered {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.rubricPill.missing {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted, #71717a);
+}

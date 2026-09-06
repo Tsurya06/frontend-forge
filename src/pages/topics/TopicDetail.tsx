@@ -1,3 +1,4 @@
+import { TopicPracticeDrills } from "@/components/topics/TopicPracticeDrills";
 import { useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useProgressContext } from "@/context/ProgressContext";
@@ -179,6 +180,15 @@ export default function TopicDetail() {
               description="Questions for this topic haven't been added."
             />
           )}
+        </div>
+      ),
+    },
+{
+      id: "practice",
+      label: "⚡ SDE2 Practice & Drills",
+      content: (
+        <div className={styles.tabContent}>
+          <TopicPracticeDrills topic={topic} />
         </div>
       ),
     },
