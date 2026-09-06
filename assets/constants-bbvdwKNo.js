@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-CbXtAM7H.js";import{t}from"./prism-vendor-C4pqrQjn.js";import"./storage-H5_QFMZr.js";var n=e(t(),1);typeof window<`u`&&(window.Prism=n.default),typeof globalThis<`u`&&(globalThis.Prism=n.default);var r=n.default;export{r as t};
