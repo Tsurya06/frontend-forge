@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useProgressContext } from "@/context/ProgressContext";
 import { STORAGE_KEYS } from "@/constants/storage";
 import {
+  LayoutDashboard,
   Code2,
   BookOpen,
   Calendar,
@@ -65,8 +66,16 @@ export function LeftQuickNav() {
       {/* Primary Navigation */}
       <div className={styles.primaryNav}>
         <Link
+          to="/dashboard"
+          className={`${styles.navItem} ${location.pathname === "/dashboard" ? styles.active : ""}`}
+          title="Dashboard"
+        >
+          <span className={styles.navIcon}><LayoutDashboard size={16} /></span>
+          {!collapsed && <span className={styles.navLabel}>Dashboard</span>}
+        </Link>
+        <Link
           to="/coding"
-          className={`${styles.navItem} ${location.pathname === "/coding" || location.pathname === "/" ? styles.active : ""}`}
+          className={`${styles.navItem} ${location.pathname.startsWith("/coding") ? styles.active : ""}`}
           title="Problems"
         >
           <span className={styles.navIcon}><Code2 size={16} /></span>
@@ -74,7 +83,7 @@ export function LeftQuickNav() {
         </Link>
         <Link
           to="/topics"
-          className={`${styles.navItem} ${location.pathname === "/topics" ? styles.active : ""}`}
+          className={`${styles.navItem} ${location.pathname.startsWith("/topics") || location.pathname.startsWith("/topic") ? styles.active : ""}`}
           title="Topics"
         >
           <span className={styles.navIcon}><BookOpen size={16} /></span>
@@ -82,7 +91,7 @@ export function LeftQuickNav() {
         </Link>
         <Link
           to="/daily"
-          className={`${styles.navItem} ${location.pathname === "/daily" ? styles.active : ""}`}
+          className={`${styles.navItem} ${location.pathname.startsWith("/daily") ? styles.active : ""}`}
           title="Daily"
         >
           <span className={styles.navIcon}><Calendar size={16} /></span>
@@ -90,11 +99,11 @@ export function LeftQuickNav() {
         </Link>
         <Link
           to="/roadmap"
-          className={`${styles.navItem} ${location.pathname === "/roadmap" ? styles.active : ""}`}
-          title="Study Plan"
+          className={`${styles.navItem} ${location.pathname.startsWith("/roadmap") ? styles.active : ""}`}
+          title="Roadmap"
         >
           <span className={styles.navIcon}><Map size={16} /></span>
-          {!collapsed && <span className={styles.navLabel}>Study Plan</span>}
+          {!collapsed && <span className={styles.navLabel}>Roadmap</span>}
         </Link>
       </div>
 
@@ -109,10 +118,10 @@ export function LeftQuickNav() {
         )}
 
         <div className={styles.listItems}>
-          <Link to="/coding" className={styles.listItem} title="Polyfills (28)">
+          <Link to="/coding" className={styles.listItem} title="Polyfills (32)">
             <span className={styles.starIcon}><Binary size={15} /></span>
             {!collapsed && <span className={styles.listItemName}>Polyfills</span>}
-            {!collapsed && <span className={styles.badge}>28</span>}
+            {!collapsed && <span className={styles.badge}>32</span>}
           </Link>
 
           <Link to="/machine-coding" className={styles.listItem} title="Machine Coding (35)">

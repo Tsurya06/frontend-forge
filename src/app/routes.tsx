@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "@/app/layout/Layout";
 
 // Primary Navigation Routes (eagerly loaded for instantaneous 0ms tab switching)
@@ -63,7 +63,8 @@ export function AppRoutes() {
     <Routes>
       <Route element={<Layout />}>
         {/* Core Instant Navigation Routes */}
-        <Route index element={<Dashboard />} />
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path={ROUTES.ROADMAP.slice(1)} element={<Roadmap />} />
         <Route path={ROUTES.TOPICS.slice(1)} element={<Topics />} />
         <Route path={ROUTES.TOPIC_SHORT.slice(1)} element={<Topics />} />

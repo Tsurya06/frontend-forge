@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate, useLocation, Link, NavLink } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useProgressContext } from "@/context/ProgressContext";
 import { useThemeContext } from "@/context/ThemeContext";
 import {
@@ -17,16 +17,6 @@ import styles from "./Header.module.css";
 interface HeaderProps {
   readonly onMenuToggle: () => void;
 }
-
-const navItems = [
-  { label: "Explore", path: "/topics" },
-  { label: "Problems", path: "/coding" },
-  { label: "Machine Coding", path: "/machine-coding" },
-  { label: "System Design", path: "/system-design" },
-  { label: "Roadmap", path: "/roadmap" },
-  { label: "Daily", path: "/daily" },
-  { label: "Sandbox", path: "/playground" },
-];
 
 export function Header({ onMenuToggle }: Readonly<HeaderProps>) {
   const { resolvedTheme, toggleTheme } = useThemeContext();
@@ -99,7 +89,7 @@ export function Header({ onMenuToggle }: Readonly<HeaderProps>) {
           <Menu size={18} />
         </button>
 
-        <Link to="/" className={styles.headerBrand}>
+        <Link to="/dashboard" className={styles.headerBrand}>
           <img
             src={import.meta.env.BASE_URL + "favicon-32.png"}
             alt="FrontendForge"
@@ -108,20 +98,7 @@ export function Header({ onMenuToggle }: Readonly<HeaderProps>) {
           <span className={styles.brandText}>FrontendForge</span>
         </Link>
 
-        {/* FrontendForge Horizontal Nav Links (Desktop) */}
-        <nav className={styles.desktopNav} aria-label="Main Navigation">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `${styles.navLink} ${isActive ? styles.activeNavLink : ""}`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
+        
       </div>
 
       <div className={styles.rightGroup}>

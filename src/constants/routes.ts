@@ -4,7 +4,8 @@
  */
 
 export const ROUTES = {
-  HOME: "/",
+  HOME: "/dashboard",
+  DASHBOARD: "/dashboard",
   ROADMAP: "/roadmap",
   TOPICS: "/topics",
   TOPIC_SHORT: "/topic",

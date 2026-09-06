@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import {
+  LayoutDashboard,
   Code2,
   Component,
   Layers,
@@ -47,10 +48,15 @@ const sections: NavSection[] = [
     title: "Core Practice",
     items: [
       {
+        label: "Dashboard",
+        path: "/dashboard",
+        icon: <LayoutDashboard size={16} />,
+      },
+      {
         label: "Problemset",
         path: "/coding",
         icon: <Code2 size={16} />,
-        badge: "28",
+        badge: "32",
       },
       {
         label: "Machine Coding",

@@ -44,7 +44,7 @@ export function useKeyboardShortcuts(callbacks: ShortcutCallbacks = {}) {
 
       switch (combo) {
         case "g d":
-          target = "/";
+          target = "/dashboard";
           break;
         case "g t":
           target = "/topics";
