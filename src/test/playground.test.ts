@@ -216,8 +216,7 @@ describe("Monaco Themes & Language Configuration", () => {
   it("registerMonacoThemes and configureMonacoLanguages execute successfully", () => {
     const definedThemes: Record<string, unknown> = {};
     let tsCompilerOptions: Record<string, unknown> = {};
-    let tsDiagnostics: Record<string, unknown> = {};
-
+    
     const mockMonaco = {
       editor: {
         defineTheme: (name: string, theme: unknown) => {
@@ -233,9 +232,7 @@ describe("Monaco Themes & Language Configuration", () => {
             setCompilerOptions: (opts: Record<string, unknown>) => {
               tsCompilerOptions = opts;
             },
-            setDiagnosticsOptions: (opts: Record<string, unknown>) => {
-              tsDiagnostics = opts;
-            },
+            setDiagnosticsOptions: () => {},
           },
           javascriptDefaults: {
             setCompilerOptions: () => {},

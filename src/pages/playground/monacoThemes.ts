@@ -319,36 +319,40 @@ export function registerMonacoThemes(monaco: typeof Monaco) {
 
 export function configureMonacoLanguages(monaco: typeof Monaco) {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tsLang = (monaco.languages as any)?.typescript;
+    if (!tsLang) return;
+
     // Configure TypeScript compiler options with JSX/TSX support
-    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-      target: monaco.languages.typescript.ScriptTarget.ES2022,
+    tsLang.typescriptDefaults.setCompilerOptions({
+      target: tsLang.ScriptTarget.ES2022,
       allowNonTextFiles: true,
       noLib: false,
       alwaysStrict: false,
       allowJs: true,
-      jsx: monaco.languages.typescript.JsxEmit.ReactJSX,
-      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+      jsx: tsLang.JsxEmit.ReactJSX,
+      moduleResolution: tsLang.ModuleResolutionKind.NodeJs,
       allowSyntheticDefaultImports: true,
     });
 
     // Configure JavaScript compiler options with JSX support
-    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-      target: monaco.languages.typescript.ScriptTarget.ES2022,
+    tsLang.javascriptDefaults.setCompilerOptions({
+      target: tsLang.ScriptTarget.ES2022,
       allowNonTextFiles: true,
       noLib: false,
       alwaysStrict: false,
       allowJs: true,
-      jsx: monaco.languages.typescript.JsxEmit.ReactJSX,
+      jsx: tsLang.JsxEmit.ReactJSX,
     });
 
     // Suppress false diagnostic errors for external modules while maintaining syntax validation
-    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+    tsLang.javascriptDefaults.setDiagnosticsOptions({
       noSemanticValidation: true,
       noSyntaxValidation: false,
       noSuggestionDiagnostics: true,
     });
 
-    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+    tsLang.typescriptDefaults.setDiagnosticsOptions({
       noSemanticValidation: true,
       noSyntaxValidation: false,
       noSuggestionDiagnostics: true,
