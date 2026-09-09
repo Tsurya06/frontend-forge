@@ -115,6 +115,17 @@ export const holyGrailLayoutProblem: CodingProblem = {
   }
 }
 </style>`,
+  htmlCssValidators: [
+    { check: "display: grid", label: "Uses CSS Grid (display: grid)" },
+    { check: "grid-template-areas", label: "Defines grid-template-areas" },
+    { check: "grid-template-columns", label: "Defines grid-template-columns" },
+    { check: "grid-template-rows", label: "Defines grid-template-rows" },
+    { check: "grid-area", label: "Assigns grid-area to children" },
+    { check: "@media", label: "Includes responsive media query" },
+    { check: "<header", label: "Has <header> element" },
+    { check: "<main", label: "Has <main> element" },
+    { check: "<footer", label: "Has <footer> element" },
+  ],
   stepByStep: [
     "Define `display: grid` with `min-height: 100dvh` (or `100vh`).",
     "Set `grid-template-rows: auto 1fr auto` so the middle row expands to take all remaining height.",
@@ -429,6 +440,15 @@ dialog.addEventListener('click', (e) => {
   if (!isInDialog) dialog.close();
 });
 </script>`,
+  htmlCssValidators: [
+    { check: "<dialog", label: "Uses native <dialog> element" },
+    { check: "showModal", label: "Uses dialog.showModal() API" },
+    { check: "::backdrop", label: "Styles the ::backdrop pseudo-element" },
+    { check: ".close()", label: "Uses dialog.close() to dismiss" },
+    { check: "<button", label: "Has interactive button elements" },
+    { check: "addEventListener", label: "Attaches event listeners" },
+    { check: "border-radius", label: "Has rounded corners styling" },
+  ],
   stepByStep: [
     "Create semantic `<dialog>` element containing modal title, body, and action buttons.",
     "Use `dialog.showModal()` to launch modal into the browser top layer.",
@@ -569,6 +589,15 @@ export const cssSkeletonShimmerProblem: CodingProblem = {
   }
 }
 </style>`,
+  htmlCssValidators: [
+    { check: "linear-gradient", label: "Uses linear-gradient for shimmer effect" },
+    { check: "background-size", label: "Sets background-size for animation" },
+    { check: "@keyframes", label: "Defines keyframe animation" },
+    { check: "animation", label: "Applies animation property" },
+    { check: "border-radius", label: "Uses border-radius for shapes" },
+    { check: "skeleton", label: "Has .skeleton class structure" },
+    { check: "prefers-reduced-motion", label: "Respects prefers-reduced-motion" },
+  ],
   stepByStep: [
     "Define `.skeleton` with a 3-stop `linear-gradient` (base color, lighter highlight, base color).",
     "Set `background-size: 200% 100%` so the highlight wave can translate across.",

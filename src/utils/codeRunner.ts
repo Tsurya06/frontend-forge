@@ -568,6 +568,72 @@ export async function evaluateProblem(
   };
 }
 
+
+/**
+ * Evaluates HTML/CSS problems by checking structural requirements
+ * (specific elements, CSS properties, class names, etc.) instead of
+ * executing them through the JS engine.
+ */
+export function evaluateHtmlCssProblem(
+  userCode: string,
+  validators: Array<{ check: string; label: string }>,
+): ProblemEvaluationResult {
+  const trimmed = userCode.trim();
+  const caseResults: TestCaseEvaluation[] = [];
+  let passedCases = 0;
+  let failedCase: TestCaseEvaluation | undefined;
+
+  if (!trimmed) {
+    return {
+      status: "wrong_answer",
+      totalCases: validators.length,
+      passedCases: 0,
+      totalTime: 0,
+      cases: [],
+      errorMessage: "No code provided to evaluate.",
+      logs: [],
+    };
+  }
+
+  const lowerCode = trimmed.toLowerCase();
+
+  for (let i = 0; i < validators.length; i++) {
+    const v = validators[i];
+    if (!v) continue;
+
+    const checkLower = v.check.toLowerCase();
+    const passed = lowerCode.includes(checkLower);
+
+    const caseEval: TestCaseEvaluation = {
+      caseIndex: i,
+      input: v.label,
+      expectedOutput: `Code contains: ${v.check}`,
+      actualOutput: passed ? "✓ Found" : "✗ Not found",
+      passed,
+      logs: [],
+      executionTime: 1,
+    };
+    caseResults.push(caseEval);
+
+    if (passed) {
+      passedCases++;
+    } else if (!failedCase) {
+      failedCase = caseEval;
+    }
+  }
+
+  const allPassed = passedCases === validators.length;
+
+  return {
+    status: allPassed ? "accepted" : "wrong_answer",
+    totalCases: validators.length,
+    passedCases,
+    totalTime: 12,
+    cases: caseResults,
+    failedCase,
+    logs: [],
+  };
+}
 /**
  * Executes a standalone JavaScript snippet safely in a sandboxed Function scope,
  * intercepting console logs, warnings, errors, and async results.

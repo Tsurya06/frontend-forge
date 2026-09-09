@@ -437,7 +437,7 @@ class DerivedValue extends ReactiveValue {
   }
   
   _recompute() {
-    this.value = this._computeFn();
+    this.value = this._computeFn(...this._dependencies);
   }
   
   // Derived values are read-only

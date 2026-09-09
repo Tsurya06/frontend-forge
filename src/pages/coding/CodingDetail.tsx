@@ -11,6 +11,7 @@ import { useApiQuery } from "@/services/api/hooks/useApi";
 import type { CodingProblem } from "@/types";
 import {
   evaluateProblem,
+  evaluateHtmlCssProblem,
   type ProblemEvaluationResult,
 } from "@/utils/codeRunner";
 import {
@@ -185,28 +186,48 @@ export default function CodingDetail() {
     setIsRunning(true);
 
     if (isHtmlCss) {
+      // Always show preview for HTML/CSS problems
       setRightTab("preview");
-      setIsRunning(false);
-      if (isSubmit) {
-        const trimmed = userCode.trim();
-        const hasHtml = trimmed.includes("<") && trimmed.includes(">");
-        const hasCss = trimmed.includes("{") && trimmed.includes("}");
-        if (hasHtml && hasCss && trimmed.length > 100) {
-          markComplete(problem.id, "coding");
 
-          const newSub: UserSubmission = {
-            id: String(Date.now()),
-            timestamp: new Date().toLocaleTimeString(),
-            status: "accepted",
-            passedCases: 1,
-            totalCases: 1,
-            runtimeMs: 0,
-            codeSnippet: userCode.slice(0, 120),
-          };
-          const updated = [newSub, ...submissions.slice(0, 9)];
-          setSubmissions(updated);
-          saveStorageSubmissions(problem.id, updated);
+      // Run structural validators if the problem has them
+      if (problem.htmlCssValidators && problem.htmlCssValidators.length > 0) {
+        const result = evaluateHtmlCssProblem(userCode, problem.htmlCssValidators);
+        setEvaluationResult(result);
+        // Switch to result tab so user sees pass/fail feedback
+        setRightTab("result");
+      }
+
+      setIsRunning(false);
+
+      // Only Submit actions record submissions and mark complete
+      if (isSubmit) {
+        const validators = problem.htmlCssValidators ?? [];
+        const result = validators.length > 0
+          ? evaluateHtmlCssProblem(userCode, validators)
+          : null;
+
+        const allPassed = result ? result.status === "accepted" : (
+          userCode.trim().length > 100 &&
+          userCode.includes("<") &&
+          userCode.includes("{")
+        );
+
+        if (allPassed) {
+          markComplete(problem.id, "coding");
         }
+
+        const newSub: UserSubmission = {
+          id: String(Date.now()),
+          timestamp: new Date().toLocaleTimeString(),
+          status: allPassed ? "accepted" : "wrong_answer",
+          passedCases: result ? result.passedCases : (allPassed ? 1 : 0),
+          totalCases: result ? result.totalCases : 1,
+          runtimeMs: 0,
+          codeSnippet: userCode.slice(0, 120),
+        };
+        const updated = [newSub, ...submissions.slice(0, 9)];
+        setSubmissions(updated);
+        saveStorageSubmissions(problem.id, updated);
       }
       return;
     }

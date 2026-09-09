@@ -125,6 +125,14 @@ input:checked + .slider:before {
 .btn:hover {
   background: #0d8f70;
 }
+
+.btn:disabled {
+  background: #d1d5db;
+  color: #64748b;
+  cursor: not-allowed;
+  opacity: 0.65;
+  pointer-events: none;
+}
 </style>
 
 <script>
@@ -132,13 +140,26 @@ const toggle = document.getElementById('demo-toggle');
 const label = document.getElementById('status-label');
 const btn = document.getElementById('action-btn');
 
+function updateState(isEnabled) {
+  label.textContent = isEnabled ? 'Feature Enabled' : 'Feature Disabled';
+  btn.disabled = !isEnabled;
+  btn.textContent = isEnabled ? 'Click to Test Event' : 'Feature Disabled (Switch is Off)';
+}
+
 toggle.addEventListener('change', (e) => {
-  label.textContent = e.target.checked ? 'Feature Enabled' : 'Feature Disabled';
-  console.log('⚡ Toggle state changed:', e.target.checked);
+  updateState(e.target.checked);
+  console.log('⚡ Toggle state changed:', e.target.checked ? 'Enabled' : 'Disabled');
 });
 
 btn.addEventListener('click', () => {
+  if (!toggle.checked) {
+    console.warn('⚠️ Action prevented: Feature is currently disabled.');
+    return;
+  }
   console.log('🎉 Button clicked inside live iframe component!');
   alert('Event fired successfully!');
 });
+
+// Initial state synchronization
+updateState(toggle.checked);
 </script>

@@ -3,16 +3,27 @@ import { transform } from "sucrase";
 export function buildReactIframeSrc(rawSource: string): { html: string; error?: string } {
   try {
     const res = transform(rawSource, {
-      transforms: ["typescript", "jsx"],
+      transforms: ["typescript", "jsx", "imports"],
       production: false,
     });
 
-    const cleanedCode = res.code
-      .replace(/import\s+[\s\S]*?\s+from\s+['"][^'"]+['"];?/g, "")
-      .replace(/export\s+default\s+function\s+([A-Za-z0-9_]+)/g, "function $1\nwindow.__defaultComponent = $1;")
-      .replace(/export\s+default\s+class\s+([A-Za-z0-9_]+)/g, "class $1\nwindow.__defaultComponent = $1;")
-      .replace(/export\s+default\s+([A-Za-z0-9_]+);?/g, "window.__defaultComponent = $1;")
-      .replace(/export\s+{[^}]+};?/g, "");
+    const declaredNames = Array.from(
+      rawSource.matchAll(/(?:function|class|const|let|var)\s+([A-Z][A-Za-z0-9_]*)/g),
+    )
+      .map((m) => m[1])
+      .filter(Boolean);
+
+    const candidateNames = Array.from(
+      new Set([
+        ...declaredNames,
+        "App",
+        "Modal",
+        "TicTacToe",
+        "CounterApp",
+        "Component",
+        "StarRating",
+      ]),
+    );
 
     const html = `<!DOCTYPE html>
 <html>
@@ -64,6 +75,27 @@ export function buildReactIframeSrc(rawSource: string): { html: string; error?: 
           return;
         }
 
+        // Ensure React UMD is compatible with CommonJS interop
+        React.__esModule = true;
+        if (!React.default) React.default = React;
+
+        // CommonJS module environment for transformed imports and exports
+        const exports = {};
+        const module = { exports };
+        function require(mod) {
+          if (mod === 'react') return React;
+          if (mod === 'react-dom' || mod === 'react-dom/client') return ReactDOM;
+          // Safe fallback for stylesheets, icons, or external packages
+          return new Proxy({}, {
+            get: (_, prop) => {
+              if (prop === '__esModule') return true;
+              const dummy = (props) => (props && props.children ? React.createElement(React.Fragment, null, props.children) : null);
+              dummy.toString = () => String(prop);
+              return dummy;
+            }
+          });
+        }
+
         const {
           useState,
           useEffect,
@@ -81,14 +113,27 @@ export function buildReactIframeSrc(rawSource: string): { html: string; error?: 
         const { createPortal } = ReactDOM;
 
         try {
-          ${cleanedCode}
+          ${res.code}
 
-          const __Comp = window.__defaultComponent ||
-            (typeof App !== 'undefined' ? App :
-            (typeof Modal !== 'undefined' ? Modal :
-            (typeof TicTacToe !== 'undefined' ? TicTacToe :
-            (typeof CounterApp !== 'undefined' ? CounterApp :
-            (typeof Component !== 'undefined' ? Component : null))));
+          const candidateNames = ${JSON.stringify(candidateNames)};
+          let __Comp = (exports && exports.default) || window.__defaultComponent;
+          if (!__Comp && exports) {
+            __Comp = Object.values(exports).find(v => typeof v === 'function');
+          }
+          if (!__Comp) {
+            for (const name of candidateNames) {
+              try {
+                const val = eval(name);
+                if (typeof val === 'function') {
+                  __Comp = val;
+                  break;
+                }
+              } catch (_) {}
+            }
+          }
+          if (__Comp) {
+            window.__defaultComponent = __Comp;
+          }
 
           if (__Comp) {
             function ComponentHarness() {
@@ -180,10 +225,8 @@ export function buildReactIframeSrc(rawSource: string): { html: string; error?: 
   }
 }
 
-
-
 export function buildHtmlIframeSrc(rawSource: string): string {
-  const isPureCSS = !rawSource.includes("<" ) && !rawSource.includes("</");
+  const isPureCSS = !rawSource.includes("<") && !rawSource.includes("</");
   let injectedContent = rawSource;
 
   if (isPureCSS) {

@@ -23,6 +23,7 @@ import {
   type PlaygroundLanguage,
   type PlaygroundTab,
 } from "@/components/playground";
+import { registerMonacoThemes, configureMonacoLanguages } from "./monacoThemes";
 
 export default function Playground() {
   const { resolvedTheme: appTheme } = useThemeContext();
@@ -37,29 +38,51 @@ export default function Playground() {
     if (sessionSnippet) {
       sessionStorage.removeItem(SESSION_KEYS.PLAYGROUND_SNIPPET);
       sessionStorage.removeItem(SESSION_KEYS.PLAYGROUND_MODE);
+
+      const isReact =
+        sessionMode === "react" ||
+        sessionSnippet.includes("import React") ||
+        sessionSnippet.includes("from 'react'") ||
+        sessionSnippet.includes("from \"react\"") ||
+        /export\s+default\s+function/.test(sessionSnippet) ||
+        (/function\s+[A-Z]/.test(sessionSnippet) && /<[a-zA-Z]/.test(sessionSnippet));
+
       const isHtml =
-        sessionMode === "web" ||
-        sessionSnippet.includes("<html") ||
-        sessionSnippet.includes("<div") ||
-        sessionSnippet.includes("<style");
+        !isReact &&
+        (sessionMode === "web" ||
+          sessionSnippet.trim().startsWith("<!DOCTYPE") ||
+          sessionSnippet.trim().startsWith("<html") ||
+          (sessionSnippet.includes("<style") && sessionSnippet.includes("<div")));
+
+      const lang: PlaygroundLanguage = isReact
+        ? "react"
+        : isHtml
+          ? "html"
+          : "typescript";
+
       return {
         code: sessionSnippet,
-        language: (isHtml ? "html" : "typescript") as PlaygroundLanguage,
-        activeTab: (isHtml ? "preview" : "console") as PlaygroundTab,
+        language: lang,
+        activeTab: (isReact || isHtml ? "preview" : "console") as PlaygroundTab,
       };
     }
     const problemId = searchParams.get("problem");
     if (problemId) {
       const p = getCodingProblemById(problemId);
       if (p) {
-        const isHtml = p.category === "CSS" || p.category === "HTML & CSS";
+        const isReact =
+          p.category === "React" ||
+          p.implementation.includes("import React") ||
+          p.implementation.includes("from 'react'") ||
+          p.implementation.includes("from \"react\"");
+        const isHtml = !isReact && (p.category === "CSS" || p.category === "HTML & CSS");
         const starterCode = p.implementation.startsWith("<!--")
           ? p.implementation
           : `// 🎯 ${p.title} (${p.difficulty})\n// ${p.problem}\n\n// Solution implementation:\n${p.implementation}\n\n// Try running tests:\nconsole.log('Testing solution for ${p.title}...');\n`;
         return {
           code: starterCode,
-          language: (isHtml ? "html" : "typescript") as PlaygroundLanguage,
-          activeTab: (isHtml ? "preview" : "console") as PlaygroundTab,
+          language: (isReact ? "react" : isHtml ? "html" : "typescript") as PlaygroundLanguage,
+          activeTab: (isReact || isHtml ? "preview" : "console") as PlaygroundTab,
         };
       }
     }
@@ -106,7 +129,9 @@ export default function Playground() {
       language:
         p.category === "CSS" || p.category === "HTML & CSS"
           ? "html"
-          : "javascript",
+          : p.category === "React" || p.implementation.includes("from 'react'") || p.implementation.includes('from "react"')
+            ? "react"
+            : "javascript",
       type: "coding",
       code: p.implementation,
     }));
@@ -128,7 +153,9 @@ export default function Playground() {
         item.code.startsWith("<!--");
       const isReact =
         item.language === "react" ||
-        item.category.toLowerCase().includes("react");
+        item.category.toLowerCase().includes("react") ||
+        item.code.includes("from 'react'") ||
+        item.code.includes('from "react"');
 
       if (isReact) {
         setLanguage("react");
@@ -140,12 +167,16 @@ export default function Playground() {
         setLanguage(
           item.language === "typescript" ? "typescript" : "javascript",
         );
+        setActiveTab("console");
       }
       setCode(item.code);
       tsCacheRef.current = item.code;
       if (editorRef.current) {
         editorRef.current.setValue(item.code);
       }
+      setOutput([]);
+      setExecutionTime(null);
+      setHasError(false);
       setIsTemplatesOpen(false);
       setStatusMessage(`Loaded: ${item.name}`);
     },
@@ -160,14 +191,27 @@ export default function Playground() {
     if (problemParam) {
       const p = getCodingProblemById(problemParam);
       if (p) {
-        const isHtml = p.category === "CSS" || p.category === "HTML & CSS";
+        const isReact =
+          p.category === "React" ||
+          p.implementation.includes("import React") ||
+          p.implementation.includes("from 'react'") ||
+          p.implementation.includes("from \"react\"");
+        const isHtml = !isReact && (p.category === "CSS" || p.category === "HTML & CSS");
         const starterCode = p.implementation.startsWith("<!--")
           ? p.implementation
           : `// 🎯 ${p.title} (${p.difficulty})\n// ${p.problem}\n\n// Solution implementation:\n${p.implementation}\n\n// Try running tests:\nconsole.log('Testing solution for ${p.title}...');\n`;
         setCode(starterCode);
-        if (isHtml) {
+        setOutput([]);
+        setExecutionTime(null);
+        setHasError(false);
+        if (isReact) {
+          setLanguage("react");
+          setActiveTab("preview");
+        } else if (isHtml) {
           setLanguage("html");
           setActiveTab("preview");
+        } else {
+          setLanguage("typescript");
         }
       }
     }
@@ -195,15 +239,26 @@ export default function Playground() {
   const handleLanguageChange = (newLang: PlaygroundLanguage) => {
     const currentCode = editorRef.current?.getValue() ?? code;
     setLanguage(newLang);
+    setOutput([]);
+    setExecutionTime(null);
+    setHasError(false);
+
+    const isCurrentReact =
+      currentCode.includes("import React") ||
+      currentCode.includes("from 'react'") ||
+      currentCode.includes('from "react"') ||
+      (currentCode.includes("export default") && /<[a-zA-Z]/.test(currentCode));
+
+    const isCurrentHtml =
+      !isCurrentReact &&
+      (currentCode.trim().startsWith("<!DOCTYPE") ||
+        currentCode.trim().startsWith("<html") ||
+        (currentCode.includes("<style") && currentCode.includes("</style>")) ||
+        (currentCode.includes("<!--") && currentCode.includes("-->")));
 
     if (newLang === "react") {
       setActiveTab("preview");
-      if (
-        !currentCode.includes("import React") &&
-        !currentCode.includes("useState") &&
-        !currentCode.includes("useReducer") &&
-        !currentCode.includes("export default")
-      ) {
+      if (!isCurrentReact) {
         setCode(DEFAULT_REACT_CODE);
         if (editorRef.current) {
           editorRef.current.setValue(DEFAULT_REACT_CODE);
@@ -214,11 +269,7 @@ export default function Playground() {
 
     if (newLang === "html") {
       setActiveTab("preview");
-      if (
-        !currentCode.includes("<div") &&
-        !currentCode.includes("<style") &&
-        !currentCode.includes("<html")
-      ) {
+      if (!isCurrentHtml) {
         setCode(DEFAULT_HTML_CODE);
         if (editorRef.current) {
           editorRef.current.setValue(DEFAULT_HTML_CODE);
@@ -227,83 +278,60 @@ export default function Playground() {
       return;
     }
 
+    setActiveTab("console");
+
     if (newLang === "javascript") {
-      tsCacheRef.current = currentCode;
-      try {
-        const pureJS = transpileToJS(currentCode);
-        setCode(pureJS);
+      if (isCurrentReact || isCurrentHtml) {
+        const jsDefault = transpileToJS(DEFAULT_CODE);
+        setCode(jsDefault);
         if (editorRef.current) {
-          editorRef.current.setValue(pureJS);
+          editorRef.current.setValue(jsDefault);
         }
-      } catch (err) {
-        console.error("Failed to convert TS to JS", err);
+      } else {
+        tsCacheRef.current = currentCode;
+        try {
+          const pureJS = transpileToJS(currentCode);
+          setCode(pureJS);
+          if (editorRef.current) {
+            editorRef.current.setValue(pureJS);
+          }
+        } catch (err) {
+          console.error("Failed to convert TS to JS", err);
+        }
       }
-    } else if (newLang === "typescript") {
-      if (tsCacheRef.current) {
+      return;
+    }
+
+    if (newLang === "typescript") {
+      if (isCurrentReact || isCurrentHtml) {
+        const tsCode =
+          tsCacheRef.current &&
+          !tsCacheRef.current.includes("from 'react'") &&
+          !tsCacheRef.current.includes('from "react"') &&
+          !tsCacheRef.current.trim().startsWith("<!DOCTYPE") &&
+          !tsCacheRef.current.trim().startsWith("<html")
+            ? tsCacheRef.current
+            : DEFAULT_CODE;
+        setCode(tsCode);
+        if (editorRef.current) {
+          editorRef.current.setValue(tsCode);
+        }
+      } else if (tsCacheRef.current) {
         setCode(tsCacheRef.current);
         if (editorRef.current) {
           editorRef.current.setValue(tsCacheRef.current);
         }
       }
+      return;
     }
   };
 
-  // Setup custom Monaco themes on mount
+  // Setup custom Monaco themes and compiler options on mount
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
-
-    monaco.editor.defineTheme("dracula", {
-      base: "vs-dark",
-      inherit: true,
-      rules: [
-        { token: "comment", foreground: "6272a4", fontStyle: "italic" },
-        { token: "keyword", foreground: "ff79c6", fontStyle: "bold" },
-        { token: "string", foreground: "f1fa8c" },
-        { token: "number", foreground: "bd93f9" },
-        { token: "type", foreground: "8be9fd" },
-      ],
-      colors: {
-        "editor.background": "#282a36",
-        "editor.foreground": "#f8f8f2",
-        "editorLineNumber.foreground": "#6272a4",
-      },
-    });
-
-    monaco.editor.defineTheme("one-dark", {
-      base: "vs-dark",
-      inherit: true,
-      rules: [
-        { token: "comment", foreground: "5c6370", fontStyle: "italic" },
-        { token: "keyword", foreground: "c678dd" },
-        { token: "string", foreground: "98c379" },
-        { token: "number", foreground: "d19a66" },
-      ],
-      colors: {
-        "editor.background": "#21252b",
-        "editor.foreground": "#abb2bf",
-      },
-    });
-
-    // Configure JavaScript compiler options to avoid false semantic linting errors
-    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: true,
-      noSyntaxValidation: false,
-    });
-
-    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: false,
-      noSyntaxValidation: false,
-      noSuggestionDiagnostics: false,
-    });
-
-    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-      target: monaco.languages.typescript.ScriptTarget.ES2022,
-      allowNonTextFiles: true,
-      noLib: false,
-      alwaysStrict: false,
-      allowJs: true,
-    });
+    registerMonacoThemes(monaco);
+    configureMonacoLanguages(monaco);
   };
 
   const effectiveTheme =
@@ -332,6 +360,7 @@ export default function Playground() {
       setHasError(false);
       setStatusMessage("Executing...");
       setExecutionTime(null);
+      setOutput([]);
 
       const startTime = performance.now();
 
@@ -350,13 +379,15 @@ export default function Playground() {
       // 1. Detect if code is React JSX/TSX
       const isReact =
         language === "react" ||
-        rawSource.includes("import React") ||
-        rawSource.includes("from 'react'") ||
-        rawSource.includes('from "react"') ||
-        (rawSource.includes("function") && /<[A-Z][a-zA-Z0-9]*\b/.test(rawSource)) ||
-        (/export\s+default\s+function/.test(rawSource) && /<[a-zA-Z]/.test(rawSource));
+        ((rawSource.includes("import React") ||
+          rawSource.includes("from 'react'") ||
+          rawSource.includes('from "react"')) &&
+          /export\s+default\s+/.test(rawSource));
 
       if (isReact) {
+        if (language !== "react") {
+          setLanguage("react");
+        }
         setActiveTab("preview");
         if (iframeRef.current) {
           const { html, error } = buildReactIframeSrc(rawSource);
@@ -376,12 +407,17 @@ export default function Playground() {
       }
 
       // If in HTML/CSS mode, update the live iframe preview
-      if (
-        language === "html" ||
-        rawSource.includes("<html") ||
-        rawSource.includes("<div") ||
-        rawSource.includes("<style")
-      ) {
+      const isHtml =
+        !isReact &&
+        (language === "html" ||
+          rawSource.trim().startsWith("<!DOCTYPE") ||
+          rawSource.trim().startsWith("<html") ||
+          (rawSource.includes("<!--") && rawSource.includes("-->") && rawSource.includes("<style")));
+
+      if (isHtml) {
+        if (language !== "html") {
+          setLanguage("html");
+        }
         setActiveTab("preview");
         if (iframeRef.current) {
           iframeRef.current.srcdoc = buildHtmlIframeSrc(rawSource);
@@ -393,6 +429,7 @@ export default function Playground() {
       }
 
       // JavaScript / TypeScript console execution
+      setActiveTab("console");
       setOutput([]);
       const sandboxConsole = {
         log: (...args: unknown[]) => appendLine("log", ...args),
@@ -566,7 +603,12 @@ export default function Playground() {
   }, []);
 
   const resetCode = useCallback(() => {
-    const defaultVal = language === "html" ? DEFAULT_HTML_CODE : DEFAULT_CODE;
+    const defaultVal =
+      language === "react"
+        ? DEFAULT_REACT_CODE
+        : language === "html"
+          ? DEFAULT_HTML_CODE
+          : DEFAULT_CODE;
     setCode(defaultVal);
     if (editorRef.current) {
       editorRef.current.setValue(defaultVal);
@@ -633,9 +675,22 @@ export default function Playground() {
                       ? "html"
                       : language
                 }
+                path={
+                  language === "react"
+                    ? "App.tsx"
+                    : language === "typescript"
+                      ? "index.tsx"
+                      : language === "javascript"
+                        ? "index.jsx"
+                        : "index.html"
+                }
                 theme={effectiveTheme}
                 value={code}
                 onChange={(val) => setCode(val || "")}
+                beforeMount={(monaco) => {
+                  registerMonacoThemes(monaco);
+                  configureMonacoLanguages(monaco);
+                }}
                 onMount={handleEditorDidMount}
                 options={{
                   fontSize: 14,
@@ -704,7 +759,7 @@ export default function Playground() {
             </div>
 
             {/* Live Web Component Iframe View */}
-            {activeTab === "preview" ? (
+            {(language === "html" || language === "react") && activeTab === "preview" ? (
               <div className={styles.previewPane}>
                 <iframe
                   ref={iframeRef}

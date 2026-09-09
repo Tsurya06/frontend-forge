@@ -73,6 +73,7 @@ export interface CodingProblem {
   alternativeSolutions?: string[];
   commonMistakes?: string[];
   followUps?: string[];
+  htmlCssValidators?: Array<{ check: string; label: string }>;
 }
 
 export interface ProblemExample {

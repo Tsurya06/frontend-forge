@@ -433,7 +433,7 @@ promiseAllBeginner([1, 2, 3]).then(r => console.log('Non-promises:', r)); // [1,
  * EDGE CASE 3: Already resolved/rejected promises
  */
 const resolved = Promise.resolve('already resolved');
-const rejected = Promise.reject('already rejected');
+const rejected = Promise.reject('already rejected'); rejected.catch(() => {});
 // Still processes them correctly
 
 /**

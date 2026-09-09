@@ -240,7 +240,7 @@ function deepMergeExpert(...args) {
 }
 
 function mergeTwo(target, source, path, options, seen) {
-  const { arrayStrategy, skipUndefined, skipNull, customMerge } = options;
+  const { arrayStrategy = "replace", skipUndefined = false, skipNull = false, customMerge = {} } = options || {};
   
   // Handle primitives and special values
   if (source === undefined && skipUndefined) return target;
