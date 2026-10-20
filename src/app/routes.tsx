@@ -28,6 +28,9 @@ const Flashcards = lazy(() => import("@/pages/practice/Flashcards"));
 const Interview = lazy(() => import("@/pages/practice/Interview"));
 const Visualizer = lazy(() => import("@/pages/visualizer/Visualizer"));
 const NotFound = lazy(() => import("@/pages/notFound/NotFound"));
+const InterviewSprintOverview = lazy(() => import("@/pages/interviewSprint/InterviewSprintOverview"));
+const InterviewSprintLesson = lazy(() => import("@/pages/interviewSprint/InterviewSprintLesson"));
+const InterviewSprintMock = lazy(() => import("@/pages/interviewSprint/InterviewSprintMock"));
 
 // Background prefetch during browser idle time
 function startIdlePrefetch() {
@@ -42,6 +45,9 @@ function startIdlePrefetch() {
     import("@/pages/practice/Quiz");
     import("@/pages/practice/Flashcards");
     import("@/pages/practice/Interview");
+    import("@/pages/interviewSprint/InterviewSprintOverview");
+    import("@/pages/interviewSprint/InterviewSprintLesson");
+    import("@/pages/interviewSprint/InterviewSprintMock");
   };
 
   if ("requestIdleCallback" in window) {
@@ -180,6 +186,30 @@ export function AppRoutes() {
           element={
             <Suspense fallback={<PageSkeleton variant="grid" />}>
               <Interview />
+            </Suspense>
+          }
+        />
+        <Route
+          path="interview-sprint"
+          element={
+            <Suspense fallback={<PageSkeleton variant="grid" />}>
+              <InterviewSprintOverview />
+            </Suspense>
+          }
+        />
+        <Route
+          path="interview-sprint/mock"
+          element={
+            <Suspense fallback={<PageSkeleton variant="problem" />}>
+              <InterviewSprintMock />
+            </Suspense>
+          }
+        />
+        <Route
+          path="interview-sprint/:dayNumber"
+          element={
+            <Suspense fallback={<PageSkeleton variant="problem" />}>
+              <InterviewSprintLesson />
             </Suspense>
           }
         />

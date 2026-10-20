@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
+import { loadEnv } from 'vite'
 import path from 'path'
 
 function prismFixPlugin() {
@@ -17,10 +18,12 @@ function prismFixPlugin() {
 }
 
 export default defineConfig(({ mode, command }) => {
+  const env = loadEnv(mode, process.cwd(), '')
   const isProd =
     mode === 'production' ||
     command === 'build' ||
     process.env.NODE_ENV === 'production'
+  const nvidiaKey = env.VITE_NVIDIA_API_KEY || ''
 
   return {
     plugins: [react(), prismFixPlugin()],
@@ -28,6 +31,24 @@ export default defineConfig(({ mode, command }) => {
     resolve: {
       alias: {
         '@': path.resolve(import.meta.dirname, './src'),
+      },
+    },
+    server: {
+      proxy: {
+        '/api/nvidia': {
+          target: 'https://integrate.api.nvidia.com',
+          changeOrigin: true,
+          rewrite: (p) => p.replace(/^\/api\/nvidia/, ''),
+          secure: true,
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              const currentAuth = req.headers['authorization']
+              if ((!currentAuth || currentAuth === 'Bearer ' || currentAuth === 'Bearer') && nvidiaKey) {
+                proxyReq.setHeader('Authorization', `Bearer ${nvidiaKey}`)
+              }
+            })
+          },
+        },
       },
     },
     build: {
@@ -58,6 +79,9 @@ export default defineConfig(({ mode, command }) => {
           }
           if (id.includes('src/data/javascript') || id.includes('src/data/react') || id.includes('src/data/typescript')) {
             return 'data-core-topics';
+          }
+          if (id.includes('src/data/interviewSprint')) {
+            return 'data-interview-sprint';
           }
           if (id.includes('src/data/')) {
             return 'data-web-topics';

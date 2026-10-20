@@ -653,6 +653,17 @@
   }
 }
 
+.mobileSprintRow {
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
+@media (min-width: 1024px) {
+  .mobileSprintRow {
+    display: none;
+  }
+}
+
 .calendarWidget {
   background: var(--bg-card);
   border: 1px solid var(--border-color);

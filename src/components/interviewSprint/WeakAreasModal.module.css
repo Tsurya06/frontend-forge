@@ -1,0 +1,181 @@
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.description {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #9ca3af);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem 1rem;
+  background: var(--bg-primary, #1a1a1a);
+  border: 1px dashed var(--border, #3e3e3e);
+  border-radius: var(--radius-md, 6px);
+}
+
+.emptyIconBox {
+  margin-bottom: 0.75rem;
+}
+
+.emptyIcon {
+  color: var(--color-success, #00b8a3);
+}
+
+.emptyTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary, #eff2f6);
+  margin: 0 0 0.25rem 0;
+}
+
+.emptyText {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #9ca3af);
+  max-width: 380px;
+  margin: 0;
+}
+
+.weakList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.weakCard {
+  background: var(--bg-primary, #1a1a1a);
+  border: 1px solid var(--border, #3e3e3e);
+  border-radius: var(--radius-md, 6px);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dayBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent, #ffa116);
+  background: rgba(255, 161, 22, 0.12);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.badgesGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.flagBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffc01e;
+  background: rgba(255, 192, 30, 0.15);
+  border: 1px solid rgba(255, 192, 30, 0.3);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.scoreBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ff375f;
+  background: rgba(255, 55, 95, 0.15);
+  border: 1px solid rgba(255, 55, 95, 0.3);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary, #eff2f6);
+  margin: 0;
+}
+
+.cardTagline {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #9ca3af);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.trapsSection {
+  background: var(--surface, #282828);
+  border-left: 3px solid var(--accent, #ffa116);
+  padding: 0.6rem 0.75rem;
+  border-radius: 0 var(--radius-sm, 4px) var(--radius-sm, 4px) 0;
+}
+
+.trapsHeading {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--accent, #ffa116);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+}
+
+.trapsList {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--text-primary, #eff2f6);
+  line-height: 1.4;
+}
+
+.trapItem {
+  margin-bottom: 0.25rem;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.25rem;
+}
+
+.jumpLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent, #ffa116);
+  text-decoration: none;
+  transition: gap 0.15s ease;
+}
+
+.jumpLink:hover {
+  gap: 0.55rem;
+  color: var(--accent-hover, #ffaa00);
+}

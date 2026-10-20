@@ -19,6 +19,9 @@ import {
   allCodingProblems,
   allMachineCodingProblems,
 } from "@/data";
+import { Sparkles, Target, BookOpenCheck, HelpCircle } from "lucide-react";
+import { useInterviewSprintProgress } from "@/hooks/useInterviewSprintProgress";
+import { getSprintDay } from "@/data/interviewSprint";
 import type {
   Difficulty,
   Question,
@@ -59,6 +62,12 @@ export default function Daily() {
     markComplete,
     dailyStreak,
   } = useProgressContext();
+
+  const { state: sprintState, nextUnfinishedDay, revisionDays } = useInterviewSprintProgress();
+  const activeSprintLesson = useMemo(
+    () => getSprintDay(sprintState.currentDay || nextUnfinishedDay),
+    [sprintState.currentDay, nextUnfinishedDay]
+  );
 
   const [selectedDayOffset, setSelectedDayOffset] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -365,6 +374,73 @@ export default function Daily() {
                   )}
                   <span>{isMachineDone ? "Solved" : "Mark Solved"}</span>
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── 4. Recommended Study Task (From Your 7-Day Interview Sprint) ── */}
+          {activeSprintLesson && (
+            <div className={styles.sprintTaskCard}>
+              <div className={styles.cardTop}>
+                <div className={styles.sprintTaskBadge}>
+                  <Sparkles size={13} />
+                  <span>RECOMMENDED SPRINT STUDY TASK (DAY {activeSprintLesson.day})</span>
+                </div>
+                <span className={styles.sprintTargetBadge}>
+                  ~{activeSprintLesson.estimatedMinutes} mins
+                </span>
+              </div>
+
+              <h2 className={styles.challengeTitle}>
+                {activeSprintLesson.title}
+              </h2>
+              <p className={styles.challengeDesc}>
+                {activeSprintLesson.tagline}
+              </p>
+
+              <div className={styles.sprintTasksList}>
+                <div className={styles.sprintTaskItem}>
+                  <BookOpenCheck size={15} className={styles.sprintTaskIcon} />
+                  <span>
+                    <strong>Review Core Concept:</strong> {activeSprintLesson.sections[0]?.heading || "Lesson theory"}
+                  </span>
+                </div>
+                <div className={styles.sprintTaskItem}>
+                  <HelpCircle size={15} className={styles.sprintTaskIcon} />
+                  <span>
+                    <strong>Concept Check:</strong> Complete 3 technical questions & Day {activeSprintLesson.day} Quiz
+                  </span>
+                </div>
+                <div className={styles.sprintTaskItem}>
+                  <Code2 size={15} className={styles.sprintTaskIcon} />
+                  <span>
+                    <strong>Hands-on Exercise:</strong> {activeSprintLesson.exercise.title}
+                  </span>
+                </div>
+                {revisionDays.length > 0 && (
+                  <div className={`${styles.sprintTaskItem} ${styles.revisionHighlight}`}>
+                    <Target size={15} className={styles.revisionTaskIcon} />
+                    <span>
+                      <strong>Spaced Revision:</strong> Revisit flagged Day {revisionDays[0]} topics
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.cardActions}>
+                <Link
+                  to={`/interview-sprint/${activeSprintLesson.day}`}
+                  className={styles.sprintLaunchBtn}
+                >
+                  <span>Start Day {activeSprintLesson.day} Study Task</span>
+                  <ArrowRight size={13} />
+                </Link>
+                <Link
+                  to="/interview-sprint"
+                  className={styles.viewSprintBtn}
+                >
+                  <span>View 7-Day Sprint Plan</span>
+                </Link>
               </div>
             </div>
           )}

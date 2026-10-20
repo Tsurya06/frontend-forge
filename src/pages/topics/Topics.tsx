@@ -11,6 +11,7 @@ import { useVirtualGrid } from "@/hooks/useVirtualGrid";
 import { topicsApi } from "@/services/api";
 import { useApiQuery } from "@/services/api/hooks/useApi";
 import { categories } from "@/data";
+import { allSprintDays } from "@/data/interviewSprint";
 import type { Difficulty, Topic } from "@/types";
 import styles from "./Topics.module.css";
 
@@ -46,7 +47,31 @@ export default function Topics() {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   const { data: topicsData, loading } = useApiQuery<Topic[]>(() => topicsApi.getAll());
-  const allTopicsList: Topic[] = useMemo(() => topicsData ?? [], [topicsData]);
+  const allTopicsList: Topic[] = useMemo(() => {
+    const list = [...(topicsData ?? [])];
+    const sprintTopics: Topic[] = allSprintDays.map((day) => ({
+      id: day.id,
+      title: `Day ${day.day}: ${day.title}`,
+      description: day.tagline,
+      category: "interview-prep",
+      subcategory: `7-Day Sprint · Day ${day.day}`,
+      difficulty: day.day <= 2 ? "Beginner" : day.day <= 4 ? "Intermediate" : "Advanced",
+      tags: ["Frontend Sprint", "7-Day Sprint", ...day.objectives.slice(0, 3)],
+      questions: day.questions.map((q) => ({
+        id: q.id,
+        question: q.question,
+        answer: q.answer,
+        shortAnswer: q.answer.slice(0, 80),
+        explanation: q.explanation,
+        difficulty: q.difficulty === "easy" ? "Beginner" : q.difficulty === "medium" ? "Intermediate" : "Advanced",
+        type: "Conceptual",
+        category: "interview-prep",
+        topicId: day.id,
+        tags: ["Sprint"],
+      })),
+    }));
+    return [...sprintTopics, ...list];
+  }, [topicsData]);
 
   const filtered = useMemo<Topic[]>(() => {
     let topics = [...allTopicsList];
@@ -146,6 +171,7 @@ export default function Topics() {
             aria-label="Filter by category"
           >
             <option value="all">All Categories</option>
+            <option value="interview-prep">⚡ 7-Day Frontend Sprint</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.icon} {c.title}
@@ -240,10 +266,15 @@ export default function Topics() {
                     : 0;
                 const cat = categories.find((c) => c.id === topic.category);
 
+                const sprintDay = allSprintDays.find((d) => d.id === topic.id);
+                const topicUrl = sprintDay
+                  ? `/interview-sprint/${sprintDay.day}`
+                  : `/topics/${topic.id}`;
+
                 return (
                   <Link
                     key={topic.id}
-                    to={`/topics/${topic.id}`}
+                    to={topicUrl}
                     className={styles.topicLink}
                   >
                     <Card>

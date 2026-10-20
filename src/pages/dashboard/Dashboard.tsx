@@ -25,6 +25,7 @@ import {
   allMachineCodingProblems,
   allSystemDesignProblems,
 } from "@/data";
+import { SprintDashboardWidget } from "@/components/dashboard/SprintDashboardWidget";
 import type { Difficulty } from "@/types";
 import styles from "./Dashboard.module.css";
 
@@ -265,6 +266,11 @@ export default function Dashboard() {
       {/* ── Center Problemset Stream (Scrollable) ── */}
       <main className={styles.centerStream}>
         <div className={styles.centerContent}>
+          {/* Mobile / Tablet 7-Day Interview Sprint Compact Progress */}
+          <div className={styles.mobileSprintRow}>
+            <SprintDashboardWidget />
+          </div>
+
           {/* Top 3 Feature Banner Cards */}
           <section
             className={styles.bannerRow}
@@ -605,6 +611,9 @@ export default function Dashboard() {
 
       {/* ── 3. Daily & Activity Widgets (Desktop) ── */}
       <aside className={styles.rightWidgets}>
+        {/* 7-Day Interview Sprint Progress Section */}
+        <SprintDashboardWidget />
+
         {/* Calendar Widget */}
         <div className={styles.calendarWidget}>
           <div className={styles.calendarTop}>

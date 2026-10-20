@@ -9,7 +9,7 @@ import vm from "node:vm";
 function assertValidScriptSyntax(html: string) {
   const scriptMatch = html.match(/<script>\s*(\(function\(\)[\s\S]*?\)\(\);)\s*<\/script>/);
   expect(scriptMatch).not.toBeNull();
-  const scriptCode = scriptMatch![1];
+  const scriptCode = scriptMatch![1] || "";
   expect(() => {
     new vm.Script(scriptCode);
   }).not.toThrow();

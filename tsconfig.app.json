@@ -9,7 +9,8 @@
     ],
     "module": "esnext",
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
@@ -34,10 +35,5 @@
   },
   "include": [
     "src"
-  ],
-  "exclude": [
-    "src/test",
-    "**/*.test.ts",
-    "**/*.test.tsx"
   ]
 }

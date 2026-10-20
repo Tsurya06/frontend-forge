@@ -17,6 +17,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Flame,
+  Sparkles,
 } from "lucide-react";
 import styles from "./LeftQuickNav.module.css";
 
@@ -139,6 +140,12 @@ export function LeftQuickNav() {
           <Link to="/senior" className={styles.listItem} title="Staff Guide">
             <span className={styles.starIcon}><Crown size={15} /></span>
             {!collapsed && <span className={styles.listItemName}>Staff Guide</span>}
+          </Link>
+
+          <Link to="/interview-sprint" className={styles.listItem} title="7-Day Sprint">
+            <span className={styles.starIcon}><Sparkles size={15} /></span>
+            {!collapsed && <span className={styles.listItemName}>7-Day Sprint</span>}
+            {!collapsed && <span className={styles.badge} style={{ background: "rgba(255, 161, 22, 0.15)", color: "#ffa116" }}>7D</span>}
           </Link>
         </div>
       </div>

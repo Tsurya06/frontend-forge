@@ -409,3 +409,108 @@
     align-self: center;
   }
 }
+
+/* ── Sprint Task Card ── */
+.sprintTaskCard {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 161, 22, 0.35);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.sprintTaskCard:hover {
+  border-color: var(--accent);
+}
+
+.sprintTaskBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.65rem;
+  font-weight: var(--font-bold);
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+.sprintTargetBadge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.sprintTasksList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+
+.sprintTaskItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+.sprintTaskIcon {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.revisionHighlight {
+  color: #fef08a;
+}
+
+.revisionTaskIcon {
+  color: #ffc01e;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sprintLaunchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--accent);
+  color: #121212;
+  font-size: 0.8rem;
+  font-weight: var(--font-bold);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+
+.sprintLaunchBtn:hover {
+  background: var(--accent-hover);
+}
+
+.viewSprintBtn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 8px 12px;
+  transition: color var(--transition-fast);
+}
+
+.viewSprintBtn:hover {
+  color: var(--accent);
+}
+

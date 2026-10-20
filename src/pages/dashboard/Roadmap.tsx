@@ -21,6 +21,7 @@ import {
   allTopics,
   allQuestions,
 } from "@/data";
+import { SprintDashboardWidget } from "@/components/dashboard/SprintDashboardWidget";
 import styles from "./Roadmap.module.css";
 
 export default function Roadmap() {
@@ -81,6 +82,11 @@ export default function Roadmap() {
         <div className={styles.studyPlanContent}>
           {activeTab === "studyplan" ? (
             <>
+              {/* ── 7-Day Mastery Sprint Card (Compact) ── */}
+              <div style={{ marginBottom: 28 }}>
+                <SprintDashboardWidget />
+              </div>
+
               {/* ── 1. Ongoing Section ── */}
               <section className={styles.sectionBlock}>
                 <h2 className={styles.sectionTitle}>Ongoing Practice</h2>

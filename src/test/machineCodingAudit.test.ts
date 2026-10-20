@@ -15,7 +15,7 @@ describe("Machine Coding Problems Live Preview Audit", () => {
       const scriptMatch = html.match(/<script>\s*(\(function\(\)[\s\S]*?\)\(\);)\s*<\/script>/);
       expect(scriptMatch, `Should contain an execution script for ${prob.id}`).not.toBeNull();
       
-      const scriptCode = scriptMatch![1];
+      const scriptCode = scriptMatch![1] || "";
       // Parsing with vm.Script checks for SyntaxErrors (like unexpected identifier window)
       expect(() => {
         new vm.Script(scriptCode, { filename: `${prob.id}.js` });

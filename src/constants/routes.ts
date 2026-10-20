@@ -29,6 +29,9 @@ export const ROUTES = {
   QUIZ: "/quiz",
   FLASHCARDS: "/flashcards",
   INTERVIEW: "/interview",
+  INTERVIEW_SPRINT: "/interview-sprint",
+  INTERVIEW_SPRINT_DAY: (day: number | string = ":day") => `/interview-sprint/${day}`,
+  INTERVIEW_SPRINT_MOCK: "/interview-sprint/mock",
   CATEGORY: (category: string = ":category") => `/${category}`,
   TOPIC_DETAIL: (category: string = ":category", topicId: string = ":topicId") =>
     `/${category}/${topicId}`,

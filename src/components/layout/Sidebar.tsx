@@ -24,6 +24,7 @@ import {
   HelpCircle,
   BarChart3,
   Bookmark,
+  Sparkles,
 } from "lucide-react";
 import styles from "./Sidebar.module.css";
 
@@ -154,6 +155,12 @@ const sections: NavSection[] = [
   {
     title: "Study Modes & Analytics",
     items: [
+      {
+        label: "7-Day Sprint",
+        path: "/interview-sprint",
+        icon: <Sparkles size={16} />,
+        badge: "7 Days",
+      },
       {
         label: "Mock Interview",
         path: "/interview",

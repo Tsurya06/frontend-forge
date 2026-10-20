@@ -23,6 +23,11 @@ export const STORAGE_KEYS = {
   FLASHCARD_PROGRESS: "feeq-flashcard-progress",
   DAILY_STREAK: "feeq-daily-streak",
   LAST_ACTIVE_DATE: "feeq-last-active-date",
+  INTERVIEW_SPRINT_PROGRESS: "feeq-interview-sprint-progress",
+  AI_CONFIG: "feeq-ai-config",
+  AI_CHAT_HISTORY: "feeq-ai-chat-history",
+  AI_CHAT_SESSIONS: "feeq-ai-chat-sessions",
+  AI_ACTIVE_SESSION_ID: "feeq-ai-active-session-id",
 
   // Workspace Splitter Positions
   VIZ_SPLIT_X: "feeq-viz-split-x",
@@ -53,4 +58,5 @@ export const EXPORTABLE_STORAGE_KEYS = [
   STORAGE_KEYS.FLASHCARD_PROGRESS,
   STORAGE_KEYS.DAILY_STREAK,
   STORAGE_KEYS.LAST_ACTIVE_DATE,
+  STORAGE_KEYS.INTERVIEW_SPRINT_PROGRESS,
 ] as const;

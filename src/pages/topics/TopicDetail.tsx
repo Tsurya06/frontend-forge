@@ -1,5 +1,5 @@
 import { TopicPracticeDrills } from "@/components/topics/TopicPracticeDrills";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useProgressContext } from "@/context/ProgressContext";
 import { Badge } from "@/components/common/Badge";
@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { CodeBlock } from "@/components/code/CodeBlock";
 import { QuestionCard } from "@/components/questions/QuestionCard";
 import { getTopicById, allTopics, categories } from "@/data";
+import { getSprintDayById } from "@/data/interviewSprint";
 import type { Difficulty, Topic } from "@/types";
 import styles from "./TopicDetail.module.css";
 
@@ -26,6 +27,14 @@ export default function TopicDetail() {
   const { topicId } = useParams<{ topicId: string }>();
   const navigate = useNavigate();
   const { completedQuestions, addRecentlyViewed } = useProgressContext();
+
+  useEffect(() => {
+    if (!topicId) return;
+    const sprintDay = getSprintDayById(topicId);
+    if (sprintDay) {
+      navigate(`/interview-sprint/${sprintDay.day}`, { replace: true });
+    }
+  }, [topicId, navigate]);
 
   const topic = useMemo(() => {
     if (!topicId) return undefined;

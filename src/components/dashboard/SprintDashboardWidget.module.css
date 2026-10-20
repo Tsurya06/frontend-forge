@@ -1,0 +1,162 @@
+.sprintWidget {
+  background: var(--bg-card, #282828);
+  border: 1px solid var(--border-color, #3e3e3e);
+  border-radius: var(--radius-xl, 10px);
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.3));
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badgeGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.trackBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--accent, #ffa116);
+  background: rgba(255, 161, 22, 0.12);
+  border: 1px solid rgba(255, 161, 22, 0.3);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.dayBadge {
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: var(--text-secondary, #9ca3af);
+  background: var(--bg-primary, #1a1a1a);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.percentText {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--accent, #ffa116);
+}
+
+.progressTrack {
+  height: 6px;
+  background: var(--surface-tertiary, #323232);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #ffa116 0%, #ffaa00 100%);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  background: var(--bg-primary, #1a1a1a);
+  border: 1px solid var(--border-color, #3e3e3e);
+  border-radius: var(--radius-md, 6px);
+  padding: 0.65rem 0.85rem;
+}
+
+.metricItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.metricLabel {
+  font-size: 0.7rem;
+  color: var(--text-secondary, #9ca3af);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metricValue {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary, #eff2f6);
+}
+
+.nextActionBox {
+  background: rgba(255, 161, 22, 0.06);
+  border-left: 3px solid var(--accent, #ffa116);
+  border-radius: 0 4px 4px 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.actionPrompt {
+  font-weight: 700;
+  color: var(--accent, #ffa116);
+  text-transform: uppercase;
+  font-size: 0.675rem;
+  letter-spacing: 0.05em;
+}
+
+.actionDesc {
+  color: #fef08a;
+  font-weight: 500;
+}
+
+.buttonRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+}
+
+.continueSprintBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--accent, #ffa116);
+  color: #121212;
+  font-size: 0.825rem;
+  font-weight: 700;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-md, 6px);
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.continueSprintBtn:hover {
+  background: var(--accent-hover, #ffaa00);
+}
+
+.viewPlanLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary, #9ca3af);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.viewPlanLink:hover {
+  color: var(--accent, #ffa116);
+}
